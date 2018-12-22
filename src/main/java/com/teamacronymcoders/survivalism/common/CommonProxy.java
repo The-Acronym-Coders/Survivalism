@@ -1,13 +1,16 @@
 package com.teamacronymcoders.survivalism.common;
 
+import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -18,7 +21,7 @@ public class CommonProxy {
                 new BlockBarrel()
         );
 
-        TileBarrel.initialize();
+        GameRegistry.registerTileEntity(TileBarrel.class, new ResourceLocation(Survivalism.MODID, "_barrel"));
     }
 
     @SubscribeEvent

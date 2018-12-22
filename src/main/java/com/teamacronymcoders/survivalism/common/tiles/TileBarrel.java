@@ -1,86 +1,85 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
-import com.teamacronymcoders.base.registrysystem.config.ConfigEntry;
-import com.teamacronymcoders.survivalism.common.ModBlocks;
-import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
+import com.teamacronymcoders.survivalism.utils.storages.FluidHandler;
+import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 
+
 public class TileBarrel extends TileEntity implements ITickable {
 
-    private FluidTankBase tankBase;
-    private static ConfigEntry capacityEntry;
+    private FluidHandler fluid_handler;
+    private ItemHandler item_handler;
 
-    public void initialize() {
-        GameRegistry.registerTileEntity(TileBarrel.class, ModBlocks.blockBarrel.getRegistryName());
-        config();
-        init();
+    public TileBarrel() {
+        fluid_handler = new FluidHandler(16000);
+        item_handler = new ItemHandler(3, 64) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                TileBarrel.this.markDirty();
+            }
+        };
     }
-
-    private void config() {
-        capacityEntry = new ConfigEntry("Barrel", "Capacity", Property.Type.INTEGER, "16000");
-    }
-
-    private void init() {
-        tankBase = new FluidTankBase(null, Integer.getInteger(capacityEntry.getValue()));
-    }
-
 
     @Override
     public void update() {
-        
+
+    }
+
+    private boolean canInteract(EntityPlayer player) {
+        return !isInvalid() && player.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        if (compound.hasKey("items")) {
+            item_handler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setTag("items", item_handler.serializeNBT());
+        return compound;
+
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return super.hasCapability(capability, facing) || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return true;
+        }
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new IFluidHandler() {
-
-                @Override
-                public IFluidTankProperties[] getTankProperties() {
-                    FluidTankInfo info = tankBase.getInfo();
-                    return new IFluidTankProperties[] {
-                            new FluidTankProperties(info.fluid, info.capacity, true, true)
-                    };
-                }
-
-                @Override
-                public int fill(FluidStack resource, boolean doFill) {
-                    return tankBase.fill(resource, doFill);
-                }
-
-                @Nullable
-                @Override
-                public FluidStack drain(FluidStack resource, boolean doDrain) {
-                    return tankBase.drain(resource, doDrain);
-                }
-
-                @Nullable
-                @Override
-                public FluidStack drain(int maxDrain, boolean doDrain) {
-                    return tankBase.drain(maxDrain, doDrain);
-                }
-            });
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(item_handler);
         }
-
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluid_handler);
+        }
         return super.getCapability(capability, facing);
     }
 }

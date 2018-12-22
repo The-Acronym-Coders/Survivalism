@@ -22,6 +22,9 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     private static Logger logger;
     public static final SurvivalismTab TAB = new SurvivalismTab();
 
+    @Mod.Instance
+    public static Survivalism INSTANCE;
+
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
