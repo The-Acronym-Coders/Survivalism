@@ -20,27 +20,27 @@ import javax.annotation.Nullable;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    private static FluidTankBase tankBase;
+    private FluidTankBase tankBase;
     private static ConfigEntry capacityEntry;
 
-    public static void initialize() {
+    public void initialize() {
         GameRegistry.registerTileEntity(TileBarrel.class, ModBlocks.blockBarrel.getRegistryName());
         config();
         init();
     }
 
-    private static void config() {
+    private void config() {
         capacityEntry = new ConfigEntry("Barrel", "Capacity", Property.Type.INTEGER, "16000");
     }
 
-    private static void init() {
+    private void init() {
         tankBase = new FluidTankBase(null, Integer.getInteger(capacityEntry.getValue()));
     }
 
 
     @Override
     public void update() {
-
+        
     }
 
     @Override
