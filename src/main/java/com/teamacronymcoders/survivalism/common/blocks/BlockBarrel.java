@@ -2,7 +2,10 @@ package com.teamacronymcoders.survivalism.common.blocks;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
+import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
+import com.teamacronymcoders.survivalism.common.tiles.NewTileBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,13 +16,16 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
@@ -48,8 +54,8 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
         return new TileBarrel();
     }
 
-    private TileBarrel getTE(World world, BlockPos pos) {
-        return (TileBarrel) world.getTileEntity(pos);
+    private NewTileBarrel getTE(World world, BlockPos pos) {
+        return (NewTileBarrel) world.getTileEntity(pos);
     }
 
     @Override
@@ -61,6 +67,21 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
         if (!(tile instanceof TileBarrel)) {
             return false;
         }
+
+        if (playerIn.isSneaking()) {
+            if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
+                ItemStack stack = playerIn.getHeldItem(hand);
+                NewTileBarrel tb = getTE(worldIn, pos);
+
+                FluidStack stackFS = FluidHelper.getFluidStackFromHandler(stack);
+                FluidStack tileFS = FluidHelper.getFluidStackFromHandler(tb);
+
+                if (FluidHelper.isFluidStacksSame(stackFS, tileFS)) {
+                    tileFS.amount = (stackFS.amount + tileFS.amount);
+                }
+            }
+        }
+
         playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }

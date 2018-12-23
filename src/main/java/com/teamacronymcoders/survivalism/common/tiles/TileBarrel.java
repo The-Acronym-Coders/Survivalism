@@ -22,8 +22,9 @@ import javax.annotation.Nullable;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    private FluidHandler fluid_handler;
-    private ItemHandler item_handler;
+    private static FluidHandler fluid_handler;
+    private static ItemHandler item_handler;
+    public static int DEFAULT_FLUIDCAPACITY = 16000;
 
     public TileBarrel() {
         fluid_handler = new FluidHandler(16000);
@@ -50,6 +51,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         if (compound.hasKey("items")) {
             item_handler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
         }
+
     }
 
     @Override

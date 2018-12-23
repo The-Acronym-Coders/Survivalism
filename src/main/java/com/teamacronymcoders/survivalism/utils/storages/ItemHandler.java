@@ -23,6 +23,10 @@ public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSe
         this.maxSlotLimit = maxSlotLimit;
     }
 
+    public NonNullList<ItemStack> getStacks() {
+        return stacks;
+    }
+
     @Override
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         validateSlotIndex(slot);
