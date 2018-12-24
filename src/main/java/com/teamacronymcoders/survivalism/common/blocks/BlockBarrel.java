@@ -1,15 +1,16 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
+import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
-import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
-import com.teamacronymcoders.survivalism.common.tiles.NewTileBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
-import net.minecraft.block.ITileEntityProvider;
+import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,21 +19,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
-public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
+public class BlockBarrel extends BlockDefault {
 
     private static final int GUI_ID = 1;
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
 
     public BlockBarrel() {
         super(Material.WOOD);
@@ -43,19 +46,18 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
         setLightOpacity(255);
     }
 
-    @Override
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileBarrel();
     }
 
-    private NewTileBarrel getTE(World world, BlockPos pos) {
-        return (NewTileBarrel) world.getTileEntity(pos);
+    private TileBarrel getTE(World world, BlockPos pos) {
+        return (TileBarrel) world.getTileEntity(pos);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
         if (playerIn.isSneaking()) {
             if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                 ItemStack stack = playerIn.getHeldItem(hand);
-                NewTileBarrel tb = getTE(worldIn, pos);
+                TileBarrel tb = getTE(worldIn, pos);
 
                 FluidStack stackFS = FluidHelper.getFluidStackFromHandler(stack);
                 FluidStack tileFS = FluidHelper.getFluidStackFromHandler(tb);
@@ -91,8 +93,8 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
     }
 
-    @SuppressWarnings("Deprecated")
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(FACING, EnumFacing.getFront((meta & 3) + 2));
     }
@@ -104,6 +106,8 @@ public class BlockBarrel extends BlockDefault implements ITileEntityProvider {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
+        return new ExtendedBlockState(this, new IProperty[]{BARREL_STATE}, new IUnlistedProperty[]{PropertySideType.SIDE_TYPE[0], PropertySideType.SIDE_TYPE[1],
+                PropertySideType.SIDE_TYPE[2], PropertySideType.SIDE_TYPE[3],
+                PropertySideType.SIDE_TYPE[4], PropertySideType.SIDE_TYPE[5]});
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BrewingRecipe extends RecipeBarrel {
     private FluidStack inputFluid;
-    private NonNullList<ItemStack> inputItemStacks;
+    private List<ItemStack> inputItemStacks;
     private FluidStack outputFluid;
     private int ticks;
 
@@ -22,7 +22,7 @@ public class BrewingRecipe extends RecipeBarrel {
      * @param ticks
      */
 
-    public BrewingRecipe(FluidStack inputFluid, NonNullList<ItemStack> inputItemStacks, FluidStack outputFluid, int ticks) {
+    public BrewingRecipe(FluidStack inputFluid, List<ItemStack> inputItemStacks, FluidStack outputFluid, int ticks) {
         this.inputFluid = inputFluid;
         this.inputItemStacks = inputItemStacks;
         this.outputFluid = outputFluid;
@@ -33,7 +33,7 @@ public class BrewingRecipe extends RecipeBarrel {
         return inputFluid;
     }
 
-    public NonNullList<ItemStack> getInputItemStacks() {
+    public List<ItemStack> getInputItemStacks() {
         return inputItemStacks;
     }
 

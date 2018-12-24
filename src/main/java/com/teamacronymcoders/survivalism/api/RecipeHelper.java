@@ -41,8 +41,8 @@ public class RecipeHelper {
             logger.error("Input ItemStack can not be Empty");
         } else if (outputItemStack.isEmpty()) {
             logger.error("Output ItemStack can not be Empty");
-        } else if (decAmount < 0 || decAmount > TileBarrel.DEFAULT_FLUIDCAPACITY) {
-            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.DEFAULT_FLUIDCAPACITY);
+        } else if (decAmount < 0 || decAmount > TileBarrel.getTankBase().getCapacity()) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.getTankBase().getCapacity());
         } else {
             RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputItemStack, outputItemStack, decAmount, ticks);
             RecipeStorage.barrelRecipes.add(soakingRecipe);

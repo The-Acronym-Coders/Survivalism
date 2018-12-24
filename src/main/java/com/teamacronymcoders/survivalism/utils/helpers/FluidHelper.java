@@ -22,7 +22,7 @@ public class FluidHelper {
             IFluidTankProperties[] props = fluidTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).getTankProperties();
             return props.length <= 0 ? null : props[0].getContents();
         }
-        return null
+        return null;
     }
 
     private static boolean isFluidHandler(ItemStack stack) {
@@ -40,5 +40,4 @@ public class FluidHelper {
         return false;
     }
 
-    FluidUtil
 }
