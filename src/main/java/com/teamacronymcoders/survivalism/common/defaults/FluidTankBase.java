@@ -94,7 +94,7 @@ public class FluidTankBase implements IFluidTank {
             drained = stack.amount;
         }
 
-        FluidStack fluidStack =  new FluidStack(stack, drained);
+        FluidStack fluidStack = new FluidStack(stack, drained);
 
         if (doDrain) {
             stack.amount -= drained;

@@ -18,7 +18,7 @@ public class RecipeHelper {
     private Logger logger = Survivalism.logger;
 
     public void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<ItemStack> inputItemStacks, @Nonnull FluidStack outputFluid, int ticks) {
-        if (inputFluid.amount <= 0){
+        if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
@@ -33,7 +33,7 @@ public class RecipeHelper {
     }
 
     public void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull ItemStack inputItemStack, @Nonnull ItemStack outputItemStack, int decAmount, int ticks) {
-        if (inputFluid.amount <= 0){
+        if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");

@@ -13,6 +13,7 @@ public class SoakingRecipe extends RecipeBarrel {
 
     /**
      * Soaking Recipe
+     *
      * @param inputFluid
      * @param inputItemStack
      * @param outputItemStack

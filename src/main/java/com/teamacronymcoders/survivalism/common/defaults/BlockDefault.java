@@ -20,8 +20,4 @@ public class BlockDefault extends Block {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return super.createBlockState();
-    }
 }

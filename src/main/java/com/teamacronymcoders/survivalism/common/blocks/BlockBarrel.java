@@ -33,9 +33,9 @@ import javax.annotation.Nullable;
 
 public class BlockBarrel extends BlockDefault {
 
+    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
     private static final int GUI_ID = 1;
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
 
     public BlockBarrel() {
         super(Material.WOOD);

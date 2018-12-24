@@ -1,6 +1,9 @@
 package com.teamacronymcoders.survivalism.utils.storages;
 
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -50,7 +53,7 @@ public class FluidHandler implements IFluidHandler, IFluidTank {
     @Override
     public IFluidTankProperties[] getTankProperties() {
         FluidTankInfo info = this.getInfo();
-        return new IFluidTankProperties[] {
+        return new IFluidTankProperties[]{
                 new FluidTankProperties(info.fluid, info.capacity, true, true)
         };
     }
@@ -108,7 +111,7 @@ public class FluidHandler implements IFluidHandler, IFluidTank {
             drained = stack.amount;
         }
 
-        FluidStack fluidStack =  new FluidStack(stack, drained);
+        FluidStack fluidStack = new FluidStack(stack, drained);
 
         if (doDrain) {
             stack.amount -= drained;

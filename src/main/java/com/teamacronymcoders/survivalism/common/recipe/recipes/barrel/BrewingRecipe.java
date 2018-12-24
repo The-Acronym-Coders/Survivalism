@@ -2,10 +2,8 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BrewingRecipe extends RecipeBarrel {
@@ -16,6 +14,7 @@ public class BrewingRecipe extends RecipeBarrel {
 
     /**
      * Brewing Recipe
+     *
      * @param inputFluid
      * @param inputItemStacks
      * @param outputFluid

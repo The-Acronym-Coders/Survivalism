@@ -1,7 +1,6 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
-import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
@@ -9,7 +8,6 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRec
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
 import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,11 +23,9 @@ import javax.annotation.Nullable;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    IBlockState currentState;
-
     static FluidTank tank;
     static ItemHandler itemHandler;
-
+    IBlockState currentState;
     int durationTicks;
 
     public TileBarrel() {
@@ -38,12 +34,20 @@ public class TileBarrel extends TileEntity implements ITickable {
         currentState = this.world.getBlockState(this.pos);
     }
 
+    public static FluidTank getTankBase() {
+        return tank;
+    }
+
+    private static FluidStack getFluidStack() {
+        return tank.getFluid();
+    }
+
     @Override
     public void update() {
         EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
-        if (currentBarrelState.getName().equals(EnumsBarrelStates.STORAGE.getName())) {
+        if (checkState(EnumsBarrelStates.STORAGE)) {
             return;
-        } else if (currentBarrelState.getName().equals(EnumsBarrelStates.BREWING.getName())) {
+        } else if (checkState(EnumsBarrelStates.BREWING)) {
             FluidStack fluidStack = getFluidStack();
             for (RecipeBarrel recipe : RecipeStorage.barrelRecipes) {
                 if (recipe instanceof BrewingRecipe) {
@@ -63,7 +67,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                     }
                 }
             }
-        } else if (currentBarrelState.getName().equals(EnumsBarrelStates.SOAKING.getName())) {
+        } else if (checkState(EnumsBarrelStates.SOAKING)) {
             FluidStack fluidStack = getFluidStack();
             ItemStack stack = itemHandler.getStackInSlot(0);
             for (RecipeBarrel recipe : RecipeStorage.barrelRecipes) {
@@ -89,24 +93,25 @@ public class TileBarrel extends TileEntity implements ITickable {
         }
     }
 
-    public static FluidTank getTankBase() {
-        return tank;
-    }
-
-    public static FluidStack getFluidStack() {
-        return tank.getFluid();
-    }
-
     /**
      * Stolen from HeatedTank
      * Sorry Skysom ;(
      */
-    private void ensureStateIs(EnumsBarrelStates expectedTankState) {
+    private void ensureStateIs(EnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
         EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
-        if (currentBarrelState != expectedTankState) {
-            world.setBlockState(this.getPos(), currentState.withProperty(BlockBarrel.BARREL_STATE, expectedTankState));
+        if (currentBarrelState != expectedBarrelState) {
+            world.setBlockState(this.getPos(), currentState.withProperty(BlockBarrel.BARREL_STATE, expectedBarrelState));
         }
+    }
+
+    private boolean checkState(EnumsBarrelStates expectedBarrelState) {
+        IBlockState currentState = this.getWorld().getBlockState(this.getPos());
+        EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
+        if (currentBarrelState == expectedBarrelState) {
+            return true;
+        }
+        return false;
     }
 
     @Override

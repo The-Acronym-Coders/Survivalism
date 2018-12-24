@@ -85,31 +85,28 @@ public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSe
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (amount == 0)
+        if (amount == 0) {
             return ItemStack.EMPTY;
+        }
 
         validateSlotIndex(slot);
 
         ItemStack existing = this.stacks.get(slot);
 
-        if (existing.isEmpty())
+        if (existing.isEmpty()) {
             return ItemStack.EMPTY;
+        }
 
         int toExtract = Math.min(amount, existing.getMaxStackSize());
 
-        if (existing.getCount() <= toExtract)
-        {
-            if (!simulate)
-            {
+        if (existing.getCount() <= toExtract) {
+            if (!simulate) {
                 this.stacks.set(slot, ItemStack.EMPTY);
                 onContentsChanged(slot);
             }
             return existing;
-        }
-        else
-        {
-            if (!simulate)
-            {
+        } else {
+            if (!simulate) {
                 this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
                 onContentsChanged(slot);
             }
@@ -137,8 +134,9 @@ public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSe
     }
 
     protected void validateSlotIndex(int slot) {
-        if (slot < 0 || slot >= stacks.size())
+        if (slot < 0 || slot >= stacks.size()) {
             throw new RuntimeException("Slot " + slot + " not in valid range - [0," + stacks.size() + ")");
+        }
     }
 
     protected void onLoad() {
@@ -153,10 +151,8 @@ public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSe
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagList nbtTagList = new NBTTagList();
-        for (int i = 0; i < stacks.size(); i++)
-        {
-            if (!stacks.get(i).isEmpty())
-            {
+        for (int i = 0; i < stacks.size(); i++) {
+            if (!stacks.get(i).isEmpty()) {
                 NBTTagCompound itemTag = new NBTTagCompound();
                 itemTag.setInteger("Slot", i);
                 stacks.get(i).writeToNBT(itemTag);
@@ -173,13 +169,11 @@ public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSe
     public void deserializeNBT(NBTTagCompound nbt) {
         setSize(nbt.hasKey("Size", Constants.NBT.TAG_INT) ? nbt.getInteger("Size") : stacks.size());
         NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < tagList.tagCount(); i++)
-        {
+        for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound itemTags = tagList.getCompoundTagAt(i);
             int slot = itemTags.getInteger("Slot");
 
-            if (slot >= 0 && slot < stacks.size())
-            {
+            if (slot >= 0 && slot < stacks.size()) {
                 stacks.set(slot, new ItemStack(itemTags));
             }
         }
