@@ -23,10 +23,9 @@ import javax.annotation.Nullable;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    static FluidTank tank;
-    static ItemHandler itemHandler;
-    IBlockState currentState;
-    int durationTicks;
+    private static FluidTank tank;
+    private static ItemHandler itemHandler;
+    private IBlockState currentState;
 
     public TileBarrel() {
         tank = new FluidTank(16000);
@@ -44,9 +43,8 @@ public class TileBarrel extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
+        int durationTicks;
         if (checkState(EnumsBarrelStates.STORAGE)) {
-            return;
         } else if (checkState(EnumsBarrelStates.BREWING)) {
             FluidStack fluidStack = getFluidStack();
             for (RecipeBarrel recipe : RecipeStorage.barrelRecipes) {
@@ -147,5 +145,9 @@ public class TileBarrel extends TileEntity implements ITickable {
             return true;
         }
         return super.hasCapability(capability, facing);
+    }
+
+    public IBlockState getCurrentState() {
+        return currentState;
     }
 }

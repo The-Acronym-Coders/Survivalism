@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.api;
+package com.teamacronymcoders.survivalism.common.recipe;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;

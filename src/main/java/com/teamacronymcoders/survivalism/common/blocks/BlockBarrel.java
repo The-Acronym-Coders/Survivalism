@@ -23,11 +23,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 
@@ -46,6 +50,7 @@ public class BlockBarrel extends BlockDefault {
         setLightOpacity(255);
     }
 
+    @Override
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
@@ -57,51 +62,57 @@ public class BlockBarrel extends BlockDefault {
     }
 
     private TileBarrel getTE(World world, BlockPos pos) {
-        return (TileBarrel) world.getTileEntity(pos);
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileBarrel) {
+            return (TileBarrel) te;
+        }
+        return null;
     }
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        TileBarrel barrel = getTE(worldIn, pos);
+        ItemStack stack = playerIn.getHeldItem(hand);
+
         if (worldIn.isRemote) {
             return true;
         }
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if (!(tile instanceof TileBarrel)) {
+        if (barrel == null) {
             return false;
         }
 
-        if (playerIn.isSneaking()) {
-            if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
-                ItemStack stack = playerIn.getHeldItem(hand);
-                TileBarrel tb = getTE(worldIn, pos);
+        if (stack.getItem() instanceof ItemBucket) {
+            FluidStack stackFS = FluidHelper.getFluidStackFromHandler(stack);
+            FluidStack tileFS = FluidHelper.getFluidStackFromHandler(barrel);
 
-                FluidStack stackFS = FluidHelper.getFluidStackFromHandler(stack);
-                FluidStack tileFS = FluidHelper.getFluidStackFromHandler(tb);
-
-                if (FluidHelper.isFluidStacksSame(stackFS, tileFS)) {
-                    tileFS.amount = (stackFS.amount + tileFS.amount);
+            if (stackFS != null && tileFS != null && FluidHelper.isFluidStacksSame(stackFS, tileFS)) {
+                IFluidHandler props = barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                if (props != null) {
+                    props.fill(stackFS, true);
+                    playerIn.sendStatusMessage(new TextComponentString(String.valueOf(tileFS.amount)), false);
                 }
             }
+        } else if (!playerIn.isSneaking()){
+            playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
 
-        playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, EnumsBarrelStates.VALUES[0]), 2);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getFront((meta & 3) + 2));
+        return getDefaultState().withProperty(BARREL_STATE, EnumsBarrelStates.VALUES[meta]);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex() - 2;
+        return state.getValue(BARREL_STATE).ordinal();
     }
 
     @Override
