@@ -5,13 +5,16 @@ import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
 import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,6 +23,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
+import javax.swing.text.html.parser.Entity;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
@@ -39,6 +43,15 @@ public class TileBarrel extends TileEntity implements ITickable {
 
     private static FluidStack getFluidStack() {
         return tank.getFluid();
+    }
+
+    public boolean insertFluid(EntityPlayer player, EnumHand hand) {
+        if (player != null) {
+            ItemStack stack = player.getHeldItem(hand);
+            FluidStack fluidStack = FluidHelper.getFluidStackFromHandler(stack);
+            tank.fill(fluidStack, true);
+        }
+        return false;
     }
 
     @Override

@@ -81,16 +81,10 @@ public class BlockBarrel extends BlockDefault {
             return false;
         }
 
-        if (stack.getItem() instanceof ItemBucket) {
-            FluidStack stackFS = FluidHelper.getFluidStackFromHandler(stack);
-            FluidStack tileFS = FluidHelper.getFluidStackFromHandler(barrel);
-
-            if (stackFS != null && tileFS != null && FluidHelper.isFluidStacksSame(stackFS, tileFS)) {
-                IFluidHandler props = barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-                if (props != null) {
-                    props.fill(stackFS, true);
-                    playerIn.sendStatusMessage(new TextComponentString(String.valueOf(tileFS.amount)), false);
-                }
+        if (!playerIn.getHeldItem(hand).isEmpty() && FluidHelper.getFluidStackFromHandler(stack) != null) {
+            if (!worldIn.isRemote) {
+                Survivalism.logger.error("Boop");
+                return !barrel.insertFluid(playerIn, hand);
             }
         } else if (!playerIn.isSneaking()){
             playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
