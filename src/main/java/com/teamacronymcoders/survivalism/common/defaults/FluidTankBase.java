@@ -1,13 +1,10 @@
 package com.teamacronymcoders.survivalism.common.defaults;
 
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
 
 import javax.annotation.Nullable;
 
-public class FluidTankBase implements IFluidTank {
+public class FluidTankBase extends FluidTank {
 
     protected FluidStack stack;
     protected int capacity;
@@ -17,14 +14,14 @@ public class FluidTankBase implements IFluidTank {
         this(null, capacity);
     }
 
-    public FluidTankBase(FluidStack stack, int capacity) {
-        this.stack = stack;
-        this.capacity = capacity;
+    public FluidTankBase (@Nullable FluidStack fluidStack, int capacity) {
+        super(fluidStack, capacity);
     }
 
     public FluidTankBase(Fluid fluid, int amount, int capacity) {
         this(new FluidStack(fluid, amount), capacity);
     }
+
 
     @Nullable
     @Override

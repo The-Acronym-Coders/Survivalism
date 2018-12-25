@@ -6,6 +6,7 @@ import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -29,11 +30,13 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class BlockBarrel extends BlockDefault {
 
@@ -61,6 +64,11 @@ public class BlockBarrel extends BlockDefault {
         return new TileBarrel();
     }
 
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
     private TileBarrel getTE(World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileBarrel) {
@@ -81,11 +89,8 @@ public class BlockBarrel extends BlockDefault {
             return false;
         }
 
-        if (!playerIn.getHeldItem(hand).isEmpty() && FluidHelper.getFluidStackFromHandler(stack) != null) {
-            if (!worldIn.isRemote) {
-                Survivalism.logger.error("Boop");
-                return !barrel.insertFluid(playerIn, hand);
-            }
+        if (!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
+            FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
         } else if (!playerIn.isSneaking()){
             playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
@@ -115,4 +120,6 @@ public class BlockBarrel extends BlockDefault {
                 PropertySideType.SIDE_TYPE[2], PropertySideType.SIDE_TYPE[3],
                 PropertySideType.SIDE_TYPE[4], PropertySideType.SIDE_TYPE[5]});
     }
+
+
 }
