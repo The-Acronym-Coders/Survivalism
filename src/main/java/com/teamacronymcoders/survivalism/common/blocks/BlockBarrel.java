@@ -4,9 +4,7 @@ import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -18,27 +16,20 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BlockBarrel extends BlockDefault {
 
@@ -95,7 +86,7 @@ public class BlockBarrel extends BlockDefault {
             return FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
         } else if (playerIn.isSneaking()) {
             Survivalism.logger.error(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
-        } else if (!playerIn.isSneaking()){
+        } else if (!playerIn.isSneaking()) {
             playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
 

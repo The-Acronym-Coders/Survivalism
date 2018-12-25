@@ -1,6 +1,9 @@
 package com.teamacronymcoders.survivalism.common.defaults;
 
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +17,7 @@ public class FluidTankBase extends FluidTank {
         this(null, capacity);
     }
 
-    public FluidTankBase (@Nullable FluidStack fluidStack, int capacity) {
+    public FluidTankBase(@Nullable FluidStack fluidStack, int capacity) {
         super(fluidStack, capacity);
     }
 

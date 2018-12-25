@@ -61,16 +61,19 @@ repositories{
 }
 
 dependencies {
+    // Libs
+    deobfCompile "com.teamacronymcoders.base:base:${mc_version}-${base_version}-SNAPSHOT.+"
+
     // Ease-of-Use Tools:
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.144"
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.21-B36_1.12"
-
-    // Patchouli
-    deobfCompile "patchouli:Patchouli:1.0:13"
-
-    // Req Libs:
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
-    deobfCompile "com.teamacronymcoders.base:base:${mc_version}-${base_version}-SNAPSHOT.+"
+
+    // Addon Support
+    deobfCompile "patchouli:Patchouli:1.0:13"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:CraftTweaker2-API:1.12-${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:ZenScript:1.12-${crafttweaker_version}"
     
 }
 

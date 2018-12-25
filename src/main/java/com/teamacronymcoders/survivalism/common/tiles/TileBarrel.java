@@ -14,13 +14,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -28,14 +26,21 @@ import javax.annotation.Nullable;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    private int durationTicks;
-    private boolean sealed = false;
     private static FluidTankBase tank;
     private static ItemHandler itemHandler;
+    private int durationTicks;
+    private boolean sealed = false;
 
     public TileBarrel() {
         tank = new FluidTankBase(16000);
         itemHandler = new ItemHandler(3, 64);
+    }
+
+    //////////////////////
+    // Setters Getters //
+    ////////////////////
+    public static FluidTankBase getTankBase() {
+        return tank;
     }
 
     @Override
@@ -88,8 +93,6 @@ public class TileBarrel extends TileEntity implements ITickable {
         }
     }
 
-
-
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -123,14 +126,6 @@ public class TileBarrel extends TileEntity implements ITickable {
             return true;
         }
         return super.hasCapability(capability, facing);
-    }
-
-
-    //////////////////////
-    // Setters Getters //
-    ////////////////////
-    public static FluidTankBase getTankBase() {
-        return tank;
     }
 
     private FluidStack getFluidStack() {
@@ -168,13 +163,13 @@ public class TileBarrel extends TileEntity implements ITickable {
         return currentBarrelState == expectedBarrelState;
     }
 
-    public void cycleStates (IBlockState state) {
+    public void cycleStates(IBlockState state) {
         EnumsBarrelStates currentState = state.getValue(BlockBarrel.BARREL_STATE);
         if (currentState == EnumsBarrelStates.STORAGE) {
             world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.BREWING));
         } else if (currentState == EnumsBarrelStates.BREWING) {
             world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.SOAKING));
-        } else if (currentState == EnumsBarrelStates.SOAKING){
+        } else if (currentState == EnumsBarrelStates.SOAKING) {
             world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.STORAGE));
         }
     }
