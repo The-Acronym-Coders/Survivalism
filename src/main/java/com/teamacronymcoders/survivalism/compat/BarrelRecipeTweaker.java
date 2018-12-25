@@ -3,10 +3,6 @@ package com.teamacronymcoders.survivalism.compat;
 import com.teamacronymcoders.base.modulesystem.Module;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeHelper;
-import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
 import crafttweaker.CraftTweakerAPI;
@@ -18,6 +14,7 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import javax.annotation.Nonnull;
@@ -26,6 +23,7 @@ import java.util.List;
 
 @Module("crafttweaker")
 @ModOnly("crafttweaker")
+@ZenClass
 @ZenRegister
 public class BarrelRecipeTweaker {
 
