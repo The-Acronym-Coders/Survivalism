@@ -98,7 +98,7 @@ public class TileBarrel extends TileEntity implements ITickable {
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setTag("tank", tank.writeToNBT(compound));
+        compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
         return super.writeToNBT(compound);
     }
 

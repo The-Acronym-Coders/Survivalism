@@ -37,6 +37,8 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BlockBarrel extends BlockDefault {
 
@@ -91,6 +93,8 @@ public class BlockBarrel extends BlockDefault {
 
         if (!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
             FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
+        } else if (playerIn.isSneaking()) {
+            Survivalism.logger.error(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
         } else if (!playerIn.isSneaking()){
             playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
