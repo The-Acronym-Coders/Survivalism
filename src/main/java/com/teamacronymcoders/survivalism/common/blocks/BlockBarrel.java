@@ -92,7 +92,7 @@ public class BlockBarrel extends BlockDefault {
         }
 
         if (!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
-            FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
+            return FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
         } else if (playerIn.isSneaking()) {
             Survivalism.logger.error(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
         } else if (!playerIn.isSneaking()){
