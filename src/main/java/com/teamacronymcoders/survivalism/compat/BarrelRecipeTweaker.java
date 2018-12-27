@@ -21,9 +21,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Module("crafttweaker")
 @ModOnly("crafttweaker")
-@ZenClass
+@ZenClass("mods.survivalism.Barrel")
 @ZenRegister
 public class BarrelRecipeTweaker {
 
@@ -46,8 +45,8 @@ public class BarrelRecipeTweaker {
 
         private addBrewingRecipe(@Nonnull ILiquidStack inputFluid, @Nonnull IItemStack[] inputItemStacks, @Nonnull ILiquidStack outputFluid, int ticks) {
             this.inputFluid = CraftTweakerMC.getLiquidStack(inputFluid);
-            for (int i = 0; i < inputItemStacks.length; i++) {
-                this.inputItemStacks.add(CraftTweakerMC.getItemStack(inputItemStacks[i]));
+            for (IItemStack inputItemStack : inputItemStacks) {
+                this.inputItemStacks.add(CraftTweakerMC.getItemStack(inputItemStack));
             }
             this.outputFluid = CraftTweakerMC.getLiquidStack(outputFluid);
             this.ticks = ticks;
