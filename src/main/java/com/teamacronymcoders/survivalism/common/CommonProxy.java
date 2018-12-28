@@ -34,7 +34,7 @@ public class CommonProxy {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 new ItemBlock(ModBlocks.blockBarrel).setRegistryName(Objects.requireNonNull(ModBlocks.blockBarrel.getRegistryName())),
-                new ItemBlock(ModBlocks.blockBarrel).setRegistryName(Objects.requireNonNull(ModBlocks.blockCrushingVat.getRegistryName()))
+                new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(Objects.requireNonNull(ModBlocks.blockCrushingVat.getRegistryName()))
         );
     }
 }
