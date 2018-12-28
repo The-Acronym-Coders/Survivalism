@@ -2,7 +2,9 @@ package com.teamacronymcoders.survivalism.common;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
+import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -12,22 +14,27 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.Objects;
+
 @Mod.EventBusSubscriber
 public class CommonProxy {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
-                new BlockBarrel()
+                new BlockBarrel(),
+                new BlockCrushingVat()
         );
 
         GameRegistry.registerTileEntity(TileBarrel.class, new ResourceLocation(Survivalism.MODID, "_barrel"));
+        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                new ItemBlock(ModBlocks.blockBarrel).setRegistryName(ModBlocks.blockBarrel.getRegistryName())
+                new ItemBlock(ModBlocks.blockBarrel).setRegistryName(Objects.requireNonNull(ModBlocks.blockBarrel.getRegistryName())),
+                new ItemBlock(ModBlocks.blockBarrel).setRegistryName(Objects.requireNonNull(ModBlocks.blockCrushingVat.getRegistryName()))
         );
     }
 }

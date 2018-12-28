@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.compat;
 
-import com.teamacronymcoders.base.modulesystem.Module;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeHelper;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;

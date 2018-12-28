@@ -5,7 +5,6 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.crushingVat.CrushingVatRecipe;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -62,7 +61,7 @@ public class RecipeHelper {
         if (jumps <= 0) {
             logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
         } else {
-            RecipeVat vatRecipe = new CrushingVatRecipe(inputStack, outputStack, outputFluidStack, jumps);
+            RecipeVat vatRecipe = new RecipeVat(inputStack, outputStack, outputFluidStack, jumps);
             RecipeStorage.getVatRecipes().add(vatRecipe);
         }
     }
@@ -82,7 +81,7 @@ public class RecipeHelper {
     }
 
     public static void addCRTCrushing(@Nonnull ItemStack inputStack, ItemStack outputStack, FluidStack outputFluidStack, int jumps) {
-        RecipeVat vatRecipe = new CrushingVatRecipe(inputStack, outputStack, outputFluidStack, jumps);
+        RecipeVat vatRecipe = new RecipeVat(inputStack, outputStack, outputFluidStack, jumps);
         RecipeStorage.getVatRecipes().add(vatRecipe);
     }
 

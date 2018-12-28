@@ -1,4 +1,85 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
-public class TileCrushingVat {
+import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
+import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
+import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
+import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
+public class TileCrushingVat extends TileEntity {
+
+    private static FluidTankBase tank;
+    private static ItemHandler itemHandler;
+    private static RecipeVat recipeVat;
+    private static double jumpsTargetted;
+    private static double jumpsContained = 0.0D;
+    private static List<RecipeVat> vatRecipes;
+
+    public TileCrushingVat() {
+        tank = new FluidTankBase(16000);
+        itemHandler = new ItemHandler(3, 64);
+        vatRecipes = RecipeStorage.getVatRecipes();
+    }
+
+    public void makeProgress(EntityLivingBase entity) {
+        Double multiplier = 0.0D;
+        Map<Item, Double> map = RecipeStorage.getBootMultiplierMap();
+
+        if (recipeVat != null) {
+            if (entity != null) {
+                for (ItemStack boots : entity.getArmorInventoryList()) {
+                    multiplier = map.getOrDefault(boots.getItem(), 1.0);
+                }
+            }
+            jumpsContained = jumpsContained + multiplier;
+        } else {
+            for (RecipeVat recipe : vatRecipes) {
+                ItemStack inputStack = recipe.getInputStack();
+                if (itemHandler.getStackInSlot(0) == inputStack) {
+                    jumpsTargetted = recipe.getJumps();
+                    recipeVat = recipe;
+                }
+            }
+        }
+
+        if (jumpsContained >= jumpsTargetted) {
+            if (recipeVat != null) {
+                itemHandler.setStackInSlot(1, recipeVat.getOutputStack());
+                tank.fill(recipeVat.getOutputFluid(), true);
+            }
+            itemHandler.getStackInSlot(0).shrink(1);
+            jumpsContained = 0;
+        }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        return super.writeToNBT(compound);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return super.hasCapability(capability, facing);
+    }
 }

@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism.compat;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.crushingVat.CrushingVatRecipe;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
@@ -48,7 +47,7 @@ public class VatRecipeTweaker {
             if (jumps <= 0) {
                 CraftTweakerAPI.logError("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
             } else {
-                RecipeVat vatRecipe = new CrushingVatRecipe(inputStack, outputStack, outputFluidStack, jumps);
+                RecipeVat vatRecipe = new RecipeVat(inputStack, outputStack, outputFluidStack, jumps);
                 RecipeStorage.getVatRecipes().add(vatRecipe);
             }
         }

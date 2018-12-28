@@ -23,17 +23,21 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
     private static FluidTankBase tank;
     private static ItemHandler itemHandler;
+    List<RecipeBarrel> barrelRecipes;
     private int durationTicks;
     private boolean sealed = false;
 
     public TileBarrel() {
         tank = new FluidTankBase(16000);
         itemHandler = new ItemHandler(3, 64);
+        barrelRecipes = RecipeStorage.getBarrelRecipes();
+
     }
 
     //////////////////////
@@ -45,11 +49,9 @@ public class TileBarrel extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (checkState(EnumsBarrelStates.STORAGE)) {
-            return;
-        } else if (checkState(EnumsBarrelStates.BREWING) && isSealed()) {
+        if (checkState(EnumsBarrelStates.BREWING) && isSealed()) {
             FluidStack fluidStack = getFluidStack();
-            for (RecipeBarrel recipe : RecipeStorage.barrelRecipes) {
+            for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof BrewingRecipe) {
                     FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
                     if (fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
@@ -70,7 +72,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         } else if (checkState(EnumsBarrelStates.SOAKING) && isSealed()) {
             FluidStack fluidStack = getFluidStack();
             ItemStack stack = itemHandler.getStackInSlot(0);
-            for (RecipeBarrel recipe : RecipeStorage.barrelRecipes) {
+            for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof SoakingRecipe) {
                     FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
                     ItemStack recipeInputIS = ((SoakingRecipe) recipe).getInputItemStack();
