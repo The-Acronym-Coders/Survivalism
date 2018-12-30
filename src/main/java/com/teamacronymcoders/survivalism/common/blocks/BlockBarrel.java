@@ -80,15 +80,15 @@ public class BlockBarrel extends BlockDefault {
             return false;
         }
 
-        if(!worldIn.isRemote) {
-            if(!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
+        if (!worldIn.isRemote) {
+            if (!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
                 boolean handled = FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
-                playerIn.sendMessage(new TextComponentString("Handled: " + handled + " fluid: " + barrel.getTankBase().getFluid()));
+                playerIn.sendMessage(new TextComponentString("Handled: " + handled + " fluid: " + barrel.getInputTank().getFluid()));
                 return handled;
-            } else if(playerIn.isSneaking()) {
-                Survivalism.INSTANCE.logger.info(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
-            return true;
-            } else if(!playerIn.isSneaking()) {
+            } else if (playerIn.isSneaking()) {
+                Survivalism.INSTANCE.logger.info(Objects.requireNonNull(barrel.getInputTank().getFluid()).getLocalizedName() + ":" + barrel.getInputTank().getFluidAmount());
+                return true;
+            } else if (!playerIn.isSneaking()) {
                 playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
                 return true;
             }

@@ -1,7 +1,6 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
-import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
@@ -18,52 +17,102 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class TileBarrel extends TileEntity implements ITickable {
-
-    private FluidTank tank;
-    private ItemHandler itemHandler;
-    List<RecipeBarrel> barrelRecipes;
+    public static final int TANK_CAPACITY = 16000;
+    private static final int STORAGE_SIZE = 9;
+    private static final int BREWING_SIZE = 3;
+    private static final int SOAKING_SIZE = 1;
+    private List<RecipeBarrel> barrelRecipes;
+    private FluidTank inputTank;
+    private FluidTank outputTank;
+    private ItemHandler storageHandler;
+    private ItemHandler brewingHandler;
+    private ItemHandler soakingHandler;
     private int durationTicks;
     private boolean sealed = false;
 
-    public static final int TANK_CAPACITY = 16000;
     public TileBarrel() {
-        tank = new FluidTank(TANK_CAPACITY);
-        itemHandler = new ItemHandler(3, 64);
+        inputTank = new FluidTank(TANK_CAPACITY) {
+            @Override
+            public boolean canFill() {
+                return true;
+            }
+
+            @Override
+            public boolean canDrain() {
+                return false;
+            }
+        };
+        outputTank = new FluidTank(TANK_CAPACITY) {
+            @Override
+            public boolean canFill() {
+                return false;
+            }
+
+            @Override
+            public boolean canDrain() {
+                return true;
+            }
+        };
+        storageHandler = new ItemHandler(STORAGE_SIZE, 64) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                TileBarrel.this.markDirty();
+            }
+        };
+        brewingHandler = new ItemHandler(BREWING_SIZE, 64) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                TileBarrel.this.markDirty();
+            }
+        };
+        soakingHandler = new ItemHandler(SOAKING_SIZE, 64) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                TileBarrel.this.markDirty();
+            }
+        };
         barrelRecipes = RecipeStorage.getBarrelRecipes();
-
     }
 
-    //////////////////////
-    // Setters Getters //
-    ////////////////////
-    public FluidTank getTankBase() {
-        return tank;
+    public void toggleSealed() {
+        if (isSealed()) {
+            sealed = false;
+        } else if (!isSealed()) {
+            sealed = true;
+        }
     }
+
+    ///////////
+    // Stuff //
+    ///////////
 
     @Override
     public void update() {
         if (checkState(EnumsBarrelStates.BREWING) && isSealed()) {
-            FluidStack fluidStack = getFluidStack();
+            FluidStack inputTank = getInputTank().getFluid();
             for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof BrewingRecipe) {
                     FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
-                    if (fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
-                        if (itemHandler.getStacks().equals(((BrewingRecipe) recipe).getInputItemStacks())) {
+                    if (inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
+                        if (brewingHandler.getStacks().equals(((BrewingRecipe) recipe).getInputItemStacks())) {
                             durationTicks = ((BrewingRecipe) recipe).getTicks();
                             int currentTicks = 0;
                             for (int x = 0; x < durationTicks; ++x) {
                                 currentTicks++;
                             }
                             if (currentTicks == durationTicks) {
-                                fluidStack = ((BrewingRecipe) recipe).getOutputFluid();
+                                getOutputTank().fillInternal(((BrewingRecipe) recipe).getOutputFluid(), true);
                                 durationTicks = 0;
                             }
                         }
@@ -71,13 +120,13 @@ public class TileBarrel extends TileEntity implements ITickable {
                 }
             }
         } else if (checkState(EnumsBarrelStates.SOAKING) && isSealed()) {
-            FluidStack fluidStack = getFluidStack();
-            ItemStack stack = itemHandler.getStackInSlot(0);
+            FluidStack fluidStack = getInputTank().getFluid();
+            ItemStack stack = soakingHandler.getStackInSlot(0);
             for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof SoakingRecipe) {
                     FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
                     ItemStack recipeInputIS = ((SoakingRecipe) recipe).getInputItemStack();
-                    if (fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
+                    if (fluidStack != null && fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
                         if (stack.getItem().equals(recipeInputIS.getItem())) {
                             durationTicks = ((SoakingRecipe) recipe).getTicks();
                             int currentTicks = 0;
@@ -86,7 +135,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                             }
                             if (currentTicks == durationTicks) {
                                 fluidStack.amount -= ((SoakingRecipe) recipe).getDecAmount();
-                                itemHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
+                                soakingHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
                                 durationTicks = 0;
                             }
                         }
@@ -99,12 +148,32 @@ public class TileBarrel extends TileEntity implements ITickable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        tank = (FluidTankBase) tank.readFromNBT(compound.getCompoundTag("tank"));
+        if (compound.hasKey("inputTank")) {
+            inputTank = inputTank.readFromNBT(compound.getCompoundTag("inputTank"));
+        }
+        if (compound.hasKey("outputTank")) {
+            outputTank = outputTank.readFromNBT(compound.getCompoundTag("outputTank"));
+        }
+        if (compound.hasKey("storageINV")) {
+            storageHandler.deserializeNBT(compound);
+        }
+        if (compound.hasKey("brewingINV")) {
+            brewingHandler.deserializeNBT(compound);
+        }
+        if (compound.hasKey("soakingINV")) {
+            soakingHandler.deserializeNBT(compound);
+        }
+
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+        compound.setTag("inputTank", inputTank.writeToNBT(new NBTTagCompound()));
+        compound.setTag("outputTank", outputTank.writeToNBT(new NBTTagCompound()));
+        compound.setTag("storageINV", storageHandler.serializeNBT());
+        compound.setTag("brewingINV", brewingHandler.serializeNBT());
+        compound.setTag("soakingINV", soakingHandler.serializeNBT());
         return super.writeToNBT(compound);
     }
 
@@ -112,10 +181,22 @@ public class TileBarrel extends TileEntity implements ITickable {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return (T) tank;
+            if (Objects.equals(facing != null ? facing.getName() : null, "down")) {
+                if (checkState(EnumsBarrelStates.BREWING)) {
+                    return (T) outputTank;
+                }
+            } else {
+                return (T) inputTank;
+            }
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) itemHandler;
+            if (checkState(EnumsBarrelStates.STORAGE)) {
+                return (T) storageHandler;
+            } else if (checkState(EnumsBarrelStates.BREWING)) {
+                return (T) brewingHandler;
+            } else if (checkState(EnumsBarrelStates.SOAKING)) {
+                return (T) soakingHandler;
+            }
         }
         return super.getCapability(capability, facing);
     }
@@ -132,17 +213,12 @@ public class TileBarrel extends TileEntity implements ITickable {
     }
 
     private FluidStack getFluidStack() {
-        return tank.getFluid();
+        return inputTank.getFluid();
     }
 
-    public boolean isSealed() {
+    private boolean isSealed() {
         return sealed;
     }
-
-    public void setSealed(boolean sealed) {
-        this.sealed = sealed;
-    }
-
 
     //////////////////////
     // Utility Methods //
@@ -181,8 +257,35 @@ public class TileBarrel extends TileEntity implements ITickable {
         if (player != null) {
             ItemStack stack = player.getHeldItem(hand);
             FluidStack fluidStack = FluidHelper.getFluidStackFromHandler(stack);
-            tank.fill(fluidStack, true);
+            inputTank.fill(fluidStack, true);
         }
         return false;
+    }
+
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
+
+    //////////////////////
+    // Setters Getters //
+    ////////////////////
+    public FluidTank getInputTank() {
+        return inputTank;
+    }
+
+    public FluidTank getOutputTank() {
+        return outputTank;
+    }
+
+    public ItemHandler getStorageHandler() {
+        return storageHandler;
+    }
+
+    public ItemHandler getBrewingHandler() {
+        return brewingHandler;
+    }
+
+    public ItemHandler getSoakingHandler() {
+        return soakingHandler;
     }
 }

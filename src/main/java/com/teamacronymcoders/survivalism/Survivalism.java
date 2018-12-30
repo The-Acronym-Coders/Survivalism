@@ -28,13 +28,11 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
             "required-after:patchouli@[1.0-13,);";
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
-    public Logger logger;
-   
     @Mod.Instance(Survivalism.MODID)
     public static Survivalism INSTANCE;
-   
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     private static CommonProxy proxy;
+    public Logger logger;
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);

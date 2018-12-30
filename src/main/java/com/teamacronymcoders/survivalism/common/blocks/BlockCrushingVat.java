@@ -3,8 +3,6 @@ package com.teamacronymcoders.survivalism.common.blocks;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
-import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
-import net.minecraft.block.BlockPrismarine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -79,7 +77,7 @@ public class BlockCrushingVat extends BlockDefault {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex()-2;
+        return state.getValue(FACING).getIndex() - 2;
     }
 
     @Nonnull
