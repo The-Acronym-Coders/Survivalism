@@ -30,14 +30,10 @@ import java.util.Objects;
 public class TileBarrel extends TileEntity implements ITickable {
     public static final int TANK_CAPACITY = 16000;
     private static final int STORAGE_SIZE = 9;
-    private static final int BREWING_SIZE = 3;
-    private static final int SOAKING_SIZE = 1;
     private List<RecipeBarrel> barrelRecipes;
     private FluidTank inputTank;
     private FluidTank outputTank;
-    private ItemHandler storageHandler;
-    private ItemHandler brewingHandler;
-    private ItemHandler soakingHandler;
+    private ItemHandler itemHandler;
     private int durationTicks;
     private boolean sealed = false;
 
@@ -64,19 +60,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                 return true;
             }
         };
-        storageHandler = new ItemHandler(STORAGE_SIZE, 64) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                TileBarrel.this.markDirty();
-            }
-        };
-        brewingHandler = new ItemHandler(BREWING_SIZE, 64) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                TileBarrel.this.markDirty();
-            }
-        };
-        soakingHandler = new ItemHandler(SOAKING_SIZE, 64) {
+        itemHandler = new ItemHandler(STORAGE_SIZE, 64) {
             @Override
             protected void onContentsChanged(int slot) {
                 TileBarrel.this.markDirty();
@@ -105,7 +89,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                 if (recipe instanceof BrewingRecipe) {
                     FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
                     if (inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
-                        if (brewingHandler.getStacks().equals(((BrewingRecipe) recipe).getInputItemStacks())) {
+                        if (itemHandler.getStacks().equals(((BrewingRecipe) recipe).getInputItemStacks())) {
                             durationTicks = ((BrewingRecipe) recipe).getTicks();
                             int currentTicks = 0;
                             for (int x = 0; x < durationTicks; ++x) {
@@ -121,7 +105,7 @@ public class TileBarrel extends TileEntity implements ITickable {
             }
         } else if (checkState(EnumsBarrelStates.SOAKING) && isSealed()) {
             FluidStack fluidStack = getInputTank().getFluid();
-            ItemStack stack = soakingHandler.getStackInSlot(0);
+            ItemStack stack = itemHandler.getStackInSlot(0);
             for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof SoakingRecipe) {
                     FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
@@ -135,7 +119,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                             }
                             if (currentTicks == durationTicks) {
                                 fluidStack.amount -= ((SoakingRecipe) recipe).getDecAmount();
-                                soakingHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
+                                itemHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
                                 durationTicks = 0;
                             }
                         }
@@ -154,16 +138,9 @@ public class TileBarrel extends TileEntity implements ITickable {
         if (compound.hasKey("outputTank")) {
             outputTank = outputTank.readFromNBT(compound.getCompoundTag("outputTank"));
         }
-        if (compound.hasKey("storageINV")) {
-            storageHandler.deserializeNBT(compound);
+        if (compound.hasKey("inventory")) {
+            itemHandler.deserializeNBT(compound);
         }
-        if (compound.hasKey("brewingINV")) {
-            brewingHandler.deserializeNBT(compound);
-        }
-        if (compound.hasKey("soakingINV")) {
-            soakingHandler.deserializeNBT(compound);
-        }
-
     }
 
     @Nonnull
@@ -171,9 +148,7 @@ public class TileBarrel extends TileEntity implements ITickable {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("inputTank", inputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("outputTank", outputTank.writeToNBT(new NBTTagCompound()));
-        compound.setTag("storageINV", storageHandler.serializeNBT());
-        compound.setTag("brewingINV", brewingHandler.serializeNBT());
-        compound.setTag("soakingINV", soakingHandler.serializeNBT());
+        compound.setTag("inventory", itemHandler.serializeNBT());
         return super.writeToNBT(compound);
     }
 
@@ -190,13 +165,7 @@ public class TileBarrel extends TileEntity implements ITickable {
             }
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (checkState(EnumsBarrelStates.STORAGE)) {
-                return (T) storageHandler;
-            } else if (checkState(EnumsBarrelStates.BREWING)) {
-                return (T) brewingHandler;
-            } else if (checkState(EnumsBarrelStates.SOAKING)) {
-                return (T) soakingHandler;
-            }
+            return (T) itemHandler;
         }
         return super.getCapability(capability, facing);
     }
@@ -210,10 +179,6 @@ public class TileBarrel extends TileEntity implements ITickable {
             return true;
         }
         return super.hasCapability(capability, facing);
-    }
-
-    private FluidStack getFluidStack() {
-        return inputTank.getFluid();
     }
 
     private boolean isSealed() {
@@ -245,21 +210,12 @@ public class TileBarrel extends TileEntity implements ITickable {
     public void cycleStates(IBlockState state) {
         EnumsBarrelStates currentState = state.getValue(BlockBarrel.BARREL_STATE);
         if (currentState == EnumsBarrelStates.STORAGE) {
-            world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.BREWING));
+            ensureStateIs(EnumsBarrelStates.BREWING);
         } else if (currentState == EnumsBarrelStates.BREWING) {
-            world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.SOAKING));
+            ensureStateIs(EnumsBarrelStates.SOAKING);
         } else if (currentState == EnumsBarrelStates.SOAKING) {
-            world.setBlockState(this.getPos(), state.withProperty(BlockBarrel.BARREL_STATE, EnumsBarrelStates.STORAGE));
+            ensureStateIs(EnumsBarrelStates.STORAGE);
         }
-    }
-
-    public boolean insertFluid(EntityPlayer player, EnumHand hand) {
-        if (player != null) {
-            ItemStack stack = player.getHeldItem(hand);
-            FluidStack fluidStack = FluidHelper.getFluidStackFromHandler(stack);
-            inputTank.fill(fluidStack, true);
-        }
-        return false;
     }
 
     public boolean canInteractWith(EntityPlayer playerIn) {
@@ -277,15 +233,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         return outputTank;
     }
 
-    public ItemHandler getStorageHandler() {
-        return storageHandler;
-    }
-
-    public ItemHandler getBrewingHandler() {
-        return brewingHandler;
-    }
-
-    public ItemHandler getSoakingHandler() {
-        return soakingHandler;
+    public ItemHandler getItemHandler() {
+        return itemHandler;
     }
 }
