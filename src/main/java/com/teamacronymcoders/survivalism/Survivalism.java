@@ -28,10 +28,11 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
             "required-after:patchouli@[1.0-13,);";
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
-    public static Logger logger;
-    @Mod.Instance
-
+    public Logger logger;
+   
+    @Mod.Instance(Survivalism.MODID)
     public static Survivalism INSTANCE;
+   
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     private static CommonProxy proxy;
 
@@ -40,17 +41,20 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     }
 
     @Override
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         logger = event.getModLog();
     }
 
     @Override
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         super.init(event);
     }
 
     @Override
+    @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
         if (Loader.isModLoaded("crafttweaker")) {

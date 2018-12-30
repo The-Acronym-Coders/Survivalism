@@ -18,11 +18,12 @@ import java.util.Map;
 
 public class TileCrushingVat extends TileEntity {
 
-    private static FluidTankBase tank;
-    private static ItemHandler itemHandler;
-    private static RecipeVat recipeVat;
-    private static double jumpsTargetted;
-    private static double jumpsContained = 0.0D;
+    private FluidTankBase tank;
+    private ItemHandler itemHandler;
+    private RecipeVat recipeVat;
+    private double jumpsTargetted;
+    private double jumpsContained = 0.0D;
+    //This shouldn't be stored here imo, should be in it's own class or something
     private static List<RecipeVat> vatRecipes;
 
     public TileCrushingVat() {

@@ -97,8 +97,8 @@ public class BarrelRecipeTweaker {
                 CraftTweakerAPI.logError("Input ItemStack can not be Empty");
             } else if (outputItemStack.isEmpty()) {
                 CraftTweakerAPI.logError("Output ItemStack can not be Empty");
-            } else if (decAmount < 0 || decAmount > TileBarrel.getTankBase().getCapacity()) {
-                CraftTweakerAPI.logError("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.getTankBase().getCapacity());
+            } else if (decAmount < 0 || decAmount > TileBarrel.TANK_CAPACITY) {
+                CraftTweakerAPI.logError("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
             } else {
                 RecipeHelper.addCRTSoaking(inputFluid, inputItemStack, outputItemStack, decAmount, ticks);
             }

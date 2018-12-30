@@ -15,7 +15,7 @@ import java.util.List;
 
 public class RecipeHelper {
 
-    private static Logger logger = Survivalism.logger;
+    private static Logger logger = Survivalism.INSTANCE.logger;
 
     /**
      * Barrel Recipes
@@ -45,8 +45,8 @@ public class RecipeHelper {
             logger.error("Input ItemStack can not be Empty");
         } else if (outputItemStack.isEmpty()) {
             logger.error("Output ItemStack can not be Empty");
-        } else if (decAmount < 0 || decAmount > TileBarrel.getTankBase().getCapacity()) {
-            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.getTankBase().getCapacity());
+        } else if (decAmount < 0 || decAmount > TileBarrel.TANK_CAPACITY) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
         } else {
             RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputItemStack, outputItemStack, decAmount, ticks);
             RecipeStorage.getBarrelRecipes().add(soakingRecipe);
