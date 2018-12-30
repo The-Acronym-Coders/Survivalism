@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -27,14 +27,15 @@ import java.util.List;
 
 public class TileBarrel extends TileEntity implements ITickable {
 
-    private static FluidTankBase tank;
-    private static ItemHandler itemHandler;
+    private FluidTank tank;
+    private ItemHandler itemHandler;
     List<RecipeBarrel> barrelRecipes;
     private int durationTicks;
     private boolean sealed = false;
 
+    public static final int TANK_CAPACITY = 16000;
     public TileBarrel() {
-        tank = new FluidTankBase(16000);
+        tank = new FluidTank(TANK_CAPACITY);
         itemHandler = new ItemHandler(3, 64);
         barrelRecipes = RecipeStorage.getBarrelRecipes();
 
@@ -43,7 +44,7 @@ public class TileBarrel extends TileEntity implements ITickable {
     //////////////////////
     // Setters Getters //
     ////////////////////
-    public static FluidTankBase getTankBase() {
+    public FluidTank getTankBase() {
         return tank;
     }
 

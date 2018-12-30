@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -75,19 +76,22 @@ public class BlockBarrel extends BlockDefault {
         TileBarrel barrel = getTE(worldIn, pos);
         ItemStack stack = playerIn.getHeldItem(hand);
 
-        if (worldIn.isRemote) {
-            return true;
-        }
         if (barrel == null) {
             return false;
         }
 
-        if (!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
-            return FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
-        } else if (playerIn.isSneaking()) {
-            Survivalism.logger.error(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
-        } else if (!playerIn.isSneaking()) {
-            playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if(!worldIn.isRemote) {
+            if(!playerIn.getHeldItem(hand).isEmpty() && FluidUtil.getFluidHandler(stack) != null) {
+                boolean handled = FluidUtil.interactWithFluidHandler(playerIn, hand, Objects.requireNonNull(barrel.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)));
+                playerIn.sendMessage(new TextComponentString("Handled: " + handled + " fluid: " + barrel.getTankBase().getFluid()));
+                return handled;
+            } else if(playerIn.isSneaking()) {
+                Survivalism.INSTANCE.logger.info(barrel.getTankBase().getFluid().getLocalizedName() + ":" + barrel.getTankBase().getFluidAmount());
+            return true;
+            } else if(!playerIn.isSneaking()) {
+                playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                return true;
+            }
         }
 
         return true;
