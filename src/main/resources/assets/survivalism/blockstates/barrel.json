@@ -1,0 +1,33 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "survivalism:barrel"
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}],
+        "barrel_state": {
+            "soaking": {},
+            "storage": {},
+            "brewing": {}
+        },
+        "sealed": {
+            "true": {
+                "model": "survivalism:barrel_sealed"
+            },
+            "false": {}
+        },
+        "axis": {
+            "x": {
+                "x": 90,
+                "y": 90
+            },
+            "y": {
+                "x": 90
+            },
+            "z": {
+            
+            }
+        }
+    }
+}

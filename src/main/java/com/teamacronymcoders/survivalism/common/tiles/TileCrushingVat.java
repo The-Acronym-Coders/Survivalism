@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
-import com.teamacronymcoders.survivalism.common.defaults.FluidTankBase;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
@@ -11,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidTank;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -18,16 +18,15 @@ import java.util.Map;
 
 public class TileCrushingVat extends TileEntity {
 
-    //This shouldn't be stored here imo, should be in it's own class or something
     private static List<RecipeVat> vatRecipes;
-    private FluidTankBase tank;
+    private FluidTank tank;
     private ItemHandler itemHandler;
     private RecipeVat recipeVat;
     private double jumpsTargetted;
     private double jumpsContained = 0.0D;
 
     public TileCrushingVat() {
-        tank = new FluidTankBase(16000);
+        tank = new FluidTank(16000);
         itemHandler = new ItemHandler(3, 64);
         vatRecipes = RecipeStorage.getVatRecipes();
     }

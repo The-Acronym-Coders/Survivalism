@@ -2,13 +2,13 @@ package com.teamacronymcoders.survivalism.client.container.barrel;
 
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBarrelStorage extends Container {
+public class ContainerBarrelStorage extends ContainerBarrel {
 
     private TileBarrel tile;
 
@@ -36,24 +36,21 @@ public class ContainerBarrelStorage extends Container {
     }
 
     private void addOwnSlots() {
-        IItemHandler itemHandler = this.tile.getStorageHandler();
+        IItemHandler itemHandler = this.tile.getItemHandler();
         int x = 9;
         int y = 6;
 
-        int slotIndex = 0;
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            if (slotIndex <= 3) {
-                addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex, x, y));
-                slotIndex++;
-            } else if (slotIndex >= 4 && slotIndex <= 6) {
-                addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex, x, y + 12));
-                slotIndex++;
-            } else if (slotIndex >= 7) {
-                addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex, x, y + 18));
-                slotIndex++;
-            }
-            x += 18;
-        }
+        addSlotToContainer(new SlotItemHandler(itemHandler, 0, 28, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 1, 28, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 2, x, y));
+
+        addSlotToContainer(new SlotItemHandler(itemHandler, 3, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 4, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 5, x, y));
+
+        addSlotToContainer(new SlotItemHandler(itemHandler, 6, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 7, x, y));
+        addSlotToContainer(new SlotItemHandler(itemHandler, 8, x, y));
     }
 
     @Override
@@ -61,5 +58,29 @@ public class ContainerBarrelStorage extends Container {
         return this.tile.canInteractWith(playerIn);
     }
 
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
 
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (index < TileBarrel.STORAGE_SIZE) {
+                if (!this.mergeItemStack(itemstack1, TileBarrel.STORAGE_SIZE, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 0, TileBarrel.STORAGE_SIZE, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+        return itemstack;
+    }
 }

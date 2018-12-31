@@ -49,6 +49,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        proxy.init(event);
     }
 
     @Override

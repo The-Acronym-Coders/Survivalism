@@ -2,13 +2,13 @@ package com.teamacronymcoders.survivalism.client.container.barrel;
 
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerBarrelSoaking extends Container {
+public class ContainerBarrelSoaking extends ContainerBarrel {
 
     private TileBarrel tile;
 
@@ -36,7 +36,7 @@ public class ContainerBarrelSoaking extends Container {
     }
 
     private void addOwnSlots() {
-        IItemHandler itemHandler = this.tile.getBrewingHandler();
+        IItemHandler itemHandler = this.tile.getItemHandler();
         int x = 9;
         int y = 6;
         addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
@@ -47,5 +47,29 @@ public class ContainerBarrelSoaking extends Container {
         return this.tile.canInteractWith(playerIn);
     }
 
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
 
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (index < TileBarrel.STORAGE_SIZE) {
+                if (!this.mergeItemStack(itemstack1, TileBarrel.STORAGE_SIZE, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 0, TileBarrel.STORAGE_SIZE, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+        return itemstack;
+    }
 }

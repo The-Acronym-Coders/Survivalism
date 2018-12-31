@@ -5,35 +5,34 @@ import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
-import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TileBarrel extends TileEntity implements ITickable {
     public static final int TANK_CAPACITY = 16000;
-    private static final int STORAGE_SIZE = 9;
+    public static final int STORAGE_SIZE = 9;
     private List<RecipeBarrel> barrelRecipes;
     private FluidTank inputTank;
     private FluidTank outputTank;
-    private ItemHandler itemHandler;
+    private ItemStackHandler itemHandler;
     private int durationTicks;
     private boolean sealed = false;
 
@@ -60,7 +59,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                 return true;
             }
         };
-        itemHandler = new ItemHandler(STORAGE_SIZE, 64) {
+        itemHandler = new ItemStackHandler(STORAGE_SIZE) {
             @Override
             protected void onContentsChanged(int slot) {
                 TileBarrel.this.markDirty();
@@ -89,7 +88,11 @@ public class TileBarrel extends TileEntity implements ITickable {
                 if (recipe instanceof BrewingRecipe) {
                     FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
                     if (inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
-                        if (itemHandler.getStacks().equals(((BrewingRecipe) recipe).getInputItemStacks())) {
+                        List<ItemStack> itemStacks = new ArrayList<>();
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                            itemStacks.add(itemHandler.getStackInSlot(i));
+                        }
+                        if (itemStacks == ((BrewingRecipe) recipe).getInputItemStacks()) {
                             durationTicks = ((BrewingRecipe) recipe).getTicks();
                             int currentTicks = 0;
                             for (int x = 0; x < durationTicks; ++x) {
@@ -138,7 +141,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         if (compound.hasKey("outputTank")) {
             outputTank = outputTank.readFromNBT(compound.getCompoundTag("outputTank"));
         }
-        if (compound.hasKey("inventory")) {
+        if (compound.hasKey("items")) {
             itemHandler.deserializeNBT(compound);
         }
     }
@@ -148,8 +151,8 @@ public class TileBarrel extends TileEntity implements ITickable {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("inputTank", inputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("outputTank", outputTank.writeToNBT(new NBTTagCompound()));
-        compound.setTag("inventory", itemHandler.serializeNBT());
-        return super.writeToNBT(compound);
+        compound.setTag("items", itemHandler.serializeNBT());
+        return compound;
     }
 
     @Nullable
@@ -201,7 +204,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         }
     }
 
-    private boolean checkState(EnumsBarrelStates expectedBarrelState) {
+    public boolean checkState(EnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
         EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
         return currentBarrelState == expectedBarrelState;
@@ -233,7 +236,7 @@ public class TileBarrel extends TileEntity implements ITickable {
         return outputTank;
     }
 
-    public ItemHandler getItemHandler() {
+    public ItemStackHandler getItemHandler() {
         return itemHandler;
     }
 }
