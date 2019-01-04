@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.common.model;
+package com.teamacronymcoders.survivalism.client.model;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

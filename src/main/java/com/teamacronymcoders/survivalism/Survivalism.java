@@ -47,6 +47,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        proxy.preInit(event);
         logger = event.getModLog();
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -39,6 +40,10 @@ public class CommonProxy {
                 new ItemBlock(ModBlocks.blockBarrel).setRegistryName(Objects.requireNonNull(ModBlocks.blockBarrel.getRegistryName())),
                 new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(Objects.requireNonNull(ModBlocks.blockCrushingVat.getRegistryName()))
         );
+    }
+
+    public void preInit(FMLPreInitializationEvent event) {
+
     }
 
     public void init(FMLInitializationEvent event) {
