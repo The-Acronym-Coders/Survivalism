@@ -21,7 +21,7 @@ public class SurvivalismModelLoader implements ICustomModelLoader {
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return modelLocation.getResourceDomain().equalsIgnoreCase(MODID) && modelLocation.getResourceDomain().replace("models/", "").equalsIgnoreCase("specialModels");
+        return modelLocation.getResourceDomain().equalsIgnoreCase(MODID) && modelLocation.getResourcePath().replace("models/", "").equalsIgnoreCase("cmodels");
     }
 
     @Override
