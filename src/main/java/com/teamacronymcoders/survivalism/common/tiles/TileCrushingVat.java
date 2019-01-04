@@ -2,7 +2,7 @@ package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
-import com.teamacronymcoders.survivalism.utils.storages.ItemHandler;
+import com.teamacronymcoders.survivalism.utils.storages.StorageItemHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,14 +20,14 @@ public class TileCrushingVat extends TileEntity {
 
     private static List<RecipeVat> vatRecipes;
     private FluidTank tank;
-    private ItemHandler itemHandler;
+    private StorageItemHandler itemHandler;
     private RecipeVat recipeVat;
     private double jumpsTargetted;
     private double jumpsContained = 0.0D;
 
     public TileCrushingVat() {
         tank = new FluidTank(16000);
-        itemHandler = new ItemHandler(3, 64);
+        itemHandler = new StorageItemHandler(3, 64);
         vatRecipes = RecipeStorage.getVatRecipes();
     }
 

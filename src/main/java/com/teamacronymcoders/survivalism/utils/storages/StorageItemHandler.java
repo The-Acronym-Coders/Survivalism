@@ -12,13 +12,13 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
-public class ItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound> {
+public class StorageItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound> {
 
     protected int slots;
     protected int maxSlotLimit;
     protected NonNullList<ItemStack> stacks;
 
-    public ItemHandler(int slots, int maxSlotLimit) {
+    public StorageItemHandler(int slots, int maxSlotLimit) {
         this.slots = slots;
         this.maxSlotLimit = maxSlotLimit;
     }

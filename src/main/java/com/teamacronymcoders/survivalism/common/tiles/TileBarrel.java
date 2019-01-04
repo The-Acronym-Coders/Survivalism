@@ -5,7 +5,7 @@ import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
+import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -82,7 +82,7 @@ public class TileBarrel extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (checkState(EnumsBarrelStates.BREWING) && isSealed()) {
+        if (checkState(StorageEnumsBarrelStates.BREWING) && isSealed()) {
             FluidStack inputTank = getInputTank().getFluid();
             for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof BrewingRecipe) {
@@ -106,7 +106,7 @@ public class TileBarrel extends TileEntity implements ITickable {
                     }
                 }
             }
-        } else if (checkState(EnumsBarrelStates.SOAKING) && isSealed()) {
+        } else if (checkState(StorageEnumsBarrelStates.SOAKING) && isSealed()) {
             FluidStack fluidStack = getInputTank().getFluid();
             ItemStack stack = itemHandler.getStackInSlot(0);
             for (RecipeBarrel recipe : barrelRecipes) {
@@ -160,7 +160,7 @@ public class TileBarrel extends TileEntity implements ITickable {
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (Objects.equals(facing != null ? facing.getName() : null, "down")) {
-                if (checkState(EnumsBarrelStates.BREWING)) {
+                if (checkState(StorageEnumsBarrelStates.BREWING)) {
                     return (T) outputTank;
                 }
             } else {
@@ -196,28 +196,28 @@ public class TileBarrel extends TileEntity implements ITickable {
      * Stolen from HeatedTank
      * Sorry Skysom ;(
      */
-    private void ensureStateIs(EnumsBarrelStates expectedBarrelState) {
+    private void ensureStateIs(StorageEnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
-        EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
+        StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
         if (currentBarrelState != expectedBarrelState) {
             world.setBlockState(this.getPos(), currentState.withProperty(BlockBarrel.BARREL_STATE, expectedBarrelState));
         }
     }
 
-    public boolean checkState(EnumsBarrelStates expectedBarrelState) {
+    public boolean checkState(StorageEnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
-        EnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
+        StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
         return currentBarrelState == expectedBarrelState;
     }
 
     public void cycleStates(IBlockState state) {
-        EnumsBarrelStates currentState = state.getValue(BlockBarrel.BARREL_STATE);
-        if (currentState == EnumsBarrelStates.STORAGE) {
-            ensureStateIs(EnumsBarrelStates.BREWING);
-        } else if (currentState == EnumsBarrelStates.BREWING) {
-            ensureStateIs(EnumsBarrelStates.SOAKING);
-        } else if (currentState == EnumsBarrelStates.SOAKING) {
-            ensureStateIs(EnumsBarrelStates.STORAGE);
+        StorageEnumsBarrelStates currentState = state.getValue(BlockBarrel.BARREL_STATE);
+        if (currentState == StorageEnumsBarrelStates.STORAGE) {
+            ensureStateIs(StorageEnumsBarrelStates.BREWING);
+        } else if (currentState == StorageEnumsBarrelStates.BREWING) {
+            ensureStateIs(StorageEnumsBarrelStates.SOAKING);
+        } else if (currentState == StorageEnumsBarrelStates.SOAKING) {
+            ensureStateIs(StorageEnumsBarrelStates.STORAGE);
         }
     }
 

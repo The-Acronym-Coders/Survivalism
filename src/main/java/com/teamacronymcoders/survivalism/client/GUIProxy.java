@@ -5,7 +5,7 @@ import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrel
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
 import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
+import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +22,11 @@ public class GUIProxy implements IGuiHandler {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileBarrel) {
             TileBarrel barrel = (TileBarrel) te;
-            if (barrel.checkState(EnumsBarrelStates.STORAGE)) {
+            if (barrel.checkState(StorageEnumsBarrelStates.STORAGE)) {
                 return new ContainerBarrelStorage(player.inventory, barrel);
-            } else if (barrel.checkState(EnumsBarrelStates.BREWING)) {
+            } else if (barrel.checkState(StorageEnumsBarrelStates.BREWING)) {
                 return new ContainerBarrelBrewing(player.inventory, barrel);
-            } else if (barrel.checkState(EnumsBarrelStates.SOAKING)) {
+            } else if (barrel.checkState(StorageEnumsBarrelStates.SOAKING)) {
                 return new ContainerBarrelSoaking(player.inventory, barrel);
             }
         }
@@ -40,11 +40,11 @@ public class GUIProxy implements IGuiHandler {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileBarrel) {
             TileBarrel barrel = (TileBarrel) te;
-            if (barrel.checkState(EnumsBarrelStates.STORAGE)) {
+            if (barrel.checkState(StorageEnumsBarrelStates.STORAGE)) {
                 return new GUIBarrel(barrel, new ContainerBarrelStorage(player.inventory, barrel));
-            } else if (barrel.checkState(EnumsBarrelStates.BREWING)) {
+            } else if (barrel.checkState(StorageEnumsBarrelStates.BREWING)) {
                 return new GUIBarrel(barrel, new ContainerBarrelBrewing(player.inventory, barrel));
-            } else if (barrel.checkState(EnumsBarrelStates.SOAKING)) {
+            } else if (barrel.checkState(StorageEnumsBarrelStates.SOAKING)) {
                 return new GUIBarrel(barrel, new ContainerBarrelSoaking(player.inventory, barrel));
             }
         }

@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class FluidHelper {
+public class HelperFluid {
 
     public static FluidStack getFluidStackFromHandler(ItemStack fluidContainer) {
         if (isFluidHandler(fluidContainer)) {

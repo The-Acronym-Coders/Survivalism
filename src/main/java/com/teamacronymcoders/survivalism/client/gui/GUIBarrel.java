@@ -3,9 +3,12 @@ package com.teamacronymcoders.survivalism.client.gui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
+import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 public class GUIBarrel extends GuiContainer {
     public static final int WIDTH = 180;
@@ -19,15 +22,31 @@ public class GUIBarrel extends GuiContainer {
 
     public GUIBarrel(TileBarrel te, ContainerBarrel storage) {
         super(storage);
-        if (te.checkState(EnumsBarrelStates.STORAGE)) {
+        if (te.checkState(StorageEnumsBarrelStates.STORAGE)) {
             true_background = storage_background;
-        } else if (te.checkState(EnumsBarrelStates.BREWING)) {
+        } else if (te.checkState(StorageEnumsBarrelStates.BREWING)) {
             true_background = brewing_background;
-        } else if (te.checkState(EnumsBarrelStates.SOAKING)) {
+        } else if (te.checkState(StorageEnumsBarrelStates.SOAKING)) {
             true_background = soaking_background;
         }
         xSize = WIDTH;
         ySize = HEIGHT;
+    }
+
+    @Override
+    public void initGui() {
+        buttonList.clear();
+        int x = 1;
+        int y = 1;
+        buttonList.add(new GuiButton(1, x, y, ""));
+        super.initGui();
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        if (button.id == 1) {
+
+        }
     }
 
     @Override

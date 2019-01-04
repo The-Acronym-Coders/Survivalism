@@ -3,7 +3,7 @@ package com.teamacronymcoders.survivalism.compat;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeHelper;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
@@ -68,7 +68,7 @@ public class BarrelRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Adding Brewing Recipe: \n" + "Input Fluid: " + inputFluid.getLocalizedName() + "\n" + "Input ItemStacks: " + StringHelper.formatItemStacks(inputItemStacks) + "\n" + "Output Fluid: " + outputFluid.getLocalizedName();
+            return "Adding Brewing Recipe: \n" + "Input Fluid: " + inputFluid.getLocalizedName() + "\n" + "Input ItemStacks: " + HelperString.formatItemStacks(inputItemStacks) + "\n" + "Output Fluid: " + outputFluid.getLocalizedName();
         }
     }
 

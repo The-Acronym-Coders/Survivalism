@@ -10,21 +10,21 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 
-public class FluidHandler implements IFluidHandler, IFluidTank {
+public class StorageFluidHandler implements IFluidHandler, IFluidTank {
 
     protected FluidStack stack;
     protected int capacity;
 
-    public FluidHandler(int capacity) {
+    public StorageFluidHandler(int capacity) {
         this(null, capacity);
     }
 
-    public FluidHandler(FluidStack stack, int capacity) {
+    public StorageFluidHandler(FluidStack stack, int capacity) {
         this.stack = stack;
         this.capacity = capacity;
     }
 
-    public FluidHandler(Fluid fluid, int amount, int capacity) {
+    public StorageFluidHandler(Fluid fluid, int amount, int capacity) {
         this(new FluidStack(fluid, amount), capacity);
     }
 

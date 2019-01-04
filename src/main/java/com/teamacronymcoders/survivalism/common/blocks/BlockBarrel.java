@@ -4,14 +4,12 @@ import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
+import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -29,17 +27,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class BlockBarrel extends BlockDefault {
 
     private static final int GUI_ID = 1;
 
-    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
+    public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
     private static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final PropertyEnum<BlockLog.EnumAxis> AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
 
@@ -106,7 +102,7 @@ public class BlockBarrel extends BlockDefault {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, EnumsBarrelStates.VALUES[0]), 2);
+        worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.VALUES[0]), 2);
         worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, false));
     }
 
@@ -141,7 +137,7 @@ public class BlockBarrel extends BlockDefault {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(BARREL_STATE, EnumsBarrelStates.VALUES[meta]);
+        return getDefaultState().withProperty(BARREL_STATE, StorageEnumsBarrelStates.VALUES[meta]);
     }
 
     @Override

@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StringHelper {
+public class HelperString {
 
     public static String formatItemStacks(List<ItemStack> stacks) {
         if (stacks == null) {
