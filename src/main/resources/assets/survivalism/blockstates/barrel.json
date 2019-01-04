@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "survivalism:survivalism/barrel"
+        "model": "survivalism:cmodels/barrel"
     },
     "variants": {
         "normal": [{}],
@@ -13,7 +13,7 @@
         },
         "sealed": {
             "true": {
-                "model": "survivalism:survivalism/barrel_sealed"
+                "model": "survivalism:cmodels/barrel_sealed"
             },
             "false": {}
         },
