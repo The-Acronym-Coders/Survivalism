@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class BakedModelCrushingVat implements IBakedModel {
+public class BakedModelSurvivalism implements IBakedModel {
     private final IBakedModel bakedModel;
     private final Function<ResourceLocation, TextureAtlasSprite> spriteFunction;
 
-    public BakedModelCrushingVat(IBakedModel model, Function<ResourceLocation, TextureAtlasSprite> spriteFunction1) {
+    public BakedModelSurvivalism(IBakedModel model, Function<ResourceLocation, TextureAtlasSprite> spriteFunction1) {
         bakedModel = model;
         spriteFunction = spriteFunction1;
     }

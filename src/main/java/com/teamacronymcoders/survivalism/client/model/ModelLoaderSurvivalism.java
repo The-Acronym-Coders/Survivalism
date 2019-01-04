@@ -11,7 +11,7 @@ import java.util.Objects;
 import static com.teamacronymcoders.survivalism.Survivalism.MODID;
 import static com.teamacronymcoders.survivalism.utils.SurvivalismConfigs.blastProcessing;
 
-public class SurvivalismModelLoader implements ICustomModelLoader {
+public class ModelLoaderSurvivalism implements ICustomModelLoader {
     private IModel baseModel;
 
     @Override
@@ -21,7 +21,7 @@ public class SurvivalismModelLoader implements ICustomModelLoader {
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return modelLocation.getResourceDomain().equalsIgnoreCase(MODID) && modelLocation.getResourcePath().replace("models/", "").equalsIgnoreCase("cmodels");
+        return modelLocation.getResourceDomain().equalsIgnoreCase(MODID) && (modelLocation.getResourcePath().replace("models/", "").equalsIgnoreCase("barrel") || modelLocation.getResourcePath().replace("models/", "").equalsIgnoreCase("crushing_vat") || modelLocation.getResourcePath().replace("models/", "").equalsIgnoreCase("barrel_sealed"));
     }
 
     @Override
@@ -47,6 +47,6 @@ public class SurvivalismModelLoader implements ICustomModelLoader {
                 }
             }
         }
-        return new CrushingVatModel(baseModel);
+        return new ModelSurvivalism(baseModel);
     }
 }

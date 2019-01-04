@@ -12,11 +12,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class CrushingVatModel implements IModel {
+public class ModelSurvivalism implements IModel {
     private final IModel crushingVatModel;
     private IBakedModel crushingVatBakedModel = null;
 
-    public CrushingVatModel(IModel crushingVatModel) {
+    public ModelSurvivalism(IModel crushingVatModel) {
         this.crushingVatModel = crushingVatModel;
     }
 
@@ -25,6 +25,6 @@ public class CrushingVatModel implements IModel {
         if (crushingVatBakedModel == null) {
             crushingVatBakedModel = crushingVatModel.bake(state, format, bakedTextureGetter);
         }
-        return new BakedModelCrushingVat(crushingVatBakedModel, bakedTextureGetter);
+        return new BakedModelSurvivalism(crushingVatBakedModel, bakedTextureGetter);
     }
 }

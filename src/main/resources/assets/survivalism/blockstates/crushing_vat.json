@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "survivalism:cmodels/crushing_vat"
+        "model": "survivalism:crushing_vat"
     },
     "variants": {
         "normal": [{}],
