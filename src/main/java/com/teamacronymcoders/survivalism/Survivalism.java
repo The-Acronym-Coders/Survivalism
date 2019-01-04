@@ -1,7 +1,10 @@
 package com.teamacronymcoders.survivalism;
 
 import com.teamacronymcoders.base.BaseModFoundation;
+import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
+import com.teamacronymcoders.base.util.files.BaseFileUtils;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
@@ -13,6 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     private static CommonProxy proxy;
     public Logger logger;
+    public File configFolder;
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);
@@ -43,6 +48,11 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         logger = event.getModLog();
+    }
+
+    @Override
+    public void beforeModuleHandlerInit(FMLPreInitializationEvent event) {
+        SurvivalismConfigs.preInitLoad(event);
     }
 
     @Override

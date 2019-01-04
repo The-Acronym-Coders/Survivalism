@@ -4,12 +4,14 @@ import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.storages.EnumsBarrelStates;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,21 +29,25 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class BlockBarrel extends BlockDefault {
 
-    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
-    public static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final int GUI_ID = 1;
+
+    public static final PropertyEnum<EnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", EnumsBarrelStates.class);
+    private static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final PropertyEnum<BlockLog.EnumAxis> AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
 
     public BlockBarrel() {
         super(Material.WOOD);
         setCreativeTab(Survivalism.TAB);
         setUnlocalizedName(Survivalism.MODID + ".barrel");
-        setRegistryName(Survivalism.MODID, "barrel");
+        setRegistryName("barrel");
         setSoundType(SoundType.WOOD);
         setLightOpacity(255);
     }
@@ -104,18 +110,20 @@ public class BlockBarrel extends BlockDefault {
         worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, false));
     }
 
+    @Nonnull
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return this.getStateFromMeta(meta).withProperty(AXIS, BlockLog.EnumAxis.fromFacingAxis(EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis()));
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState withRotation(IBlockState state, Rotation rot) {
         switch (rot) {
             case COUNTERCLOCKWISE_90:
             case CLOCKWISE_90:
-                switch ((BlockLog.EnumAxis)state.getValue(AXIS)) {
+                switch (state.getValue(AXIS)) {
                     case X:
                         return state.withProperty(AXIS, BlockLog.EnumAxis.Z);
                     case Z:
@@ -129,6 +137,7 @@ public class BlockBarrel extends BlockDefault {
         }
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
@@ -140,6 +149,7 @@ public class BlockBarrel extends BlockDefault {
         return state.getValue(BARREL_STATE).ordinal();
     }
 
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this, new IProperty[]{BARREL_STATE, AXIS, SEALED_STATE}, new IUnlistedProperty[]{PropertySideType.SIDE_TYPE[0], PropertySideType.SIDE_TYPE[1],

@@ -1,0 +1,10 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "survivalism:crushing_vat"
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}]
+    }
+}
