@@ -1,9 +1,14 @@
 package com.teamacronymcoders.survivalism.client.model;
 
+import com.teamacronymcoders.survivalism.common.ModBlocks;
+import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
 import java.util.Objects;

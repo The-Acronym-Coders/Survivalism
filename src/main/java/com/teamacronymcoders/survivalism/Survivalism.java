@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     private static CommonProxy proxy;
     public Logger logger;
-    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+//    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);

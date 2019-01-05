@@ -21,7 +21,6 @@ public class ButtonBarrelSwitch extends GuiButton {
 
     @Override
     public void drawButtonForegroundLayer(int mouseX, int mouseY) {
-        minecraft.getTextureManager().bindTexture();
         super.drawButtonForegroundLayer(mouseX, mouseY);
     }
 }

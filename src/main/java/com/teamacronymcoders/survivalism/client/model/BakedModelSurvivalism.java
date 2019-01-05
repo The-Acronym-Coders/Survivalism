@@ -26,8 +26,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        List<BakedQuad> bakedQuads = bakedModel.getQuads(state, side, rand);
-        return bakedQuads;
+        return bakedModel.getQuads(state, side, rand);
     }
 
     @Override
