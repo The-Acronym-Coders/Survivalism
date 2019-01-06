@@ -29,7 +29,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.getQuads(state, side, rand);
         } else {
             return lowPolyBaked.getQuads(state, side, rand);
@@ -38,7 +38,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public boolean isAmbientOcclusion() {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.isAmbientOcclusion();
         } else {
             return lowPolyBaked.isAmbientOcclusion();
@@ -47,7 +47,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public boolean isGui3d() {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.isGui3d();
         } else {
             return lowPolyBaked.isGui3d();
@@ -56,7 +56,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public boolean isBuiltInRenderer() {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.isBuiltInRenderer();
         } else {
             return lowPolyBaked.isBuiltInRenderer();
@@ -65,7 +65,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.getParticleTexture();
         } else {
             return lowPolyBaked.getParticleTexture();
@@ -74,7 +74,7 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public ItemOverrideList getOverrides() {
-        if (SurvivalismConfigs.blastProcessing) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
             return highPolyBaked.getOverrides();
         } else {
             return lowPolyBaked.getOverrides();

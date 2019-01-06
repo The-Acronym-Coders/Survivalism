@@ -25,11 +25,11 @@ public class ModelSurvivalism implements IModel {
 
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        if (highPolyBakedModel == null) {
+        if (highPolyBakedModel == null && highPoly != null) {
             highPolyBakedModel = highPoly.bake(state, format, bakedTextureGetter);
         }
 
-        if (lowPolyBakedModel == null) {
+        if (lowPolyBakedModel == null && lowPoly != null) {
             lowPolyBakedModel = lowPoly.bake(state, format, bakedTextureGetter);
         }
         return new BakedModelSurvivalism(highPolyBakedModel, lowPolyBakedModel, bakedTextureGetter);
