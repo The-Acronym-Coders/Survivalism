@@ -1,6 +1,8 @@
 package com.teamacronymcoders.survivalism.client.model;
 
+import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -29,55 +31,55 @@ public class BakedModelSurvivalism implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
+        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null) {
             return highPolyBaked.getQuads(state, side, rand);
         } else {
-            return lowPolyBaked.getQuads(state, side, rand);
+            return lowPolyBaked != null ? lowPolyBaked.getQuads(state, side, rand) : null;
         }
     }
 
     @Override
     public boolean isAmbientOcclusion() {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
-            return highPolyBaked.isAmbientOcclusion();
+        if (SurvivalismConfigs.blastProcessing) {
+            return highPolyBaked != null && highPolyBaked.isAmbientOcclusion();
         } else {
-            return lowPolyBaked.isAmbientOcclusion();
+            return lowPolyBaked != null && lowPolyBaked.isAmbientOcclusion();
         }
     }
 
     @Override
     public boolean isGui3d() {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
-            return highPolyBaked.isGui3d();
+        if (SurvivalismConfigs.blastProcessing) {
+            return highPolyBaked != null && highPolyBaked.isGui3d();
         } else {
-            return lowPolyBaked.isGui3d();
+            return lowPolyBaked != null && lowPolyBaked.isGui3d();
         }
     }
 
     @Override
     public boolean isBuiltInRenderer() {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
-            return highPolyBaked.isBuiltInRenderer();
+        if (SurvivalismConfigs.blastProcessing) {
+            return highPolyBaked != null && highPolyBaked.isBuiltInRenderer();
         } else {
-            return lowPolyBaked.isBuiltInRenderer();
+            return lowPolyBaked != null && lowPolyBaked.isBuiltInRenderer();
         }
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
-            return highPolyBaked.getParticleTexture();
+        if (SurvivalismConfigs.blastProcessing) {
+            return highPolyBaked != null ? highPolyBaked.getParticleTexture() : null;
         } else {
-            return lowPolyBaked.getParticleTexture();
+            return lowPolyBaked != null ? lowPolyBaked.getParticleTexture() : null;
         }
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        if (SurvivalismConfigs.blastProcessing && highPolyBaked != null && lowPolyBaked != null) {
-            return highPolyBaked.getOverrides();
+        if (SurvivalismConfigs.blastProcessing) {
+            return highPolyBaked != null ? highPolyBaked.getOverrides() : null;
         } else {
-            return lowPolyBaked.getOverrides();
+            return lowPolyBaked != null ? lowPolyBaked.getOverrides() : null;
         }
     }
 }

@@ -23,4 +23,10 @@ public class ButtonBarrelSwitch extends GuiButton {
     public void drawButtonForegroundLayer(int mouseX, int mouseY) {
         super.drawButtonForegroundLayer(mouseX, mouseY);
     }
+
+    @Override
+    public void setWidth(int width) {
+        super.setWidth(5);
+    }
+
 }

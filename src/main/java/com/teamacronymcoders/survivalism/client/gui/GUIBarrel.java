@@ -38,7 +38,12 @@ public class GUIBarrel extends GuiContainer {
         buttonList.clear();
         int x = 1;
         int y = 1;
-        buttonList.add(new GuiButton(1, x, y, ""));
+        buttonList.add(new GuiButton(1, 395, 225, "") {
+            @Override
+            public void setWidth(int width) {
+                super.setWidth(5);
+            }
+        });
         super.initGui();
     }
 
