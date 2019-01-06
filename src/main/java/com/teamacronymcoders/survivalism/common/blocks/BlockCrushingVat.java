@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism.common.blocks;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;

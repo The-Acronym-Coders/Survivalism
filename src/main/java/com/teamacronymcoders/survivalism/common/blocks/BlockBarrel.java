@@ -33,9 +33,8 @@ import javax.annotation.Nullable;
 
 public class BlockBarrel extends BlockDefault {
 
-    private static final int GUI_ID = 1;
-
     public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
+    private static final int GUI_ID = 1;
     private static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final PropertyEnum<BlockLog.EnumAxis> AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
 
@@ -128,8 +127,8 @@ public class BlockBarrel extends BlockDefault {
                         return state;
                 }
 
-                default:
-                    return state;
+            default:
+                return state;
         }
     }
 

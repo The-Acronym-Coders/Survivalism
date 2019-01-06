@@ -1,20 +1,14 @@
 package com.teamacronymcoders.survivalism.client.model;
 
-import com.teamacronymcoders.survivalism.common.ModBlocks;
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
 import java.util.Objects;
 
 import static com.teamacronymcoders.survivalism.Survivalism.MODID;
-import static com.teamacronymcoders.survivalism.utils.SurvivalismConfigs.blastProcessing;
 
 public class ModelLoaderSurvivalism implements ICustomModelLoader {
     private IModel highPolyBarrel;
@@ -26,8 +20,12 @@ public class ModelLoaderSurvivalism implements ICustomModelLoader {
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
-        highPoly = null;
-        lowPoly = null;
+        highPolyBarrel = null;
+        lowPolyBarrel = null;
+        highPolyBarrelSealed = null;
+        lowPolyBarrelSealed = null;
+        highPolyCrushingVat = null;
+        lowPolyCrushingVat = null;
     }
 
     @Override
@@ -37,18 +35,29 @@ public class ModelLoaderSurvivalism implements ICustomModelLoader {
 
     @Override
     public IModel loadModel(ResourceLocation modelLocation) throws Exception {
-        if (highPoly == null || lowPoly == null) {
+        if (highPolyBarrel == null || lowPolyBarrel == null) {
             if (Objects.equals(modelLocation.getResourcePath(), "barrel")) {
-                highPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_barrel"));
-                lowPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_barrel"));
-            } else if (Objects.equals(modelLocation.getResourcePath(), "barrel_sealed")) {
-                highPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_barrel_sealed"));
-                lowPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_barrel_sealed"));
-            } else if (Objects.equals(modelLocation.getResourcePath(), "crushing_vat")) {
-                highPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_crushing_vat"));
-                lowPoly = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_crushing_vat"));
+                highPolyBarrel = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_barrel"));
+                lowPolyBarrel = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_barrel"));
+                return new ModelSurvivalism(highPolyBarrelSealed, lowPolyBarrelSealed);
             }
         }
-        return new ModelSurvivalism(highPoly, lowPoly);
+
+        if (highPolyBarrelSealed == null || lowPolyBarrelSealed == null) {
+            if (Objects.equals(modelLocation.getResourcePath(), "barrel_sealed")) {
+                highPolyBarrelSealed = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_barrel_sealed"));
+                lowPolyBarrelSealed = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_barrel_sealed"));
+                return new ModelSurvivalism(highPolyBarrelSealed, lowPolyBarrelSealed);
+            }
+        }
+
+        if (highPolyCrushingVat == null || lowPolyCrushingVat == null) {
+            if (Objects.equals(modelLocation.getResourcePath(), "crushing_vat")) {
+                highPolyCrushingVat = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/smooth_crushing_vat"));
+                lowPolyCrushingVat = ModelLoaderRegistry.getModel(new ResourceLocation(MODID, "models/chunky_crushing_vat"));
+                return new ModelSurvivalism(highPolyCrushingVat, lowPolyCrushingVat);
+            }
+        }
+        return new ModelSurvivalism(highPolyBarrel, lowPolyBarrel);
     }
 }

@@ -2,7 +2,6 @@ package com.teamacronymcoders.survivalism.utils.network;
 
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
