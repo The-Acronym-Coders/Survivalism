@@ -13,18 +13,25 @@ import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 public class ModelSurvivalism implements IModel {
-    private final IModel crushingVatModel;
-    private IBakedModel crushingVatBakedModel = null;
+    private final IModel highPoly;
+    private final IModel lowPoly;
+    private IBakedModel lowPolyBakedModel = null;
+    private IBakedModel highPolyBakedModel = null;
 
-    public ModelSurvivalism(IModel crushingVatModel) {
-        this.crushingVatModel = crushingVatModel;
+    public ModelSurvivalism(IModel highPoly, IModel lowPoly) {
+        this.highPoly = highPoly;
+        this.lowPoly = lowPoly;
     }
 
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        if (crushingVatBakedModel == null) {
-            crushingVatBakedModel = crushingVatModel.bake(state, format, bakedTextureGetter);
+        if (highPoly == null) {
+            highPolyBakedModel = highPoly.bake(state, format, bakedTextureGetter);
         }
-        return new BakedModelSurvivalism(crushingVatBakedModel, bakedTextureGetter);
+
+        if (lowPoly == null) {
+            lowPolyBakedModel = lowPoly.bake(state, format, bakedTextureGetter);
+        }
+        return new BakedModelSurvivalism(highPolyBakedModel, lowPolyBakedModel, bakedTextureGetter);
     }
 }
