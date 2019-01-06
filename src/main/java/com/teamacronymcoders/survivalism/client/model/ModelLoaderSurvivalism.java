@@ -17,8 +17,12 @@ import static com.teamacronymcoders.survivalism.Survivalism.MODID;
 import static com.teamacronymcoders.survivalism.utils.SurvivalismConfigs.blastProcessing;
 
 public class ModelLoaderSurvivalism implements ICustomModelLoader {
-    private IModel highPoly;
-    private IModel lowPoly;
+    private IModel highPolyBarrel;
+    private IModel lowPolyBarrel;
+    private IModel highPolyBarrelSealed;
+    private IModel lowPolyBarrelSealed;
+    private IModel highPolyCrushingVat;
+    private IModel lowPolyCrushingVat;
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
