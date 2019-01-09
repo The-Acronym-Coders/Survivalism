@@ -7,6 +7,7 @@ import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
@@ -47,4 +48,7 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(Survivalism.INSTANCE, new GUIProxy());
     }
+    
+    public EntityPlayer getClientPlayer(){return null;}
+    
 }

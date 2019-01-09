@@ -19,19 +19,14 @@ public class ContainerBarrelSoaking extends ContainerBarrel {
     }
 
     private void addPlayerSlots(IInventory playerInv) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                int x = 9 + col * 18;
-                int y = row * 18 + 70;
-                this.addSlotToContainer(new Slot(playerInv, col + row * 9 + 10, x, y));
-            }
+        for(int x = 0; x < 9; x++) {
+            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x*18), 142));
         }
-
-        // Slots for the hotbar
-        for (int row = 0; row < 9; ++row) {
-            int x = 9 + row * 18;
-            int y = 58 + 70;
-            this.addSlotToContainer(new Slot(playerInv, row, x, y));
+    
+        for(int y = 0; y < 3; y++) {
+            for(int x = 0; x < 9; x++) {
+                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x*18), 84 + (y*18)));
+            }
         }
     }
 
@@ -40,6 +35,15 @@ public class ContainerBarrelSoaking extends ContainerBarrel {
         int x = 9;
         int y = 6;
         addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
+    
+        addSlotToContainer(new SlotDisabled(itemHandler, 1, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 2, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
+        addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
+import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import net.minecraftforge.fml.common.Loader;
@@ -32,7 +33,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @Mod.Instance(Survivalism.MODID)
     public static Survivalism INSTANCE;
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
-    private static CommonProxy proxy;
+    public static CommonProxy proxy;
     public Logger logger;
 //    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
@@ -46,6 +47,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         super.preInit(event);
         proxy.preInit(event);
         logger = event.getModLog();
+        SurvivalismPacketHandler.registerMessages();
     }
 
     @Override
