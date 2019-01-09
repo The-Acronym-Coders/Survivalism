@@ -6,17 +6,17 @@ import java.util.Locale;
 
 public enum StorageEnumsBarrelStates implements IStringSerializable {
     STORAGE, BREWING, SOAKING;
-    
+
     public static final StorageEnumsBarrelStates[] VALUES = values();
-    
+
     @Override
     public String getName() {
         return this.toString().toLowerCase(Locale.US);
     }
-    
+
     public StorageEnumsBarrelStates cycle() {
         int i = this.ordinal();
-        if(i + 1 < StorageEnumsBarrelStates.values().length) {
+        if (i + 1 < StorageEnumsBarrelStates.values().length) {
             i++;
         } else {
             i = 0;

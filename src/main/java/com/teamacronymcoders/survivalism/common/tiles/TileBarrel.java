@@ -4,24 +4,30 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.*;
+import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.*;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.*;
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileBarrel extends TileBase implements ITickable, IUpdatingInventory {
-    
+
     public static final int TANK_CAPACITY = 16000;
     public static final int STORAGE_SIZE = 9;
     private List<RecipeBarrel> barrelRecipes;
@@ -30,14 +36,14 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private ItemStackHandler itemHandler;
     private int durationTicks;
     private boolean sealed = false;
-    
+
     public TileBarrel() {
         inputTank = new FluidTank(TANK_CAPACITY) {
             @Override
             public boolean canFill() {
                 return true;
             }
-            
+
             @Override
             public boolean canDrain() {
                 return false;
@@ -48,7 +54,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             public boolean canFill() {
                 return false;
             }
-            
+
             @Override
             public boolean canDrain() {
                 return true;
@@ -62,38 +68,30 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         };
         barrelRecipes = RecipeStorage.getBarrelRecipes();
     }
-    
-    public void toggleSealed() {
-        if(isSealed()) {
-            sealed = false;
-        } else if(!isSealed()) {
-            sealed = true;
-        }
-    }
-    
+
     ///////////
     // Stuff //
     ///////////
-    
+
     @Override
     public void update() {
-        if(checkState(StorageEnumsBarrelStates.BREWING) && isSealed()) {
+        if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && isSealed()) {
             FluidStack inputTank = getInputTank().getFluid();
-            for(RecipeBarrel recipe : barrelRecipes) {
-                if(recipe instanceof BrewingRecipe) {
+            for (RecipeBarrel recipe : barrelRecipes) {
+                if (recipe instanceof BrewingRecipe) {
                     FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
-                    if(inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
+                    if (inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
                         List<ItemStack> itemStacks = new ArrayList<>();
-                        for(int i = 0; i < itemHandler.getSlots(); i++) {
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
                             itemStacks.add(itemHandler.getStackInSlot(i));
                         }
-                        if(itemStacks == ((BrewingRecipe) recipe).getInputItemStacks()) {
+                        if (itemStacks == ((BrewingRecipe) recipe).getInputItemStacks()) {
                             durationTicks = ((BrewingRecipe) recipe).getTicks();
                             int currentTicks = 0;
-                            for(int x = 0; x < durationTicks; ++x) {
+                            for (int x = 0; x < durationTicks; ++x) {
                                 currentTicks++;
                             }
-                            if(currentTicks == durationTicks) {
+                            if (currentTicks == durationTicks) {
                                 getOutputTank().fillInternal(((BrewingRecipe) recipe).getOutputFluid(), true);
                                 durationTicks = 0;
                             }
@@ -101,21 +99,21 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                     }
                 }
             }
-        } else if(checkState(StorageEnumsBarrelStates.SOAKING) && isSealed()) {
+        } else if (checkBarrelState(StorageEnumsBarrelStates.SOAKING) && isSealed()) {
             FluidStack fluidStack = getInputTank().getFluid();
             ItemStack stack = itemHandler.getStackInSlot(0);
-            for(RecipeBarrel recipe : barrelRecipes) {
-                if(recipe instanceof SoakingRecipe) {
+            for (RecipeBarrel recipe : barrelRecipes) {
+                if (recipe instanceof SoakingRecipe) {
                     FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
                     ItemStack recipeInputIS = ((SoakingRecipe) recipe).getInputItemStack();
-                    if(fluidStack != null && fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
-                        if(stack.getItem().equals(recipeInputIS.getItem())) {
+                    if (fluidStack != null && fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
+                        if (stack.getItem().equals(recipeInputIS.getItem())) {
                             durationTicks = ((SoakingRecipe) recipe).getTicks();
                             int currentTicks = 0;
-                            for(int x = 0; x < durationTicks; ++x) {
+                            for (int x = 0; x < durationTicks; ++x) {
                                 currentTicks++;
                             }
-                            if(currentTicks == durationTicks) {
+                            if (currentTicks == durationTicks) {
                                 fluidStack.amount -= ((SoakingRecipe) recipe).getDecAmount();
                                 itemHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
                                 durationTicks = 0;
@@ -126,21 +124,21 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             }
         }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if(compound.hasKey("inputTank")) {
+        if (compound.hasKey("inputTank")) {
             inputTank = inputTank.readFromNBT(compound.getCompoundTag("inputTank"));
         }
-        if(compound.hasKey("outputTank")) {
+        if (compound.hasKey("outputTank")) {
             outputTank = outputTank.readFromNBT(compound.getCompoundTag("outputTank"));
         }
-        if(compound.hasKey("items")) {
+        if (compound.hasKey("items")) {
             itemHandler.deserializeNBT(compound);
         }
     }
-    
+
     @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -149,104 +147,120 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         compound.setTag("items", itemHandler.serializeNBT());
         return super.writeToNBT(compound);
     }
-    
+
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if(EnumFacing.DOWN == facing) {
-                if(checkState(StorageEnumsBarrelStates.BREWING)) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (EnumFacing.DOWN == facing) {
+                if (checkBarrelState(StorageEnumsBarrelStates.BREWING)) {
                     return (T) outputTank;
                 }
             } else {
                 return (T) inputTank;
             }
         }
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) itemHandler;
         }
         return super.getCapability(capability, facing);
     }
-    
+
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return true;
         }
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return true;
         }
         return super.hasCapability(capability, facing);
     }
-    
+
     private boolean isSealed() {
         return sealed;
     }
-    
+
     //////////////////////
     // Utility Methods //
     ////////////////////
-    
+
     /**
      * Stolen from HeatedTank
      * Sorry Skysom ;(
      */
-    private void ensureStateIs(StorageEnumsBarrelStates expectedBarrelState) {
+    private void ensureBarrelStateIs(StorageEnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
         StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
-        if(currentBarrelState != expectedBarrelState) {
+        if (currentBarrelState != expectedBarrelState) {
             IBlockState state = currentState.withProperty(BlockBarrel.BARREL_STATE, expectedBarrelState);
             world.setBlockState(this.getPos(), state);
-            if(world.isRemote) {
+            if (world.isRemote) {
                 Survivalism.INSTANCE.getPacketHandler().sendToServer(new MessageSetState(this.getPos(), state));
             }
         }
     }
-    
-    public boolean checkState(StorageEnumsBarrelStates expectedBarrelState) {
+
+    public boolean checkBarrelState(StorageEnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
         StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
         return currentBarrelState == expectedBarrelState;
     }
-    
-    public void cycleStates(IBlockState state) {
+
+    public void cycleBarrelStates(IBlockState state) {
         StorageEnumsBarrelStates currentState = state.getValue(BlockBarrel.BARREL_STATE);
         currentState = currentState.cycle();
-        ensureStateIs(currentState);
+        ensureBarrelStateIs(currentState);
     }
-    
-    public void cycleStates(StorageEnumsBarrelStates states) {
-        StorageEnumsBarrelStates newState = states.cycle();
-        ensureStateIs(newState);
-        
-        //        if (states == StorageEnumsBarrelStates.STORAGE) {
-        //            ensureStateIs(StorageEnumsBarrelStates.BREWING);
-        //        } else if (states == StorageEnumsBarrelStates.BREWING) {
-        //            ensureStateIs(StorageEnumsBarrelStates.SOAKING);
-        //        } else if (states == StorageEnumsBarrelStates.SOAKING) {
-        //            ensureStateIs(StorageEnumsBarrelStates.STORAGE);
-        //        }
+
+    private void ensureSealedStateIs(boolean sealed) {
+        IBlockState currentState = this.getWorld().getBlockState(this.getPos());
+        Boolean currentSealedState = currentState.getValue(BlockBarrel.SEALED_STATE);
+        if (currentSealedState == sealed) {
+        } else {
+            IBlockState newState = currentState.withProperty(BlockBarrel.SEALED_STATE, sealed);
+            world.setBlockState(pos, newState);
+            if (world.isRemote) {
+                Survivalism.INSTANCE.getPacketHandler().sendToServer(new MessageSetState(this.getPos(), newState));
+            }
+        }
     }
-    
+
+    public boolean checkSealedState(boolean sealed) {
+        IBlockState currentState = this.getWorld().getBlockState(this.getPos());
+        Boolean currentSealed = currentState.getValue(BlockBarrel.SEALED_STATE);
+        return currentSealed == sealed;
+    }
+
+    public void cycleSealedStates(IBlockState state) {
+        Boolean currentSealed = state.getValue(BlockBarrel.SEALED_STATE);
+        if (currentSealed == true) {
+            ensureSealedStateIs(false);
+        } else {
+            ensureSealedStateIs(true);
+        }
+    }
+
     public boolean canInteractWith(EntityPlayer playerIn) {
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
-    
+
+
     //////////////////////
     // Setters Getters //
     ////////////////////
     public FluidTank getInputTank() {
         return inputTank;
     }
-    
+
     public FluidTank getOutputTank() {
         return outputTank;
     }
-    
+
     public ItemStackHandler getItemHandler() {
         return itemHandler;
     }
-    
+
     @Override
     public void updateSlot(int slot, ItemStack stack) {
         this.markDirty();

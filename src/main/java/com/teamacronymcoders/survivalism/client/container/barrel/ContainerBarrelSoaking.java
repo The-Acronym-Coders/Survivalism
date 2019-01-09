@@ -19,23 +19,22 @@ public class ContainerBarrelSoaking extends ContainerBarrel {
     }
 
     private void addPlayerSlots(IInventory playerInv) {
-        for(int x = 0; x < 9; x++) {
-            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x*18), 142));
+        for (int x = 0; x < 9; x++) {
+            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x * 18), 142));
         }
-    
-        for(int y = 0; y < 3; y++) {
-            for(int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x*18), 84 + (y*18)));
+
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
             }
         }
     }
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tile.getItemHandler();
-        int x = 9;
-        int y = 6;
+        int x = 44;
+        int y = 40;
         addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
-    
         addSlotToContainer(new SlotDisabled(itemHandler, 1, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 2, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));

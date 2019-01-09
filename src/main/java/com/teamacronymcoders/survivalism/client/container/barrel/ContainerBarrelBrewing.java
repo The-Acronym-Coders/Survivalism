@@ -19,17 +19,17 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
     }
 
     private void addPlayerSlots(IInventory playerInv) {
-    
-        for(int x = 0; x < 9; x++) {
-            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x*18), 142));
+
+        for (int x = 0; x < 9; x++) {
+            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x * 18), 142));
         }
-    
-        for(int y = 0; y < 3; y++) {
-            for(int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x*18), 84 + (y*18)));
+
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
             }
         }
-        
+
     }
 
     private void addOwnSlots() {
@@ -39,14 +39,14 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
         addSlotToContainer(new SlotItemHandler(itemHandler, 0, 80, 17));
         addSlotToContainer(new SlotItemHandler(itemHandler, 1, 80, 17 + 20));
         addSlotToContainer(new SlotItemHandler(itemHandler, 2, 80, 17 + 40));
-    
+
         addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
-    
+
     }
 
     @Override

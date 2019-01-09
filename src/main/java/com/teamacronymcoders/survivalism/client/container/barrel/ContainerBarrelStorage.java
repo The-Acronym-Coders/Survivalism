@@ -19,17 +19,17 @@ public class ContainerBarrelStorage extends ContainerBarrel {
     }
 
     private void addPlayerSlots(IInventory playerInv) {
-    
-        for(int x = 0; x < 9; x++) {
-            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x*18), 142));
+
+        for (int x = 0; x < 9; x++) {
+            this.addSlotToContainer(new Slot(playerInv, x, 8 + (x * 18), 142));
         }
-    
-        for(int y = 0; y < 3; y++) {
-            for(int x = 0; x < 9; x++) {
-                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x*18), 84 + (y*18)));
+
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
             }
         }
-    
+
     }
 
     private void addOwnSlots() {

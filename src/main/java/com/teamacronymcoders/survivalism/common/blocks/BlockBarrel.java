@@ -18,11 +18,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -35,8 +38,10 @@ public class BlockBarrel extends BlockDefault {
 
     public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
     public static final int GUI_ID = 1;
-    private static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
+    public static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final PropertyEnum<BlockLog.EnumAxis> AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
+
+    private NBTTagCompound compound = new NBTTagCompound();
 
     public BlockBarrel() {
         super(Material.WOOD);
@@ -84,6 +89,23 @@ public class BlockBarrel extends BlockDefault {
     }
 
     @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        compound = new NBTTagCompound();
+        TileEntity te = getTE(worldIn, pos);
+        if (te != null) {
+            compound = te.serializeNBT();
+        }
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        drops.clear();
+        ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, 0);
+        stack.setTagCompound(compound);
+        drops.add(stack);
+    }
+
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileBarrel barrel = getTE(worldIn, pos);
 
@@ -101,8 +123,20 @@ public class BlockBarrel extends BlockDefault {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.VALUES[0]), 2);
-        worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, false));
+        if (!stack.hasTagCompound()) {
+            worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.VALUES[0]), 2);
+            worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, false));
+        } else {
+            NBTTagCompound compound = stack.getTagCompound();
+            TileBarrel te = getTE(worldIn, pos);
+            if (compound != null && te != null) {
+                worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.valueOf(compound.getString("barrel_state"))));
+                worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, compound.getBoolean("sealed")));
+                te.deserializeNBT(compound);
+            }
+
+        }
+
     }
 
     @Nonnull
