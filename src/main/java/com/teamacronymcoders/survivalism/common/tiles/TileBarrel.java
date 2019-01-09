@@ -221,6 +221,16 @@ public class TileBarrel extends TileEntity implements ITickable {
         }
     }
 
+    public void cycleStates(StorageEnumsBarrelStates states) {
+        if (states == StorageEnumsBarrelStates.STORAGE) {
+            ensureStateIs(StorageEnumsBarrelStates.BREWING);
+        } else if (states == StorageEnumsBarrelStates.BREWING) {
+            ensureStateIs(StorageEnumsBarrelStates.SOAKING);
+        } else if (states == StorageEnumsBarrelStates.SOAKING) {
+            ensureStateIs(StorageEnumsBarrelStates.STORAGE);
+        }
+    }
+
     public boolean canInteractWith(EntityPlayer playerIn) {
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
