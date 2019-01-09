@@ -11,6 +11,7 @@ import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TileBarrel extends TileBase implements ITickable, IUpdatingInventory {
 
@@ -34,8 +36,9 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private FluidTank inputTank;
     private FluidTank outputTank;
     private ItemStackHandler itemHandler;
-    private int durationTicks;
     private boolean sealed = false;
+    private String state;
+    private int durationTicks;
 
     public TileBarrel() {
         inputTank = new FluidTank(TANK_CAPACITY) {
@@ -75,6 +78,18 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     @Override
     public void update() {
+        if (state == null) {
+            state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName().toUpperCase(Locale.US);
+        }
+
+        if (!state.equals(this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName())) {
+            state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName().toUpperCase(Locale.US);
+        }
+
+        if (sealed != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
+            sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
+        }
+
         if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && isSealed()) {
             FluidStack inputTank = getInputTank().getFluid();
             for (RecipeBarrel recipe : barrelRecipes) {
@@ -137,6 +152,14 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         if (compound.hasKey("items")) {
             itemHandler.deserializeNBT(compound);
         }
+
+        if (compound.hasKey("sealed")) {
+            compound.getBoolean("sealed");
+        }
+
+        if (compound.hasKey("barrel_state")) {
+            compound.getString("barrel_state");
+        }
     }
 
     @Nonnull
@@ -145,6 +168,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         compound.setTag("inputTank", inputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("outputTank", outputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("items", itemHandler.serializeNBT());
+        compound.setBoolean("sealed", isSealed());
+        compound.setString("barrel_state", getState());
         return super.writeToNBT(compound);
     }
 
@@ -179,6 +204,10 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     private boolean isSealed() {
         return sealed;
+    }
+
+    public String getState() {
+        return state;
     }
 
     //////////////////////
