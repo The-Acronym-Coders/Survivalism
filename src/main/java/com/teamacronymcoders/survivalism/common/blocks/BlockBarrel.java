@@ -37,6 +37,7 @@ import javax.annotation.Nullable;
 public class BlockBarrel extends BlockDefault {
 
     public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
+    private static final StorageEnumsBarrelStates[] statesArray = StorageEnumsBarrelStates.values();
     public static final int GUI_ID = 1;
     public static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
     private static final PropertyEnum<BlockLog.EnumAxis> AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
@@ -94,6 +95,10 @@ public class BlockBarrel extends BlockDefault {
         TileEntity te = getTE(worldIn, pos);
         if (te != null) {
             compound = te.serializeNBT();
+            compound.removeTag("x");
+            compound.removeTag("y");
+            compound.removeTag("z");
+            compound.removeTag("id");
         }
     }
 
@@ -123,26 +128,31 @@ public class BlockBarrel extends BlockDefault {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (!stack.hasTagCompound()) {
-            worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.VALUES[0]), 2);
-            worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, false));
-        } else {
+        if (stack.hasTagCompound()) {
             NBTTagCompound compound = stack.getTagCompound();
             TileBarrel te = getTE(worldIn, pos);
             if (compound != null && te != null) {
-                worldIn.setBlockState(pos, state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.valueOf(compound.getString("barrel_state"))));
-                worldIn.setBlockState(pos, state.withProperty(SEALED_STATE, compound.getBoolean("sealed")));
                 te.deserializeNBT(compound);
             }
-
         }
-
     }
 
     @Nonnull
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return this.getStateFromMeta(meta).withProperty(AXIS, BlockLog.EnumAxis.fromFacingAxis(EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis()));
+        if (placer.getHeldItem(hand).hasTagCompound()) {
+            NBTTagCompound compound = placer.getHeldItem(hand).getTagCompound();
+            IBlockState state = this.getStateFromMeta(meta);
+            state.withProperty(BARREL_STATE, statesArray[compound.getInteger("barrel_state")]);
+            state.withProperty(SEALED_STATE, compound.getBoolean("sealed"));
+            state.withProperty(AXIS, BlockLog.EnumAxis.fromFacingAxis(EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis()));
+            return state;
+        }
+        IBlockState state = this.getStateFromMeta(meta);
+        state.withProperty(AXIS, BlockLog.EnumAxis.fromFacingAxis(EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis()));
+        state.withProperty(SEALED_STATE, false);
+        state.withProperty(BARREL_STATE, StorageEnumsBarrelStates.STORAGE);
+        return state;
     }
 
     @Nonnull

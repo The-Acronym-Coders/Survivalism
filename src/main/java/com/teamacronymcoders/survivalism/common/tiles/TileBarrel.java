@@ -8,6 +8,7 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRec
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -36,8 +38,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private FluidTank inputTank;
     private FluidTank outputTank;
     private ItemStackHandler itemHandler;
+    private int state = 0;
     private boolean sealed = false;
-    private String state;
     private int durationTicks;
 
     public TileBarrel() {
@@ -78,19 +80,17 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     @Override
     public void update() {
-        if (state == null) {
-            state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName().toUpperCase(Locale.US);
+        if (this.world.getBlockState(this.getPos()).getBlock() instanceof BlockBarrel) {
+            if (state != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal()) {
+                state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal();
+            }
+
+            if (sealed != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
+                sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
+            }
         }
 
-        if (!state.equals(this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName())) {
-            state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).getName().toUpperCase(Locale.US);
-        }
-
-        if (sealed != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
-            sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
-        }
-
-        if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && isSealed()) {
+        if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
             FluidStack inputTank = getInputTank().getFluid();
             for (RecipeBarrel recipe : barrelRecipes) {
                 if (recipe instanceof BrewingRecipe) {
@@ -100,7 +100,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                         for (int i = 0; i < itemHandler.getSlots(); i++) {
                             itemStacks.add(itemHandler.getStackInSlot(i));
                         }
-                        if (itemStacks == ((BrewingRecipe) recipe).getInputItemStacks()) {
+                        if (itemStacks.equals(((BrewingRecipe) recipe).getInputItemStacks())) {
                             durationTicks = ((BrewingRecipe) recipe).getTicks();
                             int currentTicks = 0;
                             for (int x = 0; x < durationTicks; ++x) {
@@ -114,7 +114,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                     }
                 }
             }
-        } else if (checkBarrelState(StorageEnumsBarrelStates.SOAKING) && isSealed()) {
+        } else if (checkBarrelState(StorageEnumsBarrelStates.SOAKING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
             FluidStack fluidStack = getInputTank().getFluid();
             ItemStack stack = itemHandler.getStackInSlot(0);
             for (RecipeBarrel recipe : barrelRecipes) {
@@ -158,7 +158,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         }
 
         if (compound.hasKey("barrel_state")) {
-            compound.getString("barrel_state");
+            compound.getInteger("barrel_state");
         }
     }
 
@@ -168,8 +168,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         compound.setTag("inputTank", inputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("outputTank", outputTank.writeToNBT(new NBTTagCompound()));
         compound.setTag("items", itemHandler.serializeNBT());
-        compound.setBoolean("sealed", isSealed());
-        compound.setString("barrel_state", getState());
+        compound.setBoolean("sealed", sealed);
+        compound.setInteger("barrel_state", state);
         return super.writeToNBT(compound);
     }
 
@@ -200,14 +200,6 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             return true;
         }
         return super.hasCapability(capability, facing);
-    }
-
-    private boolean isSealed() {
-        return sealed;
-    }
-
-    public String getState() {
-        return state;
     }
 
     //////////////////////
@@ -245,8 +237,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private void ensureSealedStateIs(boolean sealed) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
         Boolean currentSealedState = currentState.getValue(BlockBarrel.SEALED_STATE);
-        if (currentSealedState == sealed) {
-        } else {
+        if (currentSealedState != sealed) {
             IBlockState newState = currentState.withProperty(BlockBarrel.SEALED_STATE, sealed);
             world.setBlockState(pos, newState);
             if (world.isRemote) {
