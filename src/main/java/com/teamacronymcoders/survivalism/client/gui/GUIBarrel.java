@@ -4,19 +4,24 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrel;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageOpenGui;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GUIBarrel extends GuiContainer {
 
@@ -33,10 +38,12 @@ public class GUIBarrel extends GuiContainer {
     private ResourceLocation true_background = null;
 
     private TileBarrel te;
+    private ContainerBarrel storage;
 
     public GUIBarrel(TileBarrel te, ContainerBarrel storage) {
         super(storage);
         this.te = te;
+        this.storage = storage;
         if (te.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
             true_background = storage_background;
         } else if (te.checkBarrelState(StorageEnumsBarrelStates.BREWING)) {
@@ -104,5 +111,52 @@ public class GUIBarrel extends GuiContainer {
                 mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
             }
         }
+    }
+
+    private int tooltipY;
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        if (te.checkBarrelState(StorageEnumsBarrelStates.SOAKING)) {
+            if (te.getInputTank().getFluid() != null) {
+                int amount = te.getInputTank().getFluidAmount();
+                float hr = 48f/16000f;
+                float offset = amount * hr;
+                int y = Math.round(72 - offset);
+                tooltipY = y;
+                int h = Math.round(offset - 1);
+                HelperFluid.renderTiledFluid(80, y, 16, h, 1, te.getInputTank().getFluid());
+            }
+        } else if (te.checkBarrelState(StorageEnumsBarrelStates.BREWING)) {
+            if (te.getInputTank().getFluid() != null && te.getOutputTank().getFluid() != null) {
+                // Input
+                int inputTank = te.getInputTank().getFluidAmount();
+                float hr = 48f/16000f;
+                float offset = inputTank * hr;
+                int y = Math.round(65 - offset);
+                tooltipY = y;
+                int h = Math.round(offset - 1);
+                HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getInputTank().getFluid());
+
+                // Output
+                int outputTank = te.getOutputTank().getFluidAmount();
+                float offset2 = outputTank * hr;
+                int y2 = Math.round(65 - offset2);
+                tooltipY = y2;
+                int h2 = Math.round(offset - 1);
+                HelperFluid.renderTiledFluid(44, y2, 16, h2, 1, te.getOutputTank().getFluid());
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void renderHoveredToolTip(int p_191948_1_, int p_191948_2_) {
+        if (p_191948_1_ >= 80 && p_191948_2_ <= 120 && p_191948_2_ >= tooltipY && p_191948_2_ <= 72) {
+            drawHoveringText(te.getInputTank().getFluid().getLocalizedName(), p_191948_1_, p_191948_2_);
+        }
+
+        super.renderHoveredToolTip(p_191948_1_, p_191948_2_);
     }
 }

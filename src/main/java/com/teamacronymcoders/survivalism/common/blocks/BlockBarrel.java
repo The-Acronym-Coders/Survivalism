@@ -4,6 +4,7 @@ import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.BlockLog;
@@ -44,6 +45,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -117,24 +119,19 @@ public class BlockBarrel extends BlockDefault {
         compound = new NBTTagCompound();
         TileEntity te = getTE(worldIn, pos);
         if (te != null) {
-            NBTTagCompound tileCompound = te.writeToNBT(compound);
-            if (state.getValue(SEALED_STATE)) {
-                compound.setBoolean("sealed", true);
-            } else {
-                compound.setBoolean("sealed", false);
-            }
-            compound.merge(tileCompound);
-            compound.removeTag("x");
-            compound.removeTag("y");
-            compound.removeTag("z");
-            compound.removeTag("id");
+            compound.setInteger("barrel_state", state.getValue(BARREL_STATE).ordinal());
+            compound.setBoolean("sealed", state.getValue(SEALED_STATE));
+            compound.setTag("inputTank", ((TileBarrel) te).getInputTank().writeToNBT(new NBTTagCompound()));
+            compound.setTag("outputTank", ((TileBarrel) te).getOutputTank().writeToNBT(new NBTTagCompound()));
+            compound.setTag("items", ((TileBarrel) te).getItemHandler().serializeNBT());
         }
     }
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         drops.clear();
-        ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+        int meta = getMetaFromState(state);
+        ItemStack stack = new ItemStack(this, 1, meta);
         stack.setTagCompound(compound);
         drops.add(stack);
     }
@@ -151,10 +148,15 @@ public class BlockBarrel extends BlockDefault {
             return true;
         }
 
-        if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
-            ItemStack stack = playerIn.getHeldItem(hand);
-            FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
-            return true;
+        if (!barrel.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
+            if (!state.getValue(SEALED_STATE)) {
+                if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
+                    ItemStack stack = playerIn.getHeldItem(hand);
+                    FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
+                    playerIn.openContainer.detectAndSendChanges();
+                    return true;
+                }
+            }
         }
 
         playerIn.openGui(Survivalism.INSTANCE, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -166,19 +168,14 @@ public class BlockBarrel extends BlockDefault {
         if (stack.hasTagCompound()) {
             NBTTagCompound compound = stack.getTagCompound();
             TileBarrel te = getTE(worldIn, pos);
-            if (compound != null && te != null) {
-                NBTTagCompound currentNBT = te.writeToNBT(new NBTTagCompound());
-                NBTTagCompound stackNBT = compound.copy();
-                currentNBT.merge(compound);
-                currentNBT.setInteger("x", pos.getX());
-                currentNBT.setInteger("y", pos.getY());
-                currentNBT.setInteger("z", pos.getZ());
+            if (compound != null && te != null && !stack.isEmpty()) {
 
-                if (!currentNBT.equals(stackNBT)) {
-                    Survivalism.INSTANCE.logger.info(currentNBT.toString());
-                    te.readFromNBT(currentNBT);
-                    te.markDirty();
-                }
+                te.setInputTank(te.getInputTank().readFromNBT(stack.getTagCompound().getCompoundTag("inputTank")));
+                te.setOutputTank(te.getOutputTank().readFromNBT(stack.getTagCompound().getCompoundTag("outputTank")));
+
+                ItemStackHandler stackHandler = te.getItemHandler();
+                stackHandler.deserializeNBT(compound.getCompoundTag("items"));
+
             }
         }
     }
@@ -218,7 +215,7 @@ public class BlockBarrel extends BlockDefault {
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         if (itemIn instanceof SurvivalismTab) {
             for (int i = 0; i < 3; i++) {
-                ItemStack stack  = new ItemStack(this);
+                ItemStack stack  = new ItemStack(this,  1, i);
                 NBTTagCompound nbt = new NBTTagCompound();
                 nbt.setInteger("barrel_state", i);
                 stack.setTagCompound(nbt);

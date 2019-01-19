@@ -7,6 +7,7 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
+import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +22,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -41,6 +43,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private int state = 0;
     private boolean sealed = false;
     private int durationTicks;
+    private int prevAmountI;
+    private int prevAmountO;
 
     public TileBarrel() {
         inputTank = new FluidTank(TANK_CAPACITY) {
@@ -80,6 +84,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     @Override
     public void update() {
+        boolean sendUpdate = false;
         if (this.world.getBlockState(this.getPos()).getBlock() instanceof BlockBarrel) {
             if (state != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal()) {
                 state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal();
@@ -87,6 +92,14 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
             if (sealed != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
                 sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
+            }
+        }
+
+        if (!this.world.isRemote) {
+            if (prevAmountI != getInputTank().getFluidAmount() || prevAmountO != getOutputTank().getFluidAmount()) {
+                prevAmountI = getInputTank().getFluidAmount();
+                prevAmountO = getOutputTank().getFluidAmount();
+                sendUpdate = true;
             }
         }
 
@@ -137,6 +150,17 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                     }
                 }
             }
+        }
+
+        if (sendUpdate) {
+            this.markDirty();
+            this.sealed = getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
+            this.state = getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal();
+            this.prevAmountI = getInputTank().getFluidAmount();
+            this.prevAmountO = getOutputTank().getFluidAmount();
+            getWorld().addBlockEvent(getPos(), this.getBlockType(), 1, this.state);
+            Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateBarrel(this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), (double) this.getPos().getX(), (double) this.getPos().getY(), (double) this.getPos().getZ(), 128d));
+            this.world.notifyNeighborsOfStateChange(getPos(), getBlockType(), true);
         }
     }
 
@@ -269,16 +293,46 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     //////////////////////
     // Setters Getters //
     ////////////////////
+
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public boolean isSealed() {
+        return sealed;
+    }
+
+    public void setSealed(boolean sealed) {
+        this.sealed = sealed;
+    }
+
     public FluidTank getInputTank() {
         return inputTank;
+    }
+
+    public void setInputTank(FluidTank inputTank) {
+        this.inputTank = inputTank;
     }
 
     public FluidTank getOutputTank() {
         return outputTank;
     }
 
+    public void setOutputTank(FluidTank outputTank) {
+        this.outputTank = outputTank;
+    }
+
     public ItemStackHandler getItemHandler() {
         return itemHandler;
+    }
+
+    public void setItemHandler(ItemStackHandler itemHandler) {
+        this.itemHandler = itemHandler;
     }
 
     @Override
