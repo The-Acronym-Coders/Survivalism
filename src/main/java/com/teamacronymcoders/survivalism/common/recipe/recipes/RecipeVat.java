@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 import javax.annotation.Nonnull;
 
@@ -16,12 +15,13 @@ public class RecipeVat {
     private FluidStack outputFluid;
     private int jumps;
 
-    public RecipeVat(){}
+    public RecipeVat() {
+    }
 
     /**
-     * @param inputIngredient  Can't Be Null
-     * @param outputFluid      Can Be Null
-     * @param jumps            Has to be higher than 1
+     * @param inputIngredient Can't Be Null
+     * @param outputFluid     Can Be Null
+     * @param jumps           Has to be higher than 1
      */
     public RecipeVat(@Nonnull Ingredient inputIngredient, FluidStack outputFluid, int jumps) {
         this.inputIngredient = inputIngredient;
@@ -30,10 +30,10 @@ public class RecipeVat {
     }
 
     /**
-     * @param inputIngredient  Can't Be Null
-     * @param outputStack      Can Be Null
-     * @param outputFluid      Can Be Null
-     * @param jumps            Has to be higher than 1
+     * @param inputIngredient Can't Be Null
+     * @param outputStack     Can Be Null
+     * @param outputFluid     Can Be Null
+     * @param jumps           Has to be higher than 1
      */
     public RecipeVat(@Nonnull Ingredient inputIngredient, ItemStack outputStack, FluidStack outputFluid, int jumps) {
         this.inputIngredient = inputIngredient;
@@ -47,11 +47,11 @@ public class RecipeVat {
     }
 
     /**
-     * @param inputIngredient  Can't Be Null
-     * @param outputStack      Can Be Null
-     * @param chanceOutput     Can Be Null
-     * @param outputFluid      Can Be Null
-     * @param jumps            Has to be higher than 1
+     * @param inputIngredient Can't Be Null
+     * @param outputStack     Can Be Null
+     * @param chanceOutput    Can Be Null
+     * @param outputFluid     Can Be Null
+     * @param jumps           Has to be higher than 1
      */
     public RecipeVat(@Nonnull Ingredient inputIngredient, ItemStack outputStack, float chanceOutput, FluidStack outputFluid, int jumps) {
         this.inputIngredient = inputIngredient;
@@ -65,44 +65,44 @@ public class RecipeVat {
         }
     }
 
-    public void setInputIngredient(@Nonnull Ingredient inputIngredient) {
-        this.inputIngredient = inputIngredient;
-    }
-
     @Nonnull
     public Ingredient getInputIngredient() {
         return inputIngredient;
     }
 
-    public void setOutputStack(ItemStack outputStack) {
-        this.outputStack = outputStack;
+    public void setInputIngredient(@Nonnull Ingredient inputIngredient) {
+        this.inputIngredient = inputIngredient;
     }
 
     public ItemStack getOutputStack() {
         return outputStack;
     }
 
-    public void setChanceOutput(float chanceOutput) {
-        this.chanceOutput = chanceOutput;
+    public void setOutputStack(ItemStack outputStack) {
+        this.outputStack = outputStack;
     }
 
     public float getChanceOutput() {
         return chanceOutput;
     }
 
-    public void setOutputFluid(FluidStack outputFluid) {
-        this.outputFluid = outputFluid;
+    public void setChanceOutput(float chanceOutput) {
+        this.chanceOutput = chanceOutput;
     }
 
     public FluidStack getOutputFluid() {
         return outputFluid;
     }
 
-    public void setJumps(int jumps) {
-        this.jumps = jumps;
+    public void setOutputFluid(FluidStack outputFluid) {
+        this.outputFluid = outputFluid;
     }
 
     public int getJumps() {
         return jumps;
+    }
+
+    public void setJumps(int jumps) {
+        this.jumps = jumps;
     }
 }

@@ -13,7 +13,8 @@ public class SoakingRecipe extends RecipeBarrel {
     private float decreaseChance;
     private int ticks;
 
-    public SoakingRecipe() {}
+    public SoakingRecipe() {
+    }
 
     public SoakingRecipe(FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, int ticks) {
         this.inputFluid = inputFluid;

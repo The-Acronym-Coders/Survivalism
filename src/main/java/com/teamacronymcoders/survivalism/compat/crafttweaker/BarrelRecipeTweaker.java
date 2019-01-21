@@ -1,13 +1,10 @@
 package com.teamacronymcoders.survivalism.compat.crafttweaker;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.RecipeHelper;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
@@ -19,7 +16,6 @@ import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreIngredient;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;

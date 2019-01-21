@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
@@ -16,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.oredict.OreIngredient;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -6,12 +6,14 @@ import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -32,15 +34,20 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     public static final int TANK_CAPACITY = 16000;
     public static final int STORAGE_SIZE = 9;
+
     private List<RecipeBarrel> barrelRecipes;
     private FluidTank inputTank;
     private FluidTank outputTank;
     private ItemStackHandler itemHandler;
+
     private int state = 0;
-    private boolean sealed = false;
     private int durationTicks;
+    private int currentTicks = 0;
+
     private int prevAmountI;
     private int prevAmountO;
+
+    private boolean sealed = false;
 
     public TileBarrel() {
         inputTank = new FluidTank(TANK_CAPACITY) {
@@ -81,6 +88,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     @Override
     public void update() {
         boolean sendUpdate = false;
+
         if (this.world.getBlockState(this.getPos()).getBlock() instanceof BlockBarrel) {
             if (state != this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal()) {
                 state = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal();
@@ -91,60 +99,106 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             }
         }
 
-        if (!this.world.isRemote) {
-            if (prevAmountI != getInputTank().getFluidAmount() || prevAmountO != getOutputTank().getFluidAmount()) {
-                prevAmountI = getInputTank().getFluidAmount();
-                prevAmountO = getOutputTank().getFluidAmount();
-                sendUpdate = true;
-            }
-        }
-
         if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
-            FluidStack inputTank = getInputTank().getFluid();
-            for (RecipeBarrel recipe : barrelRecipes) {
-                if (recipe instanceof BrewingRecipe) {
-                    FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
-                    if (inputTank != null && inputTank.getFluid().equals(recipeInputFS.getFluid())) {
-                        List<ItemStack> itemStacks = new ArrayList<>();
-                        for (int i = 0; i < itemHandler.getSlots(); i++) {
-                            itemStacks.add(itemHandler.getStackInSlot(i));
-                        }
-                        if (itemStacks.equals(((BrewingRecipe) recipe).getInputItemStacks())) {
-                            durationTicks = ((BrewingRecipe) recipe).getTicks();
-                            int currentTicks = 0;
-                            for (int x = 0; x < durationTicks; ++x) {
-                                currentTicks++;
-                            }
-                            if (currentTicks == durationTicks) {
-                                getOutputTank().fillInternal(((BrewingRecipe) recipe).getOutputFluid(), true);
-                                durationTicks = 0;
+            FluidTank inputTank = getInputTank();
+            if (inputTank != null) {
+                FluidStack inputTankFluid = getInputTank().getFluid();
+                if (inputTankFluid != null) {
+                    for (RecipeBarrel recipe : barrelRecipes) {
+                        if (recipe instanceof BrewingRecipe) {
+                            FluidStack recipeInputFS = ((BrewingRecipe) recipe).getInputFluid();
+                            if (inputTankFluid.getFluid().equals(recipeInputFS.getFluid())) {
+                                List<ItemStack> itemStacks = new ArrayList<>();
+
+                                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                                    itemStacks.add(itemHandler.getStackInSlot(i));
+                                }
+
+                                boolean check1 = false;
+                                boolean check2 = false;
+                                boolean check3 = false;
+
+                                List<Ingredient> ingredients = ((BrewingRecipe) recipe).getInputIngredients();
+                                
+                                for (ItemStack stack : itemStacks) {
+                                    if (ingredients.get(0) == null) {
+                                        check1 = true;
+                                    } else if (ingredients.get(0).apply(stack)) {
+                                        check1 = true;
+                                    }
+
+                                    if (ingredients.get(1) == null) {
+                                        check2 = true;
+                                    } else if (ingredients.get(1).apply(stack)) {
+                                        check2 = true;
+                                    }
+
+                                    if (ingredients.get(2) == null) {
+                                        check3 = true;
+                                    } else if (ingredients.get(2).apply(stack)) {
+                                        check3 = true;
+                                    }
+                                }
+
+                                if (check1 && check2 && check3) {
+                                    durationTicks = ((BrewingRecipe) recipe).getTicks();
+                                    currentTicks += 1;
+                                    if (currentTicks >= durationTicks) {
+                                        inputTank.drain(recipeInputFS, true);
+                                        itemHandler.getStackInSlot(0).shrink(1);
+                                        itemHandler.getStackInSlot(1).shrink(1);
+                                        itemHandler.getStackInSlot(2).shrink(1);
+                                        getOutputTank().fill(((BrewingRecipe) recipe).getOutputFluid(), true);
+                                        durationTicks = 0;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         } else if (checkBarrelState(StorageEnumsBarrelStates.SOAKING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
-            FluidStack fluidStack = getInputTank().getFluid();
-            ItemStack stack = itemHandler.getStackInSlot(0);
-            for (RecipeBarrel recipe : barrelRecipes) {
-                if (recipe instanceof SoakingRecipe) {
-                    FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
-                    ItemStack recipeInputIS = ((SoakingRecipe) recipe).getInputItemStack();
-                    if (fluidStack != null && fluidStack.getFluid().equals(recipeInputFS.getFluid())) {
-                        if (stack.getItem().equals(recipeInputIS.getItem())) {
-                            durationTicks = ((SoakingRecipe) recipe).getTicks();
-                            int currentTicks = 0;
-                            for (int x = 0; x < durationTicks; ++x) {
-                                currentTicks++;
-                            }
-                            if (currentTicks == durationTicks) {
-                                fluidStack.amount -= ((SoakingRecipe) recipe).getDecAmount();
-                                itemHandler.setStackInSlot(0, ((SoakingRecipe) recipe).getOutputItemStack());
-                                durationTicks = 0;
+            FluidTank inputTank = getInputTank();
+            if (inputTank != null) {
+                FluidStack inputTankStack = inputTank.getFluid();
+                if (inputTankStack != null) {
+                    for (RecipeBarrel recipe : RecipeStorage.getBarrelRecipes()) {
+                        if (recipe instanceof SoakingRecipe) {
+                            FluidStack recipeInputFS = ((SoakingRecipe) recipe).getInputFluid();
+                            if (inputTankStack.getFluid().equals(recipeInputFS.getFluid())) {
+                                Ingredient recipeInputIS = ((SoakingRecipe) recipe).getInputIngredient();
+                                if (recipeInputIS.apply(itemHandler.getStackInSlot(0))) {
+                                    durationTicks = ((SoakingRecipe) recipe).getTicks();
+                                    currentTicks += 1;
+                                    if (currentTicks >= durationTicks) {
+                                        itemHandler.getStackInSlot(0).shrink(1);
+                                        if (((SoakingRecipe) recipe).getDecreaseAmount() != 0) {
+                                            int decreaseAmount = ((SoakingRecipe) recipe).getDecreaseAmount();
+                                            if (((SoakingRecipe) recipe).getDecreaseChance() != 0.0f) {
+                                                float decreaseChance = ((SoakingRecipe) recipe).getDecreaseChance();
+                                                if (HelperMath.tryPercentage(decreaseChance)) {
+                                                    inputTank.drain(decreaseAmount, true);
+                                                }
+                                            } else {
+                                                inputTank.drain(decreaseAmount, true);
+                                            }
+                                        }
+
+                                        itemHandler.setStackInSlot(1, ((SoakingRecipe) recipe).getOutputItemStack());
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            }
+        }
+
+        if (!this.world.isRemote) {
+            if (prevAmountI != getInputTank().getFluidAmount() || prevAmountO != getOutputTank().getFluidAmount()) {
+                prevAmountI = getInputTank().getFluidAmount();
+                prevAmountO = getOutputTank().getFluidAmount();
+                sendUpdate = true;
             }
         }
 

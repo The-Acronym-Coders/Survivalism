@@ -31,7 +31,7 @@ public class RecipeHelper {
             logger.error("Output Fluid: " + outputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
-        } else  {
+        } else {
             RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputIngredients, outputFluid, ticks);
             RecipeStorage.getBarrelRecipes().add(brewingRecipe);
         }
