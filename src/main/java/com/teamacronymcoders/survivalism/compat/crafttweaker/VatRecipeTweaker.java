@@ -51,7 +51,7 @@ public class VatRecipeTweaker {
         int jumps;
 
         addCrushingRecipe(@Nonnull IIngredient inputIngredient, IItemStack outputStack, float chanceOutput, @Nonnull ILiquidStack outputFluid, int jumps) {
-            this.name = inputIngredient.getMark();
+            this.name = inputIngredient.toCommandString();
             this.inputIngredient = CraftTweakerMC.getIngredient(inputIngredient);
             if (!outputStack.isEmpty()) {
                 this.outputStack = CraftTweakerMC.getItemStack(outputStack);

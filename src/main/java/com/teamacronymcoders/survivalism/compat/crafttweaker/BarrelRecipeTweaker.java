@@ -54,7 +54,7 @@ public class BarrelRecipeTweaker {
         addBrewingRecipe(@Nonnull ILiquidStack inputFluid, @Nonnull IIngredient[] inputIngredients, @Nonnull ILiquidStack outputFluid, int ticks) {
             this.inputFluid = CraftTweakerMC.getLiquidStack(inputFluid);
             for (IIngredient ingredient : inputIngredients) {
-                this.names.add(ingredient.getMark());
+                this.names.add(ingredient.toCommandString());
             }
             for (IIngredient ingredient : inputIngredients) {
                 this.inputIngredients.add(CraftTweakerMC.getIngredient(ingredient));
@@ -118,7 +118,7 @@ public class BarrelRecipeTweaker {
         int ticks;
 
         addSoakingRecipe(@Nonnull ILiquidStack inputFluid, @Nonnull IIngredient ingredient, @Nonnull IItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
-            this.name = ingredient.getMark();
+            this.name = ingredient.toCommandString();
             this.inputFluid = CraftTweakerMC.getLiquidStack(inputFluid);
             this.ingredient = CraftTweakerMC.getIngredient(ingredient);
             this.outputItemStack = CraftTweakerMC.getItemStack(outputItemStack);
