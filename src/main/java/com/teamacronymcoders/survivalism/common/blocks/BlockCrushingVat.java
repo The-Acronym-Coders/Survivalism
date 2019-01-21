@@ -20,7 +20,6 @@ import net.minecraftforge.client.model.ModelLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class BlockCrushingVat extends BlockDefault {
 
@@ -37,7 +36,9 @@ public class BlockCrushingVat extends BlockDefault {
 
     @Override
     public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory"));
+        if (getRegistryName() != null) {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        }
     }
 
     @Nullable
