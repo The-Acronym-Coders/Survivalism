@@ -2,50 +2,83 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 public class SoakingRecipe extends RecipeBarrel {
     private FluidStack inputFluid;
-    private ItemStack inputItemStack;
+    private Ingredient inputIngredient;
     private ItemStack outputItemStack;
-    private int decAmount;
+    private int decreaseAmount;
+    private float decreaseChance;
     private int ticks;
 
-    /**
-     * Soaking Recipe
-     *
-     * @param inputFluid
-     * @param inputItemStack
-     * @param outputItemStack
-     * @param decAmount
-     * @param ticks
-     */
+    public SoakingRecipe() {}
 
-    public SoakingRecipe(FluidStack inputFluid, ItemStack inputItemStack, ItemStack outputItemStack, int decAmount, int ticks) {
+    public SoakingRecipe(FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, int ticks) {
         this.inputFluid = inputFluid;
-        this.inputItemStack = inputItemStack;
+        this.inputIngredient = inputIngredient;
         this.outputItemStack = outputItemStack;
-        this.decAmount = decAmount;
+        this.decreaseAmount = decreaseAmount;
         this.ticks = ticks;
     }
+
+    public SoakingRecipe(FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
+        this.inputFluid = inputFluid;
+        this.inputIngredient = inputIngredient;
+        this.outputItemStack = outputItemStack;
+        this.decreaseAmount = decreaseAmount;
+        this.decreaseChance = decreaseChance;
+        this.ticks = ticks;
+    }
+
 
     public FluidStack getInputFluid() {
         return inputFluid;
     }
 
-    public ItemStack getInputItemStack() {
-        return inputItemStack;
+    public void setInputFluid(FluidStack inputFluid) {
+        this.inputFluid = inputFluid;
+    }
+
+    public Ingredient getInputIngredient() {
+        return inputIngredient;
+    }
+
+    public void setInputIngredient(Ingredient inputIngredient) {
+        this.inputIngredient = inputIngredient;
     }
 
     public ItemStack getOutputItemStack() {
         return outputItemStack;
     }
 
-    public int getDecAmount() {
-        return decAmount;
+    public void setOutputItemStack(ItemStack outputItemStack) {
+        this.outputItemStack = outputItemStack;
+    }
+
+    public int getDecreaseAmount() {
+        return decreaseAmount;
+    }
+
+    public void setDecreaseAmount(int decreaseAmount) {
+        this.decreaseAmount = decreaseAmount;
+    }
+
+    public float getDecreaseChance() {
+        return decreaseChance;
+    }
+
+    public void setDecreaseChance(float decreaseChance) {
+        this.decreaseChance = decreaseChance;
     }
 
     public int getTicks() {
         return ticks;
     }
+
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
+    }
+
 }

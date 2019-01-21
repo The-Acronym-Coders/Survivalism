@@ -2,28 +2,23 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BrewingRecipe extends RecipeBarrel {
     private FluidStack inputFluid;
-    private List<ItemStack> inputItemStacks;
+    private List<Ingredient> inputIngredients;
     private FluidStack outputFluid;
     private int ticks;
 
-    /**
-     * Brewing Recipe
-     *
-     * @param inputFluid
-     * @param inputItemStacks
-     * @param outputFluid
-     * @param ticks
-     */
+    public BrewingRecipe() {}
 
-    public BrewingRecipe(FluidStack inputFluid, List<ItemStack> inputItemStacks, FluidStack outputFluid, int ticks) {
+    public BrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<Ingredient> inputIngredients, @Nonnull FluidStack outputFluid, int ticks) {
         this.inputFluid = inputFluid;
-        this.inputItemStacks = inputItemStacks;
+        this.inputIngredients = inputIngredients;
         this.outputFluid = outputFluid;
         this.ticks = ticks;
     }
@@ -32,15 +27,31 @@ public class BrewingRecipe extends RecipeBarrel {
         return inputFluid;
     }
 
-    public List<ItemStack> getInputItemStacks() {
-        return inputItemStacks;
+    public void setInputFluid(FluidStack inputFluid) {
+        this.inputFluid = inputFluid;
+    }
+
+    public List<Ingredient> getInputIngredients() {
+        return inputIngredients;
+    }
+
+    public void setInputIngredients(List<Ingredient> inputIngredients) {
+        this.inputIngredients = inputIngredients;
     }
 
     public FluidStack getOutputFluid() {
         return outputFluid;
     }
 
+    public void setOutputFluid(FluidStack outputFluid) {
+        this.outputFluid = outputFluid;
+    }
+
     public int getTicks() {
         return ticks;
+    }
+
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
     }
 }

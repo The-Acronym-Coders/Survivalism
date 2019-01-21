@@ -7,6 +7,7 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRec
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.Logger;
 
@@ -21,34 +22,49 @@ public class RecipeHelper {
      * Barrel Recipes
      */
 
-    public static void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<ItemStack> inputItemStacks, @Nonnull FluidStack outputFluid, int ticks) {
+    public static void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<Ingredient> inputIngredients, @Nonnull FluidStack outputFluid, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
-        } else if (ticks <= 0) {
-            logger.error("Processing Ticks can't be less than or equal to 0");
-        } else if (inputItemStacks.size() <= 0 || inputItemStacks.size() > 3) {
-            logger.error("ItemStack list for Brewing Recipe: " + inputFluid.getLocalizedName() + " can't be less than or equal to 0 and not greater than 3 ItemStacks big!");
+        } else if (inputIngredients.size() <= 0 || inputIngredients.size() > 3) {
+            logger.error("Ingredient list for Brewing Recipe: " + inputFluid.getLocalizedName() + " can't be less than or equal to 0 and not greater than 3 ItemStacks big!");
         } else if (outputFluid.amount <= 0) {
             logger.error("Output Fluid: " + outputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
-        } else {
-            RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputItemStacks, outputFluid, ticks);
+        } else if (ticks <= 0) {
+            logger.error("Processing Ticks can't be less than or equal to 0");
+        } else  {
+            RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputIngredients, outputFluid, ticks);
             RecipeStorage.getBarrelRecipes().add(brewingRecipe);
         }
     }
 
-    public static void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull ItemStack inputItemStack, @Nonnull ItemStack outputItemStack, int decAmount, int ticks) {
+    public static void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
-        } else if (ticks <= 0) {
-            logger.error("Processing Ticks can't be less than or equal to 0");
-        } else if (inputItemStack.isEmpty()) {
-            logger.error("Input ItemStack can not be Empty");
         } else if (outputItemStack.isEmpty()) {
             logger.error("Output ItemStack can not be Empty");
-        } else if (decAmount < 0 || decAmount > TileBarrel.TANK_CAPACITY) {
+        } else if (decreaseAmount < 0 || decreaseAmount > TileBarrel.TANK_CAPACITY) {
             logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
+        } else if (ticks <= 0) {
+            logger.error("Processing Ticks can't be less than or equal to 0");
         } else {
-            RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputItemStack, outputItemStack, decAmount, ticks);
+            RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputIngredient, outputItemStack, decreaseAmount, ticks);
+            RecipeStorage.getBarrelRecipes().add(soakingRecipe);
+        }
+    }
+
+    public static void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
+        if (inputFluid.amount <= 0) {
+            logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
+        } else if (outputItemStack.isEmpty()) {
+            logger.error("Output ItemStack can not be Empty");
+        } else if (decreaseAmount < 0 || decreaseAmount > TileBarrel.TANK_CAPACITY) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
+        } else if (decreaseChance == 0.0f || decreaseAmount > 1.0f) {
+            logger.error("Decrease Chance can't be 0.0f or higher than 1.0f");
+        } else if (ticks <= 0) {
+            logger.error("Processing Ticks can't be less than or equal to 0");
+        } else {
+            RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputIngredient, outputItemStack, decreaseAmount, decreaseChance, ticks);
             RecipeStorage.getBarrelRecipes().add(soakingRecipe);
         }
     }
@@ -57,32 +73,42 @@ public class RecipeHelper {
      * Crushing Vat Recipes
      */
 
-    public static void addCrushingRecipe(@Nonnull ItemStack inputStack, ItemStack outputStack, FluidStack outputFluidStack, int jumps) {
-        if (jumps <= 0) {
+    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, @Nonnull FluidStack outputFluidStack, int jumps) {
+        if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
+        } else if (jumps <= 0) {
             logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
         } else {
-            RecipeVat vatRecipe = new RecipeVat(inputStack, outputStack, outputFluidStack, jumps);
+            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputFluidStack, jumps);
             RecipeStorage.getVatRecipes().add(vatRecipe);
         }
     }
 
-    /**
-     * Crafttweaker Implementations
-     */
-
-    public static void addCRTBrewing(@Nonnull FluidStack inputFluid, @Nonnull List<ItemStack> inputItemStacks, @Nonnull FluidStack outputFluid, int ticks) {
-        RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputItemStacks, outputFluid, ticks);
-        RecipeStorage.getBarrelRecipes().add(brewingRecipe);
+    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, ItemStack outputStack, @Nonnull FluidStack outputFluidStack, int jumps) {
+        if (outputStack.isEmpty()) {
+            logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
+        } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
+        } else if (jumps <= 0) {
+            logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
+        } else {
+            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputStack, outputFluidStack, jumps);
+            RecipeStorage.getVatRecipes().add(vatRecipe);
+        }
     }
 
-    public static void addCRTSoaking(@Nonnull FluidStack inputFluid, @Nonnull ItemStack inputItemStack, @Nonnull ItemStack outputItemStack, int decAmount, int ticks) {
-        RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputItemStack, outputItemStack, decAmount, ticks);
-        RecipeStorage.getBarrelRecipes().add(soakingRecipe);
+    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, ItemStack outputStack, float outputChance, @Nonnull FluidStack outputFluidStack, int jumps) {
+        if (outputStack.isEmpty()) {
+            logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
+        } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
+            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
+        } else if (outputChance == 0.0f) {
+            logger.error("Output Chance Can't Be 0.0f!");
+        } else if (jumps <= 0) {
+            logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
+        } else {
+            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputStack, outputChance, outputFluidStack, jumps);
+            RecipeStorage.getVatRecipes().add(vatRecipe);
+        }
     }
-
-    public static void addCRTCrushing(@Nonnull ItemStack inputStack, ItemStack outputStack, FluidStack outputFluidStack, int jumps) {
-        RecipeVat vatRecipe = new RecipeVat(inputStack, outputStack, outputFluidStack, jumps);
-        RecipeStorage.getVatRecipes().add(vatRecipe);
-    }
-
 }
