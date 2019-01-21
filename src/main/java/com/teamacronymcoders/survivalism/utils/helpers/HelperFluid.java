@@ -51,6 +51,9 @@ public class HelperFluid {
 
     /**
      * The below 8 Methods are taken from Tinker's Construct with full attribution.
+     * <p>
+     * Disclaimer:
+     * Some alterations has been made to make this code function properly with my enviroment.
      */
     public static void renderTiledFluid(int x, int y, int width, int height, float depth, FluidStack fluidStack) {
         TextureAtlasSprite fluidSprite = mc.getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill(fluidStack).toString());
@@ -58,7 +61,7 @@ public class HelperFluid {
         renderTiledTextureAtlas(x, y, width, height, depth, fluidSprite, fluidStack.getFluid().isGaseous(fluidStack));
     }
 
-    public static void setColorRGBA(int color) {
+    private static void setColorRGBA(int color) {
         float a = alpha(color) / 255.0F;
         float r = red(color) / 255.0F;
         float g = green(color) / 255.0F;
@@ -66,16 +69,22 @@ public class HelperFluid {
         GlStateManager.color(r, g, b, a);
     }
 
-    public static void renderTiledTextureAtlas(int x, int y, int width, int height, float depth, TextureAtlasSprite sprite, boolean upsideDown) {
+    private static void renderTiledTextureAtlas(int x, int y, int width, int height, float depth, TextureAtlasSprite sprite, boolean upsideDown) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder renderer = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         putTiledTextureQuads(renderer, x, y, width, height, depth, sprite, upsideDown);
         tessellator.draw();
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
     }
 
-    public static void putTiledTextureQuads(BufferBuilder renderer, int x, int y, int width, int height, float depth, TextureAtlasSprite sprite, boolean upsideDown) {
+    private static void putTiledTextureQuads(BufferBuilder renderer, int x, int y, int width, int height, float depth, TextureAtlasSprite sprite, boolean upsideDown) {
         float u1 = sprite.getMinU();
         float v1 = sprite.getMinV();
 
@@ -96,7 +105,7 @@ public class HelperFluid {
 
                 float u2 = sprite.getInterpolatedU((16f * renderWidth) / (float) sprite.getIconWidth());
 
-                if(upsideDown) {
+                if (upsideDown) {
                     renderer.pos(x2, y, depth).tex(u2, v1).endVertex();
                     renderer.pos(x2, y + renderHeight, depth).tex(u2, v2).endVertex();
                     renderer.pos(x2 + renderWidth, y + renderHeight, depth).tex(u1, v2).endVertex();
@@ -109,25 +118,25 @@ public class HelperFluid {
                 }
 
                 x2 += renderWidth;
-            } while(width2 > 0);
+            } while (width2 > 0);
 
             y += renderHeight;
-        } while(height > 0);
+        } while (height > 0);
     }
 
-    public static int alpha(int c) {
+    private static int alpha(int c) {
         return (c >> 24) & 0xFF;
     }
 
-    public static int red(int c) {
+    private static int red(int c) {
         return (c >> 16) & 0xFF;
     }
 
-    public static int green(int c) {
+    private static int green(int c) {
         return (c >> 8) & 0xFF;
     }
 
-    public static int blue(int c) {
+    private static int blue(int c) {
         return (c) & 0xFF;
     }
 

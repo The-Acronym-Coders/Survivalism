@@ -9,15 +9,12 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRec
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
-import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -30,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class TileBarrel extends TileBase implements ITickable, IUpdatingInventory {
 

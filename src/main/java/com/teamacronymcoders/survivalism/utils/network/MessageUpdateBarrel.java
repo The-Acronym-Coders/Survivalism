@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,7 +21,8 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
     private int amountI;
     private int amountO;
 
-    public MessageUpdateBarrel(){}
+    public MessageUpdateBarrel() {
+    }
 
     public MessageUpdateBarrel(TileBarrel barrel) {
         this.x = barrel.getPos().getX();
@@ -69,10 +71,26 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
         if (FMLClientHandler.instance().getClient().world != null) {
             TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
             if (te instanceof TileBarrel) {
-                ((TileBarrel) te).setState(message.state);
-                ((TileBarrel) te).setSealed(message.sealed);
-                ((TileBarrel) te).getInputTank().getFluid().amount = message.amountI;
-                ((TileBarrel) te).getOutputTank().getFluid().amount = message.amountO;
+                TileBarrel barrel = (TileBarrel) te;
+                FluidTank i = barrel.getInputTank();
+                FluidTank o = barrel.getOutputTank();
+                barrel.setState(message.state);
+                barrel.setSealed(message.sealed);
+                if (i.getFluid() != null) {
+                    if (message.amountI == 0) {
+                        i.setFluid(null);
+                    } else {
+                        i.getFluid().amount = message.amountI;
+                    }
+                }
+
+                if (o.getFluid() != null) {
+                    if (message.amountO == 0) {
+                        o.setFluid(null);
+                    } else {
+                        o.getFluid().amount = message.amountO;
+                    }
+                }
             }
         }
     }

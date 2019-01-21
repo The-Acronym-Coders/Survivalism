@@ -4,11 +4,8 @@ import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.common.tiles.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -20,9 +17,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
@@ -32,7 +29,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -43,8 +39,6 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.input.Keyboard;
 
@@ -55,10 +49,9 @@ import java.util.List;
 public class BlockBarrel extends BlockDefault {
 
     public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
-    private static final StorageEnumsBarrelStates[] statesArray = StorageEnumsBarrelStates.values();
     public static final int GUI_ID = 1;
     public static final PropertyBool SEALED_STATE = PropertyBool.create("sealed");
-
+    private static final StorageEnumsBarrelStates[] statesArray = StorageEnumsBarrelStates.values();
     private NBTTagCompound compound = new NBTTagCompound();
 
     public BlockBarrel() {
@@ -67,12 +60,27 @@ public class BlockBarrel extends BlockDefault {
         setUnlocalizedName(Survivalism.MODID + ".barrel");
         setRegistryName("barrel");
         setSoundType(SoundType.WOOD);
-        setLightOpacity(255);
+        setLightOpacity(0);
+    }
+
+    private static void loadAllItems(NBTTagCompound tag, NonNullList<ItemStack> list) {
+        NBTTagList nbttaglist = tag.getTagList("items", 10);
+
+        for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+            int j = nbttagcompound.getByte("slot") & 255;
+
+            if (j >= 0 && j < list.size()) {
+                list.set(j, new ItemStack(nbttagcompound));
+            }
+        }
     }
 
     @Override
     public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        if (getRegistryName() != null) {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        }
     }
 
     @Nullable
@@ -100,6 +108,21 @@ public class BlockBarrel extends BlockDefault {
             return (TileBarrel) te;
         }
         return null;
+    }
+
+    @Override
+    public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
+        return state.getValue(SEALED_STATE);
+    }
+
+    @Override
+    public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return true;
+    }
+
+    @Override
+    public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face) {
+        return 0;
     }
 
     @Override
@@ -186,7 +209,6 @@ public class BlockBarrel extends BlockDefault {
         return getStateFromMeta(placer.getHeldItem(hand).getMetadata());
     }
 
-
     @Nonnull
     @Override
     @SuppressWarnings("deprecation")
@@ -215,9 +237,10 @@ public class BlockBarrel extends BlockDefault {
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         if (itemIn instanceof SurvivalismTab) {
             for (int i = 0; i < 3; i++) {
-                ItemStack stack  = new ItemStack(this,  1, i);
+                ItemStack stack = new ItemStack(this, 1, i);
                 NBTTagCompound nbt = new NBTTagCompound();
                 nbt.setInteger("barrel_state", i);
+                nbt.setBoolean("sealed", false);
                 stack.setTagCompound(nbt);
                 items.add(stack);
             }
@@ -298,19 +321,6 @@ public class BlockBarrel extends BlockDefault {
             }
         }
         super.addInformation(stack, player, tooltip, advanced);
-    }
-
-    private static void loadAllItems(NBTTagCompound tag, NonNullList<ItemStack> list) {
-        NBTTagList nbttaglist = tag.getTagList("items", 10);
-
-        for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound.getByte("slot") & 255;
-
-            if (j >= 0 && j < list.size()) {
-                list.set(j, new ItemStack(nbttagcompound));
-            }
-        }
     }
 
     @Nonnull
