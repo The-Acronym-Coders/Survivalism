@@ -96,14 +96,14 @@ public class BarrelRecipeTweaker {
         @Override
         public String describe() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Added Brewing Recipe: ").append("\n");
-            sb.append("Input Fluidstack: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append("\n");
-            sb.append("Input Ingredients: ").append("\n");
+            sb.append("Added Brewing Recipe: ").append(" ");
+            sb.append("Input Fluidstack: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append(" ");
+            sb.append("Input Ingredients: ").append(" ");
             for (String name : names) {
-                sb.append("   ").append(name).append("\n");
+                sb.append("   ").append(name).append(" ");
             }
-            sb.append("Output Fluid: ").append(outputFluid.getLocalizedName()).append(":").append(outputFluid.amount).append("\n");
-            sb.append("Ticks: ").append(ticks).append("\n");
+            sb.append("Output Fluid: ").append(outputFluid.getLocalizedName()).append(":").append(outputFluid.amount).append(" ");
+            sb.append("Ticks: ").append(ticks).append(" ");
             return sb.toString();
         }
     }
@@ -147,15 +147,15 @@ public class BarrelRecipeTweaker {
         @Override
         public String describe() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Added Soaking Recipe: ").append("\n");
-            sb.append("Input Fluid: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append("\n");
-            sb.append("Input Ingredient: ").append(name).append("\n");
-            sb.append("Output ItemStack: ").append(outputItemStack.getDisplayName()).append("\n");
+            sb.append("Added Soaking Recipe: ").append(" ");
+            sb.append("Input Fluid: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append(" ");
+            sb.append("Input Ingredient: ").append(name).append(" ");
+            sb.append("Output ItemStack: ").append(outputItemStack.getDisplayName()).append(" ");
             sb.append("Fluid Decrease Amount: ").append(decreaseAmount);
             if (decreaseChance != 0.0f) {
-                sb.append("Decrease Chance: ").append(decreaseChance).append("\n");
+                sb.append("Decrease Chance: ").append(decreaseChance).append(" ");
             }
-            sb.append("Ticks: ").append(ticks).append("\n");
+            sb.append("Ticks: ").append(ticks).append(" ");
             return sb.toString();
         }
     }

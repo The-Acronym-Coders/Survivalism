@@ -37,7 +37,7 @@ public class VatRecipeTweaker {
     }
 
     @ZenMethod
-    public static void addCrushingMultiplierBoots(IItemStack stack, double multiplier) {
+    public static void addCrushingMultiplierBoots(@Nonnull IItemStack stack, double multiplier) {
         Survivalism.LATE_ADDITIONS.add(new addCrushingMultiplier(stack, multiplier));
     }
 
@@ -85,64 +85,18 @@ public class VatRecipeTweaker {
         @Override
         public String describe() {
             StringBuilder sb = new StringBuilder();
-            if (!(inputIngredient instanceof OreIngredient)) {
-                if (SurvivalismConfigs.enableVerboseCraftTweakerLogging) {
-                    ItemStack[] stacks = inputIngredient.getMatchingStacks();
-                    for (ItemStack stack : stacks) {
-                        sb.append("Added Crushing Recipe:\n");
-                        sb.append("Input: ").append(stack.getDisplayName()).append("\n");
-                        if (!outputStack.isEmpty()) {
-                            sb.append("Output: ").append(outputStack.getDisplayName()).append("\n");
-                        }
-                        if (chanceOutput != 0.0f) {
-                            sb.append("Output Chance: ").append(chanceOutput).append("\n");
-                        }
-                        sb.append("Fluid Output: ").append(outputFluidStack.getLocalizedName()).append("\n");
-                        sb.append("Jumps: ").append(jumps).append("\n");
-                    }
-                } else {
-                    sb.append("Added Crushing Recipe:").append("\n");
-                    sb.append("Input: ").append(name).append("\n");
-                    if (!outputStack.isEmpty()) {
-                        sb.append("Output: ").append(outputStack.getDisplayName()).append("\n");
-                    }
-                    if (chanceOutput != 0.0f) {
-                        sb.append("Output Chance: ").append(chanceOutput).append("\n");
-                    }
-                    sb.append("Fluid Output: ").append(outputFluidStack.getLocalizedName()).append("\n");
-                    sb.append("Jumps: ").append(jumps).append("\n");
-                }
-            } else {
-                if (SurvivalismConfigs.enableVerboseCraftTweakerLogging) {
-                    ItemStack[] stacks = inputIngredient.getMatchingStacks();
-                    for (ItemStack stack : stacks) {
-                        sb.append("Added Crushing Recipe:\n");
-                        sb.append("Input: ").append(stack.getDisplayName()).append("\n");
-                        if (!outputStack.isEmpty()) {
-                            sb.append("Output: ").append(outputStack.getDisplayName()).append("\n");
-                        }
-                        if (chanceOutput != 0.0f) {
-                            sb.append("Output Chance: ").append(chanceOutput).append("\n");
-                        }
-                        sb.append("Fluid Output: ").append(outputFluidStack.getLocalizedName()).append("\n");
-                        sb.append("Jumps: ").append(jumps).append("\n");
-                    }
-                } else {
-                    sb.append("Added Crushing Recipe:").append("\n");
-                    sb.append("Input: ").append(inputIngredient.toString()).append("\n");
-                    if (!outputStack.isEmpty()) {
-                        sb.append("Output: ").append(outputStack.getDisplayName()).append("\n");
-                    }
-                    if (chanceOutput != 0.0f) {
-                        sb.append("Output Chance: ").append(chanceOutput).append("\n");
-                    }
-                    sb.append("Fluid Output: ").append(outputFluidStack.getLocalizedName()).append("\n");
-                    sb.append("Jumps: ").append(jumps).append("\n");
-                }
+            sb.append("Added Crushing Recipe:").append(" ");
+            sb.append("Input: ").append(name).append(" ");
+            if (!outputStack.isEmpty()) {
+                sb.append("Output: ").append(outputStack.getDisplayName()).append(" ");
             }
+            if (chanceOutput != 0.0f) {
+                sb.append("Output Chance: ").append(chanceOutput).append(" ");
+            }
+            sb.append("Fluid Output: ").append(outputFluidStack.getLocalizedName()).append(" ");
+            sb.append("Jumps: ").append(jumps).append(" ");
             return sb.toString();
         }
-
     }
 
     private static class addCrushingMultiplier implements IAction {
