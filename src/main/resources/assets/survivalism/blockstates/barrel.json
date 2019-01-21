@@ -1,7 +1,7 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "survivalism:barrel"
+        "model": "survivalism:chunky_barrel"
     },
     "variants": {
         "normal": [{}],
@@ -13,19 +13,9 @@
         },
         "sealed": {
             "true": {
-                "model": "survivalism:barrel_sealed"
+                "model": "survivalism:chunky_barrel_sealed"
             },
             "false": {}
-        },
-        "axis": {
-            "x": {
-            	"x": 90,
-                "y": 90
-            },
-            "y": {},
-            "z": {
-            	"x": 90
-            }
         }
     }
 }
