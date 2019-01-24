@@ -17,16 +17,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 @Mod(modid = Survivalism.MODID, name = Survivalism.NAME, version = Survivalism.VERSION, acceptedMinecraftVersions = Survivalism.MCVERSION, dependencies = Survivalism.DEPS)
 public class Survivalism extends BaseModFoundation<Survivalism> {
     public static final String MODID = "survivalism";
     public static final SurvivalismTab TAB = new SurvivalismTab();
     public static final List<IAction> LATE_ADDITIONS = new LinkedList<>();
-    static final String NAME = "Survivalism";
-    static final String VERSION = "1.12.2-1.0.0";
-    static final String MCVERSION = "1.12,";
-    static final String DEPS = "" +
+    public static final String NAME = "Survivalism";
+    public static final String VERSION = "1.12.2-1.0.0";
+    public static final String MCVERSION = "1.12,";
+    public static final String DEPS = "" +
             "required-after:patchouli@[1.0-13,);";
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
@@ -35,6 +36,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     public static CommonProxy proxy;
     public Logger logger;
+    public static final Random RANDOM = new Random();
 //    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public Survivalism() {

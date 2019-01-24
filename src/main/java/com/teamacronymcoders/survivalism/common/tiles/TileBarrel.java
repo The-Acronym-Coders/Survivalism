@@ -2,6 +2,9 @@ package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
+import com.teamacronymcoders.survivalism.common.defaults.TileBase;
+import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
+import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
@@ -40,6 +43,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private FluidTank outputTank;
     private ItemStackHandler itemHandler;
 
+    int val2;
     private int state = 0;
     private int durationTicks;
     private int currentTicks = 0;
@@ -119,24 +123,26 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                                 boolean check3 = false;
 
                                 List<Ingredient> ingredients = ((BrewingRecipe) recipe).getInputIngredients();
-                                
-                                for (ItemStack stack : itemStacks) {
-                                    if (ingredients.get(0) == null) {
-                                        check1 = true;
-                                    } else if (ingredients.get(0).apply(stack)) {
-                                        check1 = true;
-                                    }
 
-                                    if (ingredients.get(1) == null) {
-                                        check2 = true;
-                                    } else if (ingredients.get(1).apply(stack)) {
-                                        check2 = true;
-                                    }
+                                if (!(ingredients.get(0) == null && ingredients.get(1) == null && ingredients.get(2) == null)) {
+                                    for (ItemStack stack : itemStacks) {
+                                        if (ingredients.get(0) == null) {
+                                            check1 = true;
+                                        } else if (ingredients.get(0).apply(stack)) {
+                                            check1 = true;
+                                        }
 
-                                    if (ingredients.get(2) == null) {
-                                        check3 = true;
-                                    } else if (ingredients.get(2).apply(stack)) {
-                                        check3 = true;
+                                        if (ingredients.get(1) == null) {
+                                            check2 = true;
+                                        } else if (ingredients.get(1).apply(stack)) {
+                                            check2 = true;
+                                        }
+
+                                        if (ingredients.get(2) == null) {
+                                            check3 = true;
+                                        } else if (ingredients.get(2).apply(stack)) {
+                                            check3 = true;
+                                        }
                                     }
                                 }
 
@@ -168,23 +174,36 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                             if (inputTankStack.getFluid().equals(recipeInputFS.getFluid())) {
                                 Ingredient recipeInputIS = ((SoakingRecipe) recipe).getInputIngredient();
                                 if (recipeInputIS.apply(itemHandler.getStackInSlot(0))) {
+                                    if (((SoakingRecipe) recipe).getDecreaseAmount() != 0 && (((SoakingRecipe) recipe).getDecreaseChance() == 0.0f || ((SoakingRecipe) recipe).getDecreaseChance() == 1.0f)) {
+                                        int val = ((SoakingRecipe) recipe).getDecreaseAmount() / durationTicks;
+                                        inputTank.drain(val, true);
+                                        val2 += val;
+                                    }
                                     durationTicks = ((SoakingRecipe) recipe).getTicks();
                                     currentTicks += 1;
                                     if (currentTicks >= durationTicks) {
                                         itemHandler.getStackInSlot(0).shrink(1);
                                         if (((SoakingRecipe) recipe).getDecreaseAmount() != 0) {
                                             int decreaseAmount = ((SoakingRecipe) recipe).getDecreaseAmount();
-                                            if (((SoakingRecipe) recipe).getDecreaseChance() != 0.0f) {
+                                            if (((SoakingRecipe) recipe).getDecreaseChance() == 0.0f || ((SoakingRecipe) recipe).getDecreaseChance() == 1.0f) {
+                                                if (val2 != decreaseAmount) {
+                                                    int dif = decreaseAmount - val2;
+                                                    inputTank.drain(dif, true);
+                                                }
+                                            }
+                                            if (((SoakingRecipe) recipe).getDecreaseChance() != 0.0f && ((SoakingRecipe) recipe).getDecreaseChance() != 1.0f) {
                                                 float decreaseChance = ((SoakingRecipe) recipe).getDecreaseChance();
                                                 if (HelperMath.tryPercentage(decreaseChance)) {
                                                     inputTank.drain(decreaseAmount, true);
                                                 }
-                                            } else {
-                                                inputTank.drain(decreaseAmount, true);
                                             }
                                         }
-
-                                        itemHandler.setStackInSlot(1, ((SoakingRecipe) recipe).getOutputItemStack());
+                                        if (itemHandler.getStackInSlot(1).isEmpty()) {
+                                            itemHandler.setStackInSlot(1, ((SoakingRecipe) recipe).getOutputItemStack());
+                                        } else {
+                                            ItemStack stack = itemHandler.getStackInSlot(1);
+                                            stack.grow(((SoakingRecipe) recipe).getOutputItemStack().getCount());
+                                        }
                                     }
                                 }
                             }
@@ -195,7 +214,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         }
 
         if (!this.world.isRemote) {
-            if (prevAmountI != getInputTank().getFluidAmount() || prevAmountO != getOutputTank().getFluidAmount()) {
+            if (prevAmountI != (getInputTank() != null ? getInputTank().getFluidAmount() : 0) || prevAmountO != (getOutputTank() != null ? getOutputTank().getFluidAmount() : 0)) {
                 prevAmountI = getInputTank().getFluidAmount();
                 prevAmountO = getOutputTank().getFluidAmount();
                 sendUpdate = true;
@@ -328,7 +347,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     public void cycleSealedStates(IBlockState state) {
         Boolean currentSealed = state.getValue(BlockBarrel.SEALED_STATE);
-        if (currentSealed == true) {
+        if (currentSealed) {
             ensureSealedStateIs(false);
         } else {
             ensureSealedStateIs(true);
@@ -344,17 +363,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     // Setters Getters //
     ////////////////////
 
-
-    public int getState() {
-        return state;
-    }
-
     public void setState(int state) {
         this.state = state;
-    }
-
-    public boolean isSealed() {
-        return sealed;
     }
 
     public void setSealed(boolean sealed) {
@@ -379,10 +389,6 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     public ItemStackHandler getItemHandler() {
         return itemHandler;
-    }
-
-    public void setItemHandler(ItemStackHandler itemHandler) {
-        this.itemHandler = itemHandler;
     }
 
     @Override

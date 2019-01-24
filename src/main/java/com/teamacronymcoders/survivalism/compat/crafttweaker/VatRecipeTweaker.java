@@ -24,18 +24,17 @@ import javax.annotation.Nonnull;
  * Credit goes out to CritFlaw
  * Please and kindly go fluff yourself!
  */
-@ModOnly("crafttweaker")
 @ZenClass("mods.survivalism.CrushingVat")
 @ZenRegister
 public class VatRecipeTweaker {
 
     @ZenMethod
-    public static void addCrushingRecipe(@Nonnull IIngredient inputIngredient, @Optional IItemStack outputStack, @Optional float chanceOutput, @Nonnull ILiquidStack outputFluidStack, int jumps) {
+    public static void addCrushingRecipe(IIngredient inputIngredient, ILiquidStack outputFluidStack, int jumps, @Optional IItemStack outputStack, @Optional float chanceOutput) {
         Survivalism.LATE_ADDITIONS.add(new addCrushingRecipe(inputIngredient, outputStack, chanceOutput, outputFluidStack, jumps));
     }
 
     @ZenMethod
-    public static void addCrushingMultiplierBoots(@Nonnull IItemStack stack, double multiplier) {
+    public static void addCrushingMultiplierBoots(IItemStack stack, double multiplier) {
         Survivalism.LATE_ADDITIONS.add(new addCrushingMultiplier(stack, multiplier));
     }
 
@@ -48,7 +47,7 @@ public class VatRecipeTweaker {
         FluidStack outputFluidStack;
         int jumps;
 
-        addCrushingRecipe(@Nonnull IIngredient inputIngredient, IItemStack outputStack, float chanceOutput, @Nonnull ILiquidStack outputFluid, int jumps) {
+        addCrushingRecipe(IIngredient inputIngredient, IItemStack outputStack, float chanceOutput, ILiquidStack outputFluid, int jumps) {
             this.name = inputIngredient.toCommandString();
             this.inputIngredient = CraftTweakerMC.getIngredient(inputIngredient);
             if (!outputStack.isEmpty()) {
