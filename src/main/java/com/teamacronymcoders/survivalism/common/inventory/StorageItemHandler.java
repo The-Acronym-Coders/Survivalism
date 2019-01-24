@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.utils.storages;
+package com.teamacronymcoders.survivalism.common.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

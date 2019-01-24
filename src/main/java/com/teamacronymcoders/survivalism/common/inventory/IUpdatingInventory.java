@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.common.tiles;
+package com.teamacronymcoders.survivalism.common.inventory;
 
 import net.minecraft.item.ItemStack;
 

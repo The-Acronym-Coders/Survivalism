@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.common.tiles;
+package com.teamacronymcoders.survivalism.common.defaults;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
