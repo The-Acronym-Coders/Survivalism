@@ -1,12 +1,13 @@
 package com.teamacronymcoders.survivalism;
 
 import com.teamacronymcoders.base.BaseModFoundation;
-import com.teamacronymcoders.survivalism.common.CommonProxy;
+import com.teamacronymcoders.survivalism.common.*;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
