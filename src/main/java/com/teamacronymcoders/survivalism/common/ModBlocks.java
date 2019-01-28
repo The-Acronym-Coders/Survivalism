@@ -9,16 +9,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModBlocks {
 
     @GameRegistry.ObjectHolder("survivalism:barrel")
-    public static BlockBarrel blockBarrel;
+    static BlockBarrel blockBarrel;
 
     @GameRegistry.ObjectHolder("survivalism:crushing_vat")
-    public static BlockCrushingVat blockCrushingVat;
+    static BlockCrushingVat blockCrushingVat;
 
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         blockBarrel.initModel();
         blockCrushingVat.initModel();
-
     }
 
 }
