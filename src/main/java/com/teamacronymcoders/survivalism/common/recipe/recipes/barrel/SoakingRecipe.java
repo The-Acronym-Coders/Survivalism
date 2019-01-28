@@ -33,7 +33,6 @@ public class SoakingRecipe extends RecipeBarrel {
         this.ticks = ticks;
     }
 
-
     public FluidStack getInputFluid() {
         return inputFluid;
     }
