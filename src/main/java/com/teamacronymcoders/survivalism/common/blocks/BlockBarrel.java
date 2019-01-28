@@ -6,6 +6,8 @@ import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -45,6 +47,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class BlockBarrel extends BlockDefault {
 
@@ -63,6 +66,11 @@ public class BlockBarrel extends BlockDefault {
         setLightOpacity(0);
     }
 
+    @Override
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
+
     private static void loadAllItems(NBTTagCompound tag, NonNullList<ItemStack> list) {
         NBTTagList nbttaglist = tag.getTagList("items", 10);
 
@@ -70,16 +78,9 @@ public class BlockBarrel extends BlockDefault {
             NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
             int j = nbttagcompound.getByte("slot") & 255;
 
-            if (j >= 0 && j < list.size()) {
+            if (j < list.size()) {
                 list.set(j, new ItemStack(nbttagcompound));
             }
-        }
-    }
-
-    @Override
-    public void initModel() {
-        if (getRegistryName() != null) {
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
         }
     }
 
@@ -187,15 +188,32 @@ public class BlockBarrel extends BlockDefault {
     }
 
     @Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
+        return side != EnumFacing.UP && side != EnumFacing.DOWN;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if (worldIn.isRemote) {
+            return;
+        }
+        if (worldIn.isBlockPowered(pos)) {
+            TileBarrel tb = getTE(worldIn, pos);
+            if (tb != null) {
+                tb.handleRedstone(worldIn.isBlockPowered(pos));
+            }
+        }
+    }
+
+    @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         if (stack.hasTagCompound()) {
             NBTTagCompound compound = stack.getTagCompound();
             TileBarrel te = getTE(worldIn, pos);
             if (compound != null && te != null && !stack.isEmpty()) {
-
                 te.setInputTank(te.getInputTank().readFromNBT(stack.getTagCompound().getCompoundTag("inputTank")));
                 te.setOutputTank(te.getOutputTank().readFromNBT(stack.getTagCompound().getCompoundTag("outputTank")));
-
                 ItemStackHandler stackHandler = te.getItemHandler();
                 stackHandler.deserializeNBT(compound.getCompoundTag("items"));
 
