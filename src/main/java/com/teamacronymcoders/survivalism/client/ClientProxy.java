@@ -12,12 +12,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ClientProxy extends CommonProxy {
 
-//    private ICustomModelLoader loader = new ModelLoaderSurvivalism();
-
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
-//        ModelLoaderRegistry.registerLoader(loader);
-    }
+    public void preInit(FMLPreInitializationEvent event) {}
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
