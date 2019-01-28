@@ -34,18 +34,15 @@ public class ContainerBarrelStorage extends ContainerBarrel {
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tile.getItemHandler();
-        int x = 9;
-        int y = 6;
-
-        addSlotToContainer(new SlotItemHandler(itemHandler, 0, 62, 17));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 1, 80, 17));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 2, 98, 17));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 3, 62, 35));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 4, 80, 35));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 5, 98, 35));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 6, 62, 53));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 7, 80, 53));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 8, 98, 53));
+        addSlotToContainer(new SlotSealable(itemHandler, 0, 62, 17, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 1, 80, 17, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 2, 98, 17, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 3, 62, 35, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 4, 80, 35, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 5, 98, 35, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 6, 62, 53, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 7, 80, 53, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 8, 98, 53, tile));
     }
 
     @Override

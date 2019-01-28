@@ -34,19 +34,15 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tile.getItemHandler();
-        int x = 9;
-        int y = 6;
-        addSlotToContainer(new SlotItemHandler(itemHandler, 0, 80, 17));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 1, 80, 17 + 20));
-        addSlotToContainer(new SlotItemHandler(itemHandler, 2, 80, 17 + 40));
-
+        addSlotToContainer(new SlotSealable(itemHandler, 0, 80, 17, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 1, 80, 37, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 2, 80, 57, tile));
         addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
-
     }
 
     @Override

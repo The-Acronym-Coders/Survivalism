@@ -32,10 +32,8 @@ public class ContainerBarrelSoaking extends ContainerBarrel {
 
     private void addOwnSlots() {
         IItemHandler itemHandler = this.tile.getItemHandler();
-        int x = 44;
-        int y = 40;
-        addSlotToContainer(new SlotItemHandler(itemHandler, 0, x, y));
-        addSlotToContainer(new SlotDisabled(itemHandler, 1, -100, -100));
+        addSlotToContainer(new SlotSealable(itemHandler, 0, 44, 40, tile));
+        addSlotToContainer(new SlotSealable(itemHandler, 1, 116, 40, tile));
         addSlotToContainer(new SlotDisabled(itemHandler, 2, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
         addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
