@@ -7,7 +7,6 @@ import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -47,7 +46,6 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 public class BlockBarrel extends BlockDefault {
 
@@ -66,11 +64,6 @@ public class BlockBarrel extends BlockDefault {
         setLightOpacity(0);
     }
 
-    @Override
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
     private static void loadAllItems(NBTTagCompound tag, NonNullList<ItemStack> list) {
         NBTTagList nbttaglist = tag.getTagList("items", 10);
 
@@ -82,6 +75,11 @@ public class BlockBarrel extends BlockDefault {
                 list.set(j, new ItemStack(nbttagcompound));
             }
         }
+    }
+
+    @Override
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
     @Nullable

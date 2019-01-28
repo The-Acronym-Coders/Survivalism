@@ -29,6 +29,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public static final String MCVERSION = "1.12,";
     public static final String DEPS = "" +
             "required-after:patchouli@[1.0-13,);";
+    public static final Random RANDOM = new Random();
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
     @Mod.Instance(Survivalism.MODID)
@@ -36,7 +37,6 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     public static CommonProxy proxy;
     public Logger logger;
-    public static final Random RANDOM = new Random();
 //    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public Survivalism() {

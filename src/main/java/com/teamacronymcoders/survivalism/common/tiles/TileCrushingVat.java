@@ -1,7 +1,6 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
-import com.teamacronymcoders.survivalism.common.inventory.StorageItemHandler;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;

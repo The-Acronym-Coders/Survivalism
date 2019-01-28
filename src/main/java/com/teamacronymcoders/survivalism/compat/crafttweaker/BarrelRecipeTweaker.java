@@ -7,7 +7,6 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRec
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
-import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
@@ -20,7 +19,6 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

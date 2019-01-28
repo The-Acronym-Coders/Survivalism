@@ -13,8 +13,6 @@ import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import com.teamacronymcoders.survivalism.utils.network.MessageSetState;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
-import net.minecraft.block.BlockRailPowered;
-import net.minecraft.block.BlockRedstoneLight;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -118,7 +116,6 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                 sendUpdate = true;
             }
         }
-
 
 
         if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
