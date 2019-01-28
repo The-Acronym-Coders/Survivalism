@@ -135,6 +135,7 @@ public class BarrelRecipeTweaker {
             SoakingRecipe recipe = new SoakingRecipe();
             recipe.setInputFluid(inputFluid);
             recipe.setInputIngredient(ingredient);
+            recipe.setOutputItemStack(outputItemStack);
             recipe.setDecreaseAmount(decreaseAmount);
             if (decreaseChance != 0.0f) {
                 recipe.setDecreaseChance(decreaseChance);
@@ -150,7 +151,7 @@ public class BarrelRecipeTweaker {
             sb.append("Input Fluid: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append(" ");
             sb.append("Input Ingredient: ").append(name).append(" ");
             sb.append("Output ItemStack: ").append(outputItemStack.getDisplayName()).append(" ");
-            sb.append("Fluid Decrease Amount: ").append(decreaseAmount);
+            sb.append("Fluid Decrease Amount: ").append(decreaseAmount).append(" ");
             if (decreaseChance != 0.0f) {
                 sb.append("Decrease Chance: ").append(decreaseChance).append(" ");
             }
