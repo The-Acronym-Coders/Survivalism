@@ -1,5 +1,6 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
+import com.teamacronymcoders.base.blocks.BlockBase;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
@@ -21,7 +22,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlockCrushingVat extends BlockDefault {
+public class BlockCrushingVat extends BlockBase {
 
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
@@ -34,12 +35,12 @@ public class BlockCrushingVat extends BlockDefault {
         setLightOpacity(255);
     }
 
-    @Override
-    public void initModel() {
-        if (getRegistryName() != null) {
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-        }
-    }
+//    @Override
+//    public void initModel() {
+//        if (getRegistryName() != null) {
+//            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+//        }
+//    }
 
     @Nullable
     @Override

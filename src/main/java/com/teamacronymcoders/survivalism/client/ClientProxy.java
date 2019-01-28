@@ -16,10 +16,10 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
     }
 
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event) {
-        ModBlocks.initModels();
-    }
+//    @SubscribeEvent
+//    public void registerModels(ModelRegistryEvent event) {
+//        ModBlocks.initModels();
+//    }
 
     @Override
     public EntityPlayer getClientPlayer() {

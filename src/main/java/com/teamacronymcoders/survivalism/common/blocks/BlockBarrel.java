@@ -1,5 +1,6 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
+import com.teamacronymcoders.base.blocks.BlockBase;
 import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
@@ -47,7 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrel extends BlockDefault {
+public class BlockBarrel extends BlockBase {
 
     public static final PropertyEnum<StorageEnumsBarrelStates> BARREL_STATE = PropertyEnum.create("barrel_state", StorageEnumsBarrelStates.class);
     public static final int GUI_ID = 1;
@@ -77,10 +78,10 @@ public class BlockBarrel extends BlockDefault {
         }
     }
 
-    @Override
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
+//    @Override
+//    public void initModel() {
+//        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+//    }
 
     @Nullable
     @Override
