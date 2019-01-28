@@ -252,7 +252,7 @@ public class BlockBarrel extends BlockBase {
 
     @Override
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
-        if (itemIn instanceof SurvivalismTab) {
+        if (itemIn instanceof SurvivalismTab || itemIn == CreativeTabs.SEARCH) {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = new ItemStack(this, 1, i);
                 NBTTagCompound nbt = new NBTTagCompound();
