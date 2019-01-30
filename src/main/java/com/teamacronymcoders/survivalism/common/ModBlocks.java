@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.common;
 import com.teamacronymcoders.survivalism.common.blocks.*;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -16,7 +17,7 @@ import net.minecraftforge.fml.relauncher.*;
 public class ModBlocks {
 
     @GameRegistry.ObjectHolder("survivalism:barrel")
-    static BlockBarrel blockBarrel;
+    public static BlockBarrel blockBarrel;
 
     @GameRegistry.ObjectHolder("survivalism:crushing_vat")
     static BlockCrushingVat blockCrushingVat;

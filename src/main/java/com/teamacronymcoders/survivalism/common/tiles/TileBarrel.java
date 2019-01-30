@@ -23,6 +23,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -105,7 +106,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                 sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
             }
         }
-        if (!this.world.isRemote) {
+        if (this.world.isRemote) {
             if (prevSealed != sealed) {
                 prevSealed = sealed;
                 sendUpdate = true;
@@ -130,7 +131,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                             List<Ingredient> recipeInputIngredients = trueRecipe.getInputIngredients();
                             FluidStack recipeOutputFluidStack = trueRecipe.getOutputFluid();
                             int ticks = trueRecipe.getTicks();
-                            if (inputTankFluid.getFluid().equals(recipeInputFS.getFluid())) {
+                            if (inputTankFluid.getFluid().equals(recipeInputFS.getFluid()) && inputTankFluid.amount >= recipeInputFS.amount) {
                                 List<ItemStack> itemStacks = new ArrayList<>();
 
                                 for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -167,12 +168,17 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                                     durationTicks = ticks;
                                     currentTicks += 1;
                                     if (currentTicks >= durationTicks) {
-                                        inputTank.drain(recipeInputFS, true);
+                                        getInputTank().drain(recipeInputFS, true);
                                         itemHandler.getStackInSlot(0).shrink(1);
                                         itemHandler.getStackInSlot(1).shrink(1);
                                         itemHandler.getStackInSlot(2).shrink(1);
-                                        getOutputTank().fill(recipeOutputFluidStack, true);
-                                        durationTicks = 0;
+                                        if (getOutputTank().getFluid() == null) {
+                                            getOutputTank().setFluid(recipeOutputFluidStack);
+                                        } else {
+                                            getOutputTank().fill(recipeOutputFluidStack, true);
+                                        }
+                                        currentTicks = 0;
+                                        sendUpdatePacketClient();
                                     }
                                 }
                             }
@@ -225,6 +231,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                                         } else {
                                             outputSlotStack.grow(recipeOutputStack.getCount());
                                         }
+                                        sendUpdatePacketClient();
                                     }
                                 }
                             }

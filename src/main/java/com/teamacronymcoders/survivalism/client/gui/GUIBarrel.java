@@ -80,10 +80,7 @@ public class GUIBarrel extends GuiContainer {
                 }
             }
         });
-
-        if (!te.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
-            buttonList.add(new GuiButtonExt(1, 450, 150, 54, buttonH, "Sealed"));
-        }
+        buttonList.add(new GuiButtonExt(1, 450, 150, 54, buttonH, "Sealed"));
     }
 
     @Override
@@ -101,12 +98,10 @@ public class GUIBarrel extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(true_background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        if (!te.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
-            if (te.checkSealedState(true)) {
-                mc.fontRenderer.drawString("Sealed", guiLeft + 72, guiTop + 5, 4210752);
-            } else if (te.checkSealedState(false)) {
-                mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
-            }
+        if (te.checkSealedState(true)) {
+            mc.fontRenderer.drawString("Sealed", guiLeft + 72, guiTop + 5, 4210752);
+        } else if (te.checkSealedState(false)) {
+            mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
         }
     }
 
@@ -141,7 +136,7 @@ public class GUIBarrel extends GuiContainer {
                 int y = Math.round(65 - offset);
                 tooltipY = y;
                 int h = Math.round(offset - 1);
-                HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getOutputTank().getFluid());
+                HelperFluid.renderTiledFluid(116, y, 16, h, 1, te.getOutputTank().getFluid());
             }
         }
     }

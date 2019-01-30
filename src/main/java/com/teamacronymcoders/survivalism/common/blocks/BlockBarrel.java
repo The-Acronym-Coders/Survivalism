@@ -7,10 +7,7 @@ import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockShulkerBox;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -24,6 +21,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
@@ -183,12 +181,16 @@ public class BlockBarrel extends BlockBase {
 
         if (!barrel.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
             if (!state.getValue(SEALED_STATE)) {
+                if (playerIn.getHeldItem(hand).getItem().equals(Item.getItemFromBlock(Blocks.SPONGE))) {
+                    FluidUtil.getFluidHandler(worldIn, pos, null).drain(Integer.MAX_VALUE, true);
+                    FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN).drain(Integer.MAX_VALUE, true);
+                }
                 if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                     ItemStack stack = playerIn.getHeldItem(hand);
                     FluidStack fs = FluidUtil.getFluidContained(stack);
                     if (fs != null) {
                         if (fs.amount == 0) {
-                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(stack), Integer.MAX_VALUE, playerIn, true);
+                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
                         }
                         if (fs.amount == 1000) {
                             FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
@@ -233,7 +235,6 @@ public class BlockBarrel extends BlockBase {
                 te.setOutputTank(te.getOutputTank().readFromNBT(stack.getTagCompound().getCompoundTag("outputTank")));
                 ItemStackHandler stackHandler = te.getItemHandler();
                 stackHandler.deserializeNBT(compound.getCompoundTag("items"));
-
             }
         }
     }
@@ -333,23 +334,25 @@ public class BlockBarrel extends BlockBase {
 
                 if (compound.hasKey("items")) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
-                        NonNullList<ItemStack> nonNullList = NonNullList.withSize(9, ItemStack.EMPTY);
-                        ItemStackHelper.loadAllItems(compound, nonNullList);
-
                         int c = 0;
                         int d = 0;
+
+                        NonNullList<ItemStack> nonNullList = NonNullList.withSize(9, ItemStack.EMPTY);
+                        ItemStackHelper.loadAllItems(compound.getCompoundTag("items"), nonNullList);
+
+                        tooltip.add("Inventory:");
 
                         for (ItemStack itemstack : nonNullList) {
                             if (!itemstack.isEmpty()) {
                                 ++d;
                                 if (c <= 4) {
                                     ++c;
-                                    tooltip.add(String.format("%s x%d", itemstack.getDisplayName(), itemstack.getCount()));
+                                    tooltip.add(String.format(" %dx %s", itemstack.getCount(), itemstack.getDisplayName()));
                                 }
                             }
                         }
                         if (d - c > 0) {
-                            tooltip.add(String.format(TextFormatting.ITALIC + I18n.format("container.shulkerBox.more"), d - c));
+                            tooltip.add(" " + TextFormatting.ITALIC + I18n.format("container.shulkerBox.more", d - c));
                         }
                     } else if (!Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
                         tooltip.add(TextFormatting.GRAY + "Press Shift + R-Ctrl for Item Information");

@@ -29,7 +29,7 @@ public class VatRecipeTweaker {
 
     @ZenMethod
     public static void addCrushingRecipe(IIngredient inputIngredient, ILiquidStack outputFluidStack, int jumps, @Optional IItemStack outputStack, @Optional float chanceOutput) {
-        Survivalism.LATE_ADDITIONS.add(new addCrushingRecipe(inputIngredient, outputStack, chanceOutput, outputFluidStack, jumps));
+        Survivalism.LATE_ADDITIONS.add(new addCrushingRecipe(inputIngredient, outputFluidStack, jumps, outputStack, chanceOutput));
     }
 
     @ZenMethod
@@ -40,25 +40,22 @@ public class VatRecipeTweaker {
     private static class addCrushingRecipe implements IAction {
         String name;
         Ingredient inputIngredient;
-        ItemStack outputStack;
-        float chanceOutput;
-        @Nonnull
         FluidStack outputFluidStack;
         int jumps;
+        ItemStack outputStack;
+        float chanceOutput;
 
-        addCrushingRecipe(IIngredient inputIngredient, IItemStack outputStack, float chanceOutput, ILiquidStack outputFluid, int jumps) {
+        addCrushingRecipe(IIngredient inputIngredient, ILiquidStack outputFluid, int jumps, IItemStack outputStack, float chanceOutput) {
             this.name = inputIngredient.toCommandString();
             this.inputIngredient = CraftTweakerMC.getIngredient(inputIngredient);
-            if (!outputStack.isEmpty()) {
+            this.outputFluidStack = CraftTweakerMC.getLiquidStack(outputFluid);
+            this.jumps = jumps;
+            if (outputStack != null && !outputStack.isEmpty()) {
                 this.outputStack = CraftTweakerMC.getItemStack(outputStack);
             }
-
             if (chanceOutput != 0.0f) {
                 this.chanceOutput = chanceOutput;
             }
-
-            this.outputFluidStack = CraftTweakerMC.getLiquidStack(outputFluid);
-            this.jumps = jumps;
         }
 
         @Override
@@ -66,7 +63,7 @@ public class VatRecipeTweaker {
             RecipeVat recipeVat = new RecipeVat();
             recipeVat.setInputIngredient(inputIngredient);
             recipeVat.setOutputFluid(outputFluidStack);
-            if (!outputStack.isEmpty()) {
+            if (outputStack != null && !outputStack.isEmpty()) {
                 recipeVat.setOutputStack(outputStack);
             }
             if (chanceOutput != 0.0f) {
@@ -83,7 +80,7 @@ public class VatRecipeTweaker {
             StringBuilder sb = new StringBuilder();
             sb.append("Added Crushing Recipe:").append(" ");
             sb.append("Input: ").append(name).append(" ");
-            if (!outputStack.isEmpty()) {
+            if (outputStack != null && !outputStack.isEmpty()) {
                 sb.append("Output: ").append(outputStack.getDisplayName()).append(" ");
             }
             if (chanceOutput != 0.0f) {
