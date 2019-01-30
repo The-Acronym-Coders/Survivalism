@@ -20,12 +20,6 @@ public class ModBlocks {
 
     @GameRegistry.ObjectHolder("survivalism:crushing_vat")
     static BlockCrushingVat blockCrushingVat;
-
-//    @SideOnly(Side.CLIENT)
-//    public static void initModels() {
-//        blockBarrel.initModel();
-//        blockCrushingVat.initModel();
-//    }
     
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -35,7 +29,6 @@ public class ModBlocks {
         for(int i = 0; i < items.size(); i++) {
             ItemStack item = items.get(i);
             ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel", "inventory"));
-            
         }
         items.clear();
         blockCrushingVat.getSubBlocks(CreativeTabs.SEARCH, items);
@@ -43,7 +36,7 @@ public class ModBlocks {
             ItemStack item = items.get(i);
             ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
         }
-        
+
     }
 
 }

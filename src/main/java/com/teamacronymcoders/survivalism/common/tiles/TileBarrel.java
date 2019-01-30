@@ -322,8 +322,11 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
     public boolean checkBarrelState(StorageEnumsBarrelStates expectedBarrelState) {
         IBlockState currentState = this.getWorld().getBlockState(this.getPos());
-        StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
-        return currentBarrelState == expectedBarrelState;
+        if (currentState.getPropertyKeys().contains(BlockBarrel.BARREL_STATE)) {
+            StorageEnumsBarrelStates currentBarrelState = currentState.getValue(BlockBarrel.BARREL_STATE);
+            return currentBarrelState == expectedBarrelState;
+        }
+        return false;
     }
 
     public void cycleBarrelStates(IBlockState state) {
@@ -393,7 +396,10 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     }
 
     public ItemStackHandler getItemHandler() {
-        return itemHandler;
+        if (itemHandler != null) {
+            return itemHandler;
+        }
+        return null;
     }
 
     @Override

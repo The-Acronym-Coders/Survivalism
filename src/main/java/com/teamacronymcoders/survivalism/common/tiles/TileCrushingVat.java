@@ -1,12 +1,17 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
+import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
+import com.teamacronymcoders.survivalism.utils.network.MessageUpdateCrushingVat;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -16,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -32,6 +38,7 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     private RecipeVat recipeVat;
     private double jumpsTargeted = 0.0D;
     private double jumpsContained = 0.0D;
+    private int prevFluid;
 
     public TileCrushingVat() {
         tank = new FluidTank(TileBarrel.TANK_CAPACITY);
@@ -51,6 +58,7 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     }
 
     public void makeProgress(EntityLivingBase entity) {
+        boolean sendUpdate = false;
         Double multiplier = 0.0D;
         Map<Item, Double> map = RecipeStorage.getBootMultiplierMap();
 
@@ -59,6 +67,15 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
             jumpsTargeted = 0.0D;
             jumpsContained = 0.0D;
             return;
+        }
+
+
+
+        if (!this.world.isRemote) {
+            if (prevFluid != (getTank() != null ? getTank().getFluidAmount() : 0)) {
+                prevFluid = getTank() != null ? getTank().getFluidAmount() : 0;
+                sendUpdate = true;
+            }
         }
 
         if (recipeVat != null) {
@@ -97,6 +114,10 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
                 tank.fill(recipeVat.getOutputFluid(), true);
                 jumpsContained = 0.0D;
             }
+        }
+
+        if (sendUpdate) {
+            sendUpdatePacketClient();
         }
     }
 
@@ -159,5 +180,34 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     @Override
     public void updateSlot(int slot, ItemStack stack) {
         this.markDirty();
+    }
+
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
+
+    public ItemStackHandler getInputItemHandler() {
+        if (inputItemHandler != null) {
+            return inputItemHandler;
+        }
+        return null;
+    }
+
+    public ItemStackHandler getOutputItemHandler() {
+        if (outputItemHandler != null) {
+            return outputItemHandler;
+        }
+        return null;
+    }
+
+    public FluidTank getTank() {
+        return tank;
+    }
+
+    private void sendUpdatePacketClient() {
+        this.markDirty();
+        this.prevFluid = getTank().getFluidAmount();
+        Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateCrushingVat(this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), (double) this.getPos().getX(), (double) this.getPos().getY(), (double) this.getPos().getZ(), 128d));
+        this.world.notifyNeighborsOfStateChange(getPos(), getBlockType(), true);
     }
 }

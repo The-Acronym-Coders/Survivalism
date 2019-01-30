@@ -3,8 +3,11 @@ package com.teamacronymcoders.survivalism.client;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelBrewing;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
+import com.teamacronymcoders.survivalism.client.container.vat.ContainerVat;
 import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
+import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,6 +33,10 @@ public class GUIProxy implements IGuiHandler {
                 return new ContainerBarrelSoaking(player.inventory, barrel);
             }
         }
+        if (te instanceof TileCrushingVat) {
+            TileCrushingVat vat = (TileCrushingVat) te;
+            return new ContainerVat(player.inventory, vat);
+        }
         return null;
     }
 
@@ -47,6 +54,10 @@ public class GUIProxy implements IGuiHandler {
             } else if (barrel.checkBarrelState(StorageEnumsBarrelStates.SOAKING)) {
                 return new GUIBarrel(barrel, new ContainerBarrelSoaking(player.inventory, barrel));
             }
+        }
+        if (te instanceof TileCrushingVat) {
+            TileCrushingVat vat = (TileCrushingVat) te;
+            return new GUICrushingVat(vat, new ContainerVat(player.inventory, vat));
         }
         return null;
     }

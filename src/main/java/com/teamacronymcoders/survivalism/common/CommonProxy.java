@@ -35,10 +35,8 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                new ItemBlock(ModBlocks.blockBarrel).setRegistryName(ModBlocks.blockBarrel.getRegistryName()),
-                new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(ModBlocks.blockCrushingVat.getRegistryName())
-        );
+        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel).setRegistryName(ModBlocks.blockBarrel.getRegistryName()));
+        event.getRegistry().register(new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(ModBlocks.blockCrushingVat.getRegistryName()));
     }
 
     public void preInit(FMLPreInitializationEvent event) {

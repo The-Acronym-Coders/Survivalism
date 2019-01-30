@@ -8,6 +8,8 @@ import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -22,6 +24,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
@@ -64,24 +69,6 @@ public class BlockBarrel extends BlockBase {
         setSoundType(SoundType.WOOD);
         setLightOpacity(0);
     }
-
-    private static void loadAllItems(NBTTagCompound tag, NonNullList<ItemStack> list) {
-        NBTTagList nbttaglist = tag.getTagList("items", 10);
-
-        for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound.getByte("slot") & 255;
-
-            if (j < list.size()) {
-                list.set(j, new ItemStack(nbttagcompound));
-            }
-        }
-    }
-
-//    @Override
-//    public void initModel() {
-//        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-//    }
 
     @Nullable
     @Override
@@ -138,25 +125,48 @@ public class BlockBarrel extends BlockBase {
     }
 
     @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
+        return true;
+    }
+
+    @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    }
+
+    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        compound = new NBTTagCompound();
-        TileEntity te = getTE(worldIn, pos);
-        if (te != null) {
-            compound.setInteger("barrel_state", state.getValue(BARREL_STATE).ordinal());
-            compound.setBoolean("sealed", state.getValue(SEALED_STATE));
-            compound.setTag("inputTank", ((TileBarrel) te).getInputTank().writeToNBT(new NBTTagCompound()));
-            compound.setTag("outputTank", ((TileBarrel) te).getOutputTank().writeToNBT(new NBTTagCompound()));
-            compound.setTag("items", ((TileBarrel) te).getItemHandler().serializeNBT());
+        TileBarrel te = getTE(worldIn, pos);
+        if (te.getItemHandler() != null) {
+            if (state.getValue(SEALED_STATE)) {
+                compound = new NBTTagCompound();
+                compound.setInteger("barrel_state", state.getValue(BARREL_STATE).ordinal());
+                compound.setBoolean("sealed", state.getValue(SEALED_STATE));
+                compound.setTag("inputTank", (te.getInputTank().writeToNBT(new NBTTagCompound())));
+                compound.setTag("outputTank", (te.getOutputTank().writeToNBT(new NBTTagCompound())));
+                compound.setTag("items", (te.getItemHandler().serializeNBT()));
+            } else {
+                for (int i = 0; i < te.getItemHandler().getSlots(); i++) {
+                    ItemStack stack = te.getItemHandler().getStackInSlot(i);
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+                }
+            }
         }
     }
 
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        drops.clear();
-        int meta = getMetaFromState(state);
-        ItemStack stack = new ItemStack(this, 1, meta);
-        stack.setTagCompound(compound);
-        drops.add(stack);
+        if (!state.getValue(SEALED_STATE)) {
+            int meta = getMetaFromState(state);
+            ItemStack stack = new ItemStack(this, 1, meta);
+            drops.add(stack);
+        } else {
+            drops.clear();
+            int meta = getMetaFromState(state);
+            ItemStack stack = new ItemStack(this, 1, meta);
+            stack.setTagCompound(compound);
+            drops.add(stack);
+        }
     }
 
     @Override
@@ -175,7 +185,15 @@ public class BlockBarrel extends BlockBase {
             if (!state.getValue(SEALED_STATE)) {
                 if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                     ItemStack stack = playerIn.getHeldItem(hand);
-                    FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
+                    FluidStack fs = FluidUtil.getFluidContained(stack);
+                    if (fs != null) {
+                        if (fs.amount == 0) {
+                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(stack), Integer.MAX_VALUE, playerIn, true);
+                        }
+                        if (fs.amount == 1000) {
+                            FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
+                        }
+                    }
                     playerIn.openContainer.detectAndSendChanges();
                     return true;
                 }
@@ -253,11 +271,16 @@ public class BlockBarrel extends BlockBase {
     @Override
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         if (itemIn instanceof SurvivalismTab || itemIn == CreativeTabs.SEARCH) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 6; i++) {
                 ItemStack stack = new ItemStack(this, 1, i);
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger("barrel_state", i);
-                nbt.setBoolean("sealed", false);
+                if (i <= 2) {
+                    nbt.setInteger("barrel_state", i);
+                    nbt.setBoolean("sealed", false);
+                } else {
+                    nbt.setInteger("barrel_state", i - 3);
+                    nbt.setBoolean("sealed", true);
+                }
                 stack.setTagCompound(nbt);
                 items.add(stack);
             }
@@ -311,28 +334,27 @@ public class BlockBarrel extends BlockBase {
                 if (compound.hasKey("items")) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
                         NonNullList<ItemStack> nonNullList = NonNullList.withSize(9, ItemStack.EMPTY);
-                        loadAllItems(compound, nonNullList);
-                        int i = 0;
-                        int j = 0;
+                        ItemStackHelper.loadAllItems(compound, nonNullList);
+
+                        int c = 0;
+                        int d = 0;
 
                         for (ItemStack itemstack : nonNullList) {
                             if (!itemstack.isEmpty()) {
-                                ++j;
-
-                                if (i <= 4) {
-                                    ++i;
+                                ++d;
+                                if (c <= 4) {
+                                    ++c;
                                     tooltip.add(String.format("%s x%d", itemstack.getDisplayName(), itemstack.getCount()));
                                 }
                             }
                         }
-                        if (j - i > 0) {
-                            tooltip.add(String.format(TextFormatting.ITALIC + I18n.format("container.shulkerBox.more"), j - i));
+                        if (d - c > 0) {
+                            tooltip.add(String.format(TextFormatting.ITALIC + I18n.format("container.shulkerBox.more"), d - c));
                         }
                     } else if (!Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
                         tooltip.add(TextFormatting.GRAY + "Press Shift + R-Ctrl for Item Information");
                     }
                 }
-
             } else if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(TextFormatting.GRAY + "Press Shift for Barrel Information");
             }
@@ -343,9 +365,7 @@ public class BlockBarrel extends BlockBase {
     @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[]{BARREL_STATE, SEALED_STATE}, new IUnlistedProperty[]{PropertySideType.SIDE_TYPE[0], PropertySideType.SIDE_TYPE[1],
-                PropertySideType.SIDE_TYPE[2], PropertySideType.SIDE_TYPE[3],
-                PropertySideType.SIDE_TYPE[4], PropertySideType.SIDE_TYPE[5]});
+        return new BlockStateContainer(this, BARREL_STATE, SEALED_STATE);
     }
 
 
