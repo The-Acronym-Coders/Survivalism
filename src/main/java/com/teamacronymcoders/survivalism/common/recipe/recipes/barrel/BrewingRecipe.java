@@ -5,20 +5,20 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Map;
 
 public class BrewingRecipe extends RecipeBarrel {
     private FluidStack inputFluid;
-    private List<Ingredient> inputIngredients;
+    private Map<Ingredient, Integer> inputIngredientsMap;
     private FluidStack outputFluid;
     private int ticks;
 
     public BrewingRecipe() {
     }
 
-    public BrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<Ingredient> inputIngredients, @Nonnull FluidStack outputFluid, int ticks) {
+    public BrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Map<Ingredient, Integer> inputIngredientsMap, @Nonnull FluidStack outputFluid, int ticks) {
         this.inputFluid = inputFluid;
-        this.inputIngredients = inputIngredients;
+        this.inputIngredientsMap = inputIngredientsMap;
         this.outputFluid = outputFluid;
         this.ticks = ticks;
     }
@@ -31,12 +31,13 @@ public class BrewingRecipe extends RecipeBarrel {
         this.inputFluid = inputFluid;
     }
 
-    public List<Ingredient> getInputIngredients() {
-        return inputIngredients;
+
+    public Map<Ingredient, Integer> getInputIngredientsMap() {
+        return inputIngredientsMap;
     }
 
-    public void setInputIngredients(List<Ingredient> inputIngredients) {
-        this.inputIngredients = inputIngredients;
+    public void setInputIngredientsMap(Map<Ingredient, Integer> inputIngredientsMap) {
+        this.inputIngredientsMap = inputIngredientsMap;
     }
 
     public FluidStack getOutputFluid() {

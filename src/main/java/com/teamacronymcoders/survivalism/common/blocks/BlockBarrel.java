@@ -1,20 +1,17 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
 import com.teamacronymcoders.base.blocks.BlockBase;
-import com.teamacronymcoders.base.blocks.properties.PropertySideType;
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,14 +19,12 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -38,9 +33,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -179,26 +171,27 @@ public class BlockBarrel extends BlockBase {
             return true;
         }
 
-        if (!barrel.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
-            if (!state.getValue(SEALED_STATE)) {
-                if (playerIn.getHeldItem(hand).getItem().equals(Item.getItemFromBlock(Blocks.SPONGE))) {
-                    FluidUtil.getFluidHandler(worldIn, pos, null).drain(Integer.MAX_VALUE, true);
-                    FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN).drain(Integer.MAX_VALUE, true);
-                }
-                if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
-                    ItemStack stack = playerIn.getHeldItem(hand);
-                    FluidStack fs = FluidUtil.getFluidContained(stack);
-                    if (fs != null) {
-                        if (fs.amount == 0) {
-                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
-                        }
-                        if (fs.amount == 1000) {
-                            FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
-                        }
+        if (!state.getValue(SEALED_STATE)) {
+            if (playerIn.getHeldItem(hand).getItem().equals(Item.getItemFromBlock(Blocks.SPONGE))) {
+                FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.NORTH).drain(Integer.MAX_VALUE, true);
+                FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN).drain(Integer.MAX_VALUE, true);
+                barrel.sendUpdatePacketClient();
+            } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
+                ItemStack stack = playerIn.getHeldItem(hand);
+                FluidStack fs = FluidUtil.getFluidContained(stack);
+                if (fs != null) {
+                    if (fs.amount == 0) {
+                        FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
+                        barrel.sendUpdatePacketClient();
                     }
-                    playerIn.openContainer.detectAndSendChanges();
-                    return true;
+                    if (fs.amount == 1000) {
+                        FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
+                        barrel.sendUpdatePacketClient();
+                    }
                 }
+
+                playerIn.openContainer.detectAndSendChanges();
+                return true;
             }
         }
 

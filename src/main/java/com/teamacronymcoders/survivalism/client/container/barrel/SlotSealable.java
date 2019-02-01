@@ -1,12 +1,10 @@
 package com.teamacronymcoders.survivalism.client.container.barrel;
 
 import com.teamacronymcoders.survivalism.common.ModBlocks;
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;

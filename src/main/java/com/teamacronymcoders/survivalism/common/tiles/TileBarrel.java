@@ -21,9 +21,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -31,8 +31,10 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TileBarrel extends TileBase implements ITickable, IUpdatingInventory {
 
@@ -106,7 +108,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                 sealed = this.getWorld().getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE);
             }
         }
-        if (this.world.isRemote) {
+        if (!world.isRemote) {
             if (prevSealed != sealed) {
                 prevSealed = sealed;
                 sendUpdate = true;
@@ -118,7 +120,6 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             }
         }
 
-
         if (checkBarrelState(StorageEnumsBarrelStates.BREWING) && this.world.getBlockState(this.getPos()).getValue(BlockBarrel.SEALED_STATE)) {
             FluidTank inputTank = getInputTank();
             if (inputTank != null) {
@@ -128,56 +129,75 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                         if (recipe instanceof BrewingRecipe) {
                             BrewingRecipe trueRecipe = (BrewingRecipe) recipe;
                             FluidStack recipeInputFS = trueRecipe.getInputFluid();
-                            List<Ingredient> recipeInputIngredients = trueRecipe.getInputIngredients();
+                            Map<Ingredient, Integer> recipeInputIngredients = trueRecipe.getInputIngredientsMap();
                             FluidStack recipeOutputFluidStack = trueRecipe.getOutputFluid();
                             int ticks = trueRecipe.getTicks();
-                            if (inputTankFluid.getFluid().equals(recipeInputFS.getFluid()) && inputTankFluid.amount >= recipeInputFS.amount) {
-                                List<ItemStack> itemStacks = new ArrayList<>();
 
-                                for (int i = 0; i < itemHandler.getSlots(); i++) {
-                                    itemStacks.add(itemHandler.getStackInSlot(i));
+                            if (inputTankFluid.getFluid().equals(recipeInputFS.getFluid()) && inputTankFluid.amount >= recipeInputFS.amount) {
+                                boolean valid = true;
+
+                                Set<Ingredient> keys = recipeInputIngredients.keySet();
+                                Map<Ingredient, Boolean> checkMap = new HashMap<>();
+                                for (Ingredient ingredient : keys) {
+                                    checkMap.put(ingredient, false);
                                 }
 
-                                boolean check1 = false;
-                                boolean check2 = false;
-                                boolean check3 = false;
-
-                                if (!(recipeInputIngredients.get(0) == null && recipeInputIngredients.get(1) == null && recipeInputIngredients.get(2) == null)) {
-                                    for (ItemStack stack : itemStacks) {
-                                        if (recipeInputIngredients.get(0) == null) {
-                                            check1 = true;
-                                        } else if (recipeInputIngredients.get(0).apply(stack)) {
-                                            check1 = true;
-                                        }
-
-                                        if (recipeInputIngredients.get(1) == null) {
-                                            check2 = true;
-                                        } else if (recipeInputIngredients.get(1).apply(stack)) {
-                                            check2 = true;
-                                        }
-
-                                        if (recipeInputIngredients.get(2) == null) {
-                                            check3 = true;
-                                        } else if (recipeInputIngredients.get(2).apply(stack)) {
-                                            check3 = true;
+                                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                                    ItemStack inv = itemHandler.getStackInSlot(i);
+                                    for (Ingredient ingredient : keys) {
+                                        if (ingredient.apply(inv) && !checkMap.get(ingredient)) {
+                                            checkMap.remove(ingredient);
+                                            checkMap.put(ingredient, true);
+                                            break;
                                         }
                                     }
                                 }
 
-                                if (check1 && check2 && check3) {
+                                for (Ingredient ingredient : keys) {
+                                    if (!checkMap.get(ingredient)) {
+                                        valid = false;
+                                    }
+                                }
+
+                                if (valid) {
                                     durationTicks = ticks;
                                     currentTicks += 1;
                                     if (currentTicks >= durationTicks) {
+                                        currentTicks = 0;
                                         getInputTank().drain(recipeInputFS, true);
-                                        itemHandler.getStackInSlot(0).shrink(1);
-                                        itemHandler.getStackInSlot(1).shrink(1);
-                                        itemHandler.getStackInSlot(2).shrink(1);
+
+                                        for (Ingredient ingredient : keys) {
+                                            if (checkMap.get(ingredient)) {
+                                                checkMap.remove(ingredient);
+                                                checkMap.put(ingredient, false);
+                                            }
+                                        }
+
+                                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                                            ItemStack inv = itemHandler.getStackInSlot(i);
+                                            for (Ingredient ingredient : keys) {
+                                                if (ingredient.apply(inv) && !checkMap.get(ingredient)) {
+                                                    checkMap.remove(ingredient);
+                                                    checkMap.put(ingredient, true);
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                                            ItemStack inv = itemHandler.getStackInSlot(i);
+                                            for (Ingredient ingredient : keys) {
+                                                if (!checkMap.get(ingredient) && ingredient.apply(inv)) {
+                                                    itemHandler.getStackInSlot(i).shrink(recipeInputIngredients.get(ingredient));
+                                                }
+                                            }
+                                        }
+
                                         if (getOutputTank().getFluid() == null) {
                                             getOutputTank().setFluid(recipeOutputFluidStack);
                                         } else {
                                             getOutputTank().fill(recipeOutputFluidStack, true);
                                         }
-                                        currentTicks = 0;
                                         sendUpdatePacketClient();
                                     }
                                 }
@@ -196,42 +216,82 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
                             SoakingRecipe trueRecipe = (SoakingRecipe) recipe;
                             Ingredient recipeInputIS = trueRecipe.getInputIngredient();
                             FluidStack recipeInputFS = trueRecipe.getInputFluid();
-                            ItemStack recipeOutputStack = trueRecipe.getOutputItemStack();
+                            ItemStack recipeOutputStack = trueRecipe.getOutputItemStack().copy();
+                            int ticks = trueRecipe.getTicks();
                             int recipeDecreaseAmount = trueRecipe.getDecreaseAmount();
                             float recipeDecreaseChance = trueRecipe.getDecreaseChance();
-                            int ticks = trueRecipe.getTicks();
-                            if (inputTankStack.getFluid().equals(recipeInputFS.getFluid())) {
-                                if (recipeInputIS.apply(itemHandler.getStackInSlot(0))) {
-                                    durationTicks = ticks;
-                                    if (recipeDecreaseAmount != 0 && recipeDecreaseChance == 0.0f || recipeDecreaseChance == 1.0f) {
-                                        int val = recipeDecreaseAmount / durationTicks;
-                                        inputTank.drain(val, true);
-                                        val2 += val;
+                            ItemStack outputSlotStack = itemHandler.getStackInSlot(1);
+                            if (recipeInputFS != null && inputTankStack.getFluid().equals(recipeInputFS.getFluid())) {
+                                if (recipeInputIS instanceof IngredientNBT) {
+                                    boolean valid = true;
+                                    if (!recipeInputIS.apply(itemHandler.getStackInSlot(0))) {
+                                        valid = false;
                                     }
-                                    currentTicks++;
-                                    if (currentTicks >= durationTicks) {
-                                        currentTicks = 0;
-                                        itemHandler.getStackInSlot(0).shrink(1);
-                                        if (recipeDecreaseAmount != 0) {
-                                            if (recipeDecreaseChance == 0.0f || recipeDecreaseChance == 1.0f) {
-                                                if (val2 != recipeDecreaseAmount) {
-                                                    int dif = recipeDecreaseAmount - val2;
-                                                    inputTank.drain(dif, true);
+                                    if (valid) {
+                                        durationTicks = ticks;
+                                        currentTicks++;
+                                        if (currentTicks >= durationTicks) {
+                                            currentTicks = 0;
+                                            itemHandler.getStackInSlot(0).shrink(1);
+                                            if (outputSlotStack.isEmpty()) {
+                                                itemHandler.setStackInSlot(1, recipeOutputStack.copy());
+                                            } else {
+                                                if (outputSlotStack.getItem().equals(recipeOutputStack.getItem())) {
+                                                    if (recipeOutputStack.hasTagCompound() && outputSlotStack.hasTagCompound()) {
+                                                        if (outputSlotStack.getTagCompound() == recipeOutputStack.getTagCompound()) {
+                                                            outputSlotStack.grow(recipeOutputStack.getCount());
+                                                        }
+                                                    } else {
+                                                        outputSlotStack.grow(recipeOutputStack.getCount());
+                                                    }
                                                 }
                                             }
-                                            if (recipeDecreaseChance != 0.0f && recipeDecreaseChance != 1.0f) {
-                                                if (HelperMath.tryPercentage(recipeDecreaseChance)) {
+                                            if (recipeDecreaseAmount != 0) {
+                                                if (recipeDecreaseChance == 0.0f || recipeDecreaseChance == 1.0f) {
                                                     inputTank.drain(recipeDecreaseAmount, true);
                                                 }
+                                                if (recipeDecreaseChance != 0.0f && recipeDecreaseChance != 1.0f) {
+                                                    if (HelperMath.tryPercentage(recipeDecreaseChance)) {
+                                                        inputTank.drain(recipeDecreaseAmount, true);
+                                                    }
+                                                }
                                             }
+                                            sendUpdatePacketClient();
                                         }
-                                        ItemStack outputSlotStack = itemHandler.getStackInSlot(1);
-                                        if (outputSlotStack.isEmpty()) {
-                                            itemHandler.setStackInSlot(recipeOutputStack.getCount(), recipeOutputStack);
-                                        } else {
-                                            outputSlotStack.grow(recipeOutputStack.getCount());
+                                    }
+                                } else {
+                                    if (recipeInputIS.apply(itemHandler.getStackInSlot(0))) {
+                                        durationTicks = ticks;
+                                        currentTicks++;
+                                        if (currentTicks >= durationTicks) {
+                                            currentTicks = 0;
+                                            itemHandler.getStackInSlot(0).shrink(1);
+                                            if (outputSlotStack.isEmpty()) {
+                                                itemHandler.setStackInSlot(1, recipeOutputStack.copy());
+                                            } else {
+                                                if (outputSlotStack.getItem().equals(recipeOutputStack.getItem())) {
+                                                    if (recipeOutputStack.hasTagCompound() && outputSlotStack.hasTagCompound()) {
+                                                        if (outputSlotStack.getTagCompound() == recipeOutputStack.getTagCompound()) {
+                                                            itemHandler.getStackInSlot(1).grow(recipeOutputStack.getCount());
+                                                        }
+                                                    } else {
+                                                        itemHandler.getStackInSlot(1).grow(recipeOutputStack.getCount());
+                                                    }
+                                                }
+                                            }
+
+                                            if (recipeDecreaseAmount != 0) {
+                                                if (recipeDecreaseChance == 0.0f || recipeDecreaseChance == 1.0f) {
+                                                    inputTank.drain(recipeDecreaseAmount, true);
+                                                }
+                                                if (recipeDecreaseChance != 0.0f && recipeDecreaseChance != 1.0f) {
+                                                    if (HelperMath.tryPercentage(recipeDecreaseChance)) {
+                                                        inputTank.drain(recipeDecreaseAmount, true);
+                                                    }
+                                                }
+                                            }
+                                            sendUpdatePacketClient();
                                         }
-                                        sendUpdatePacketClient();
                                     }
                                 }
                             }

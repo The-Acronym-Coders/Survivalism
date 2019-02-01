@@ -4,7 +4,6 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.vat.ContainerVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
-import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
@@ -12,11 +11,9 @@ public class GUICrushingVat extends GuiContainer {
 
     private static final int WIDTH = 180;
     private static final int HEIGHT = 163;
-    private int tooltipY;
-
-    private TileCrushingVat te;
-
     private static final ResourceLocation crushing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking.png");
+    private int tooltipY;
+    private TileCrushingVat te;
 
     public GUICrushingVat(TileCrushingVat tile, ContainerVat inventorySlotsIn) {
         super(inventorySlotsIn);

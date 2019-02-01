@@ -1,14 +1,12 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.RecipeStorage;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateCrushingVat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,7 +66,6 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
             jumpsContained = 0.0D;
             return;
         }
-
 
 
         if (!this.world.isRemote) {

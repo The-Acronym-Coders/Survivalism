@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Map;
 
 public class RecipeHelper {
 
@@ -22,17 +22,17 @@ public class RecipeHelper {
      * Barrel Recipes
      */
 
-    public static void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull List<Ingredient> inputIngredients, @Nonnull FluidStack outputFluid, int ticks) {
+    public static void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Map<Ingredient, Integer> inputIngredientsMap, @Nonnull FluidStack outputFluid, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
-        } else if (inputIngredients.size() <= 0 || inputIngredients.size() > 3) {
+        } else if (inputIngredientsMap.size() <= 0 || inputIngredientsMap.size() > 3) {
             logger.error("Ingredient list for Brewing Recipe: " + inputFluid.getLocalizedName() + " can't be less than or equal to 0 and not greater than 3 ItemStacks big!");
         } else if (outputFluid.amount <= 0) {
             logger.error("Output Fluid: " + outputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
         } else {
-            RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputIngredients, outputFluid, ticks);
+            RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputIngredientsMap, outputFluid, ticks);
             RecipeStorage.getBarrelRecipes().add(brewingRecipe);
         }
     }

@@ -21,7 +21,8 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
     private int amountI;
     private int amountO;
 
-    public MessageUpdateBarrel() {}
+    public MessageUpdateBarrel() {
+    }
 
     public MessageUpdateBarrel(TileBarrel barrel) {
         this.x = barrel.getPos().getX();

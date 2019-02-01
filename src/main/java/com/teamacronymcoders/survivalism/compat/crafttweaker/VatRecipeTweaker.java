@@ -17,8 +17,6 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import javax.annotation.Nonnull;
-
 /**
  * Credit goes out to CritFlaw
  * Please and kindly go fluff yourself!
@@ -40,6 +38,7 @@ public class VatRecipeTweaker {
     private static class addCrushingRecipe implements IAction {
         String name;
         Ingredient inputIngredient;
+        int inputAmount;
         FluidStack outputFluidStack;
         int jumps;
         ItemStack outputStack;
@@ -48,6 +47,7 @@ public class VatRecipeTweaker {
         addCrushingRecipe(IIngredient inputIngredient, ILiquidStack outputFluid, int jumps, IItemStack outputStack, float chanceOutput) {
             this.name = inputIngredient.toCommandString();
             this.inputIngredient = CraftTweakerMC.getIngredient(inputIngredient);
+            this.inputAmount = inputIngredient.getAmount();
             this.outputFluidStack = CraftTweakerMC.getLiquidStack(outputFluid);
             this.jumps = jumps;
             if (outputStack != null && !outputStack.isEmpty()) {
@@ -62,6 +62,7 @@ public class VatRecipeTweaker {
         public void apply() {
             RecipeVat recipeVat = new RecipeVat();
             recipeVat.setInputIngredient(inputIngredient);
+            recipeVat.setInputAmount(inputAmount);
             recipeVat.setOutputFluid(outputFluidStack);
             if (outputStack != null && !outputStack.isEmpty()) {
                 recipeVat.setOutputStack(outputStack);

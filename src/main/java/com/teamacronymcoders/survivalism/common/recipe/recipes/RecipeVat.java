@@ -10,6 +10,7 @@ public class RecipeVat {
 
     @Nonnull
     private Ingredient inputIngredient;
+    private int inputAmount;
     private ItemStack outputStack;
     private float chanceOutput;
     private FluidStack outputFluid;
@@ -104,5 +105,13 @@ public class RecipeVat {
 
     public void setJumps(int jumps) {
         this.jumps = jumps;
+    }
+
+    public int getInputAmount() {
+        return inputAmount;
+    }
+
+    public void setInputAmount(int inputAmount) {
+        this.inputAmount = inputAmount;
     }
 }

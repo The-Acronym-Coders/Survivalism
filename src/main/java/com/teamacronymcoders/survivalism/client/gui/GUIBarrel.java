@@ -80,7 +80,7 @@ public class GUIBarrel extends GuiContainer {
                 }
             }
         });
-        buttonList.add(new GuiButtonExt(1, 450, 150, 54, buttonH, "Sealed"));
+        buttonList.add(new GuiButtonExt(1, guiLeft + 61, guiTop - 18, 54, buttonH, "Sealed"));
     }
 
     @Override

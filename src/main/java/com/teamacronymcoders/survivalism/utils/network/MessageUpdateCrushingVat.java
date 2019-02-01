@@ -17,7 +17,8 @@ public class MessageUpdateCrushingVat implements IMessage, IMessageHandler<Messa
     private int z;
     private int amount;
 
-    public MessageUpdateCrushingVat() {}
+    public MessageUpdateCrushingVat() {
+    }
 
     public MessageUpdateCrushingVat(TileCrushingVat vat) {
         this.x = vat.getPos().getX();

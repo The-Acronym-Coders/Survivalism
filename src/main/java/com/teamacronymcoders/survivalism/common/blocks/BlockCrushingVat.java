@@ -2,47 +2,33 @@ package com.teamacronymcoders.survivalism.common.blocks;
 
 import com.teamacronymcoders.base.blocks.BlockBase;
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.defaults.BlockDefault;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-
-import static com.teamacronymcoders.survivalism.common.blocks.BlockBarrel.GUI_ID;
 
 public class BlockCrushingVat extends BlockBase {
 
-    private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final int GUI_ID = 2;
+    private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockCrushingVat() {
         super(Material.WOOD);
@@ -103,7 +89,7 @@ public class BlockCrushingVat extends BlockBase {
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
         TileCrushingVat vat = getTE(worldIn, pos);
         if (vat != null) {
-            if (entityIn instanceof  EntityLivingBase) {
+            if (entityIn instanceof EntityLivingBase) {
                 vat.makeProgress((EntityLivingBase) entityIn);
             }
         }

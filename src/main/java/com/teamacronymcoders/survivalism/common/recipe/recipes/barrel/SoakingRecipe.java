@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class SoakingRecipe extends RecipeBarrel {
     private FluidStack inputFluid;
     private Ingredient inputIngredient;
+    private int inputAmount;
     private ItemStack outputItemStack;
     private int decreaseAmount;
     private float decreaseChance;
@@ -40,6 +41,7 @@ public class SoakingRecipe extends RecipeBarrel {
     public void setInputFluid(FluidStack inputFluid) {
         this.inputFluid = inputFluid;
     }
+
 
     public Ingredient getInputIngredient() {
         return inputIngredient;
@@ -80,5 +82,4 @@ public class SoakingRecipe extends RecipeBarrel {
     public void setTicks(int ticks) {
         this.ticks = ticks;
     }
-
 }
