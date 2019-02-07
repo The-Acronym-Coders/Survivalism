@@ -8,6 +8,7 @@ import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRec
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +23,7 @@ public class RecipeHelper {
      * Barrel Recipes
      */
 
-    public static void addBrewingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Map<Ingredient, Integer> inputIngredientsMap, @Nonnull FluidStack outputFluid, int ticks) {
+    public static void addBrewingRecipe(ResourceLocation id, @Nonnull FluidStack inputFluid, @Nonnull Map<Ingredient, Integer> inputIngredientsMap, @Nonnull FluidStack outputFluid, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
         } else if (inputIngredientsMap.size() <= 0 || inputIngredientsMap.size() > 3) {
@@ -32,12 +33,12 @@ public class RecipeHelper {
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
         } else {
-            RecipeBarrel brewingRecipe = new BrewingRecipe(inputFluid, inputIngredientsMap, outputFluid, ticks);
+            RecipeBarrel brewingRecipe = new BrewingRecipe(id, inputFluid, inputIngredientsMap, outputFluid, ticks);
             RecipeStorage.getBarrelRecipes().add(brewingRecipe);
         }
     }
 
-    public static void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, int ticks) {
+    public static void addSoakingRecipe(ResourceLocation id, @Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
         } else if (outputItemStack.isEmpty()) {
@@ -47,12 +48,12 @@ public class RecipeHelper {
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
         } else {
-            RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputIngredient, outputItemStack, decreaseAmount, ticks);
+            RecipeBarrel soakingRecipe = new SoakingRecipe(id, inputFluid, inputIngredient, outputItemStack, decreaseAmount, ticks);
             RecipeStorage.getBarrelRecipes().add(soakingRecipe);
         }
     }
 
-    public static void addSoakingRecipe(@Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
+    public static void addSoakingRecipe(ResourceLocation id, @Nonnull FluidStack inputFluid, @Nonnull Ingredient inputIngredient, @Nonnull ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
         if (inputFluid.amount <= 0) {
             logger.error("Input Fluid: " + inputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
         } else if (outputItemStack.isEmpty()) {
@@ -64,7 +65,7 @@ public class RecipeHelper {
         } else if (ticks <= 0) {
             logger.error("Processing Ticks can't be less than or equal to 0");
         } else {
-            RecipeBarrel soakingRecipe = new SoakingRecipe(inputFluid, inputIngredient, outputItemStack, decreaseAmount, decreaseChance, ticks);
+            RecipeBarrel soakingRecipe = new SoakingRecipe(id, inputFluid, inputIngredient, outputItemStack, decreaseAmount, decreaseChance, ticks);
             RecipeStorage.getBarrelRecipes().add(soakingRecipe);
         }
     }
@@ -73,18 +74,18 @@ public class RecipeHelper {
      * Crushing Vat Recipes
      */
 
-    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, @Nonnull FluidStack outputFluidStack, int jumps) {
+    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, @Nonnull FluidStack outputFluidStack, int jumps) {
         if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
             logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
         } else if (jumps <= 0) {
             logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
         } else {
-            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputFluidStack, jumps);
+            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputFluidStack, jumps);
             RecipeStorage.getVatRecipes().add(vatRecipe);
         }
     }
 
-    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, ItemStack outputStack, @Nonnull FluidStack outputFluidStack, int jumps) {
+    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, @Nonnull FluidStack outputFluidStack, int jumps) {
         if (outputStack.isEmpty()) {
             logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
         } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
@@ -92,12 +93,12 @@ public class RecipeHelper {
         } else if (jumps <= 0) {
             logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
         } else {
-            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputStack, outputFluidStack, jumps);
+            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputStack, outputFluidStack, jumps);
             RecipeStorage.getVatRecipes().add(vatRecipe);
         }
     }
 
-    public static void addCrushingRecipe(@Nonnull Ingredient inputIngredient, ItemStack outputStack, float outputChance, @Nonnull FluidStack outputFluidStack, int jumps) {
+    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, float outputChance, @Nonnull FluidStack outputFluidStack, int jumps) {
         if (outputStack.isEmpty()) {
             logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
         } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
@@ -107,7 +108,7 @@ public class RecipeHelper {
         } else if (jumps <= 0) {
             logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
         } else {
-            RecipeVat vatRecipe = new RecipeVat(inputIngredient, outputStack, outputChance, outputFluidStack, jumps);
+            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputStack, outputChance, outputFluidStack, jumps);
             RecipeStorage.getVatRecipes().add(vatRecipe);
         }
     }

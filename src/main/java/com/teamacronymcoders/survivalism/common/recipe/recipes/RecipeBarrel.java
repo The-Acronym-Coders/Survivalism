@@ -1,5 +1,5 @@
 package com.teamacronymcoders.survivalism.common.recipe.recipes;
 
-public class RecipeBarrel {
+import net.minecraft.util.ResourceLocation;
 
-}
+public class RecipeBarrel {}

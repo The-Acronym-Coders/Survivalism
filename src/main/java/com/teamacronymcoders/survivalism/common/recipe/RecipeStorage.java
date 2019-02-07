@@ -2,8 +2,11 @@ package com.teamacronymcoders.survivalism.common.recipe;
 
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
+import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,5 +42,36 @@ public class RecipeStorage {
 
     public static Map<Item, Double> getBootMultiplierMap() {
         return bootMultiplierMap;
+    }
+
+    public static RecipeBarrel getBrewingRecipeByID(ResourceLocation id) {
+        for (RecipeBarrel recipe : getBarrelRecipes()) {
+            if (recipe instanceof BrewingRecipe) {
+                if (((BrewingRecipe) recipe).getId().equals(id)) {
+                    return recipe;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static RecipeBarrel getSoakingRecipeByID(ResourceLocation id) {
+        for (RecipeBarrel recipe : getBarrelRecipes()) {
+            if (recipe instanceof SoakingRecipe) {
+                if (((SoakingRecipe) recipe).getId().equals(id)) {
+                    return recipe;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static RecipeVat getCrushingRecipeByID(ResourceLocation id) {
+        for (RecipeVat recipe : getVatRecipes()) {
+            if (recipe.getId().equals(id)) {
+                return recipe;
+            }
+        }
+        return null;
     }
 }

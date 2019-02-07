@@ -3,9 +3,11 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 public class SoakingRecipe extends RecipeBarrel {
+    private ResourceLocation id;
     private FluidStack inputFluid;
     private Ingredient inputIngredient;
     private int inputAmount;
@@ -17,7 +19,8 @@ public class SoakingRecipe extends RecipeBarrel {
     public SoakingRecipe() {
     }
 
-    public SoakingRecipe(FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, int ticks) {
+    public SoakingRecipe(ResourceLocation id, FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, int ticks) {
+        this.id = id;
         this.inputFluid = inputFluid;
         this.inputIngredient = inputIngredient;
         this.outputItemStack = outputItemStack;
@@ -25,13 +28,22 @@ public class SoakingRecipe extends RecipeBarrel {
         this.ticks = ticks;
     }
 
-    public SoakingRecipe(FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
+    public SoakingRecipe(ResourceLocation id, FluidStack inputFluid, Ingredient inputIngredient, ItemStack outputItemStack, int decreaseAmount, float decreaseChance, int ticks) {
+        this.id = id;
         this.inputFluid = inputFluid;
         this.inputIngredient = inputIngredient;
         this.outputItemStack = outputItemStack;
         this.decreaseAmount = decreaseAmount;
         this.decreaseChance = decreaseChance;
         this.ticks = ticks;
+    }
+
+    public ResourceLocation getId() {
+        return id;
+    }
+
+    public void setId(ResourceLocation id) {
+        this.id = id;
     }
 
     public FluidStack getInputFluid() {
@@ -41,7 +53,6 @@ public class SoakingRecipe extends RecipeBarrel {
     public void setInputFluid(FluidStack inputFluid) {
         this.inputFluid = inputFluid;
     }
-
 
     public Ingredient getInputIngredient() {
         return inputIngredient;
@@ -82,4 +93,6 @@ public class SoakingRecipe extends RecipeBarrel {
     public void setTicks(int ticks) {
         this.ticks = ticks;
     }
+
+
 }

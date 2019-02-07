@@ -2,12 +2,14 @@ package com.teamacronymcoders.survivalism.common.recipe.recipes;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
 public class RecipeVat {
 
+    private ResourceLocation id;
     @Nonnull
     private Ingredient inputIngredient;
     private int inputAmount;
@@ -24,7 +26,8 @@ public class RecipeVat {
      * @param outputFluid     Can Be Null
      * @param jumps           Has to be higher than 1
      */
-    public RecipeVat(@Nonnull Ingredient inputIngredient, FluidStack outputFluid, int jumps) {
+    public RecipeVat(ResourceLocation id, @Nonnull Ingredient inputIngredient, FluidStack outputFluid, int jumps) {
+        this.id = id;
         this.inputIngredient = inputIngredient;
         this.outputFluid = outputFluid;
         this.jumps = jumps;
@@ -36,7 +39,8 @@ public class RecipeVat {
      * @param outputFluid     Can Be Null
      * @param jumps           Has to be higher than 1
      */
-    public RecipeVat(@Nonnull Ingredient inputIngredient, ItemStack outputStack, FluidStack outputFluid, int jumps) {
+    public RecipeVat(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, FluidStack outputFluid, int jumps) {
+        this.id = id;
         this.inputIngredient = inputIngredient;
         this.outputStack = outputStack;
         this.outputFluid = outputFluid;
@@ -54,7 +58,8 @@ public class RecipeVat {
      * @param outputFluid     Can Be Null
      * @param jumps           Has to be higher than 1
      */
-    public RecipeVat(@Nonnull Ingredient inputIngredient, ItemStack outputStack, float chanceOutput, FluidStack outputFluid, int jumps) {
+    public RecipeVat(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, float chanceOutput, FluidStack outputFluid, int jumps) {
+        this.id = id;
         this.inputIngredient = inputIngredient;
         this.outputStack = outputStack;
         this.chanceOutput = chanceOutput;
@@ -64,6 +69,14 @@ public class RecipeVat {
         } else {
             this.jumps = jumps;
         }
+    }
+
+    public ResourceLocation getId() {
+        return id;
+    }
+
+    public void setId(ResourceLocation id) {
+        this.id = id;
     }
 
     @Nonnull
@@ -114,4 +127,6 @@ public class RecipeVat {
     public void setInputAmount(int inputAmount) {
         this.inputAmount = inputAmount;
     }
+
+
 }
