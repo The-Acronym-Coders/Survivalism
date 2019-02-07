@@ -48,7 +48,7 @@ public class RecipeStorage {
         for (RecipeBarrel recipe : getBarrelRecipes()) {
             if (recipe instanceof BrewingRecipe) {
                 if (((BrewingRecipe) recipe).getId().equals(id)) {
-                    return recipe;
+                    return (BrewingRecipe) recipe;
                 }
             }
         }
@@ -59,7 +59,7 @@ public class RecipeStorage {
         for (RecipeBarrel recipe : getBarrelRecipes()) {
             if (recipe instanceof SoakingRecipe) {
                 if (((SoakingRecipe) recipe).getId().equals(id)) {
-                    return recipe;
+                    return (SoakingRecipe) recipe;
                 }
             }
         }
