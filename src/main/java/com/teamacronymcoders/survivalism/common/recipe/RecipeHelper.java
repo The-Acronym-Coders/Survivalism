@@ -1,19 +1,20 @@
 package com.teamacronymcoders.survivalism.common.recipe;
 
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.apache.logging.log4j.Logger;
+
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
-import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeVat;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.recipes.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
 
 public class RecipeHelper {
 
@@ -70,46 +71,4 @@ public class RecipeHelper {
         }
     }
 
-    /**
-     * Crushing Vat Recipes
-     */
-
-    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, @Nonnull FluidStack outputFluidStack, int jumps) {
-        if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
-            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
-        } else if (jumps <= 0) {
-            logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
-        } else {
-            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputFluidStack, jumps);
-            RecipeStorage.getVatRecipes().add(vatRecipe);
-        }
-    }
-
-    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, @Nonnull FluidStack outputFluidStack, int jumps) {
-        if (outputStack.isEmpty()) {
-            logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
-        } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
-            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
-        } else if (jumps <= 0) {
-            logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
-        } else {
-            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputStack, outputFluidStack, jumps);
-            RecipeStorage.getVatRecipes().add(vatRecipe);
-        }
-    }
-
-    public static void addCrushingRecipe(ResourceLocation id, @Nonnull Ingredient inputIngredient, ItemStack outputStack, float outputChance, @Nonnull FluidStack outputFluidStack, int jumps) {
-        if (outputStack.isEmpty()) {
-            logger.error("Output Stack: " + outputStack.getDisplayName() + " Can't be ItemStack.Empty!");
-        } else if (outputFluidStack.amount < 0 || outputFluidStack.amount > TileBarrel.TANK_CAPACITY) {
-            logger.error("Decrease Amount can't be lower than 0 or higher than " + TileBarrel.TANK_CAPACITY);
-        } else if (outputChance == 0.0f) {
-            logger.error("Output Chance Can't Be 0.0f!");
-        } else if (jumps <= 0) {
-            logger.error("Jumps can not be lower than 1, Defaulting to 1 jumps per item processed!");
-        } else {
-            RecipeVat vatRecipe = new RecipeVat(id, inputIngredient, outputStack, outputChance, outputFluidStack, jumps);
-            RecipeStorage.getVatRecipes().add(vatRecipe);
-        }
-    }
 }

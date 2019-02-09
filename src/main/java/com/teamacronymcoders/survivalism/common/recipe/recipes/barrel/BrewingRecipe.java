@@ -1,11 +1,13 @@
 package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 
-import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+
+import com.teamacronymcoders.survivalism.common.recipe.RecipeBarrel;
+
 import java.util.Map;
 
 public class BrewingRecipe extends RecipeBarrel {

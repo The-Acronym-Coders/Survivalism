@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.common.recipe.recipes.barrel;
 
-import com.teamacronymcoders.survivalism.common.recipe.recipes.RecipeBarrel;
+import com.teamacronymcoders.survivalism.common.recipe.RecipeBarrel;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
