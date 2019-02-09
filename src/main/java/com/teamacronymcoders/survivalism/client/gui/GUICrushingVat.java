@@ -9,8 +9,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class GUICrushingVat extends GuiContainer {
 
-    private static final int WIDTH = 180;
-    private static final int HEIGHT = 163;
     private static final ResourceLocation crushing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking.png");
     private int tooltipY;
     private TileCrushingVat te;

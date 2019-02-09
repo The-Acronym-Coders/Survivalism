@@ -46,7 +46,6 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     private FluidTank outputTank;
     private ItemStackHandler itemHandler;
 
-    private int val2;
     private int state = 0;
     private int durationTicks;
     private int currentTicks = 0;
@@ -344,14 +343,14 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (EnumFacing.DOWN == facing) {
                 if (checkBarrelState(StorageEnumsBarrelStates.BREWING)) {
-                    return (T) outputTank;
+                    return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(outputTank);
                 }
             } else {
-                return (T) inputTank;
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(inputTank);
             }
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) itemHandler;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandler);
         }
         return super.getCapability(capability, facing);
     }

@@ -34,13 +34,11 @@ public class GUIBarrel extends GuiContainer {
     private ResourceLocation true_background = null;
 
     private TileBarrel te;
-    private ContainerBarrel storage;
     private int tooltipY;
 
     public GUIBarrel(TileBarrel te, ContainerBarrel storage) {
         super(storage);
         this.te = te;
-        this.storage = storage;
         if (te.checkBarrelState(StorageEnumsBarrelStates.STORAGE)) {
             true_background = storage_background;
         } else if (te.checkBarrelState(StorageEnumsBarrelStates.BREWING)) {

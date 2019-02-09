@@ -54,7 +54,7 @@ public class BlockBarrel extends BlockBase {
     public BlockBarrel() {
         super(Material.WOOD);
         setCreativeTab(Survivalism.TAB);
-        setUnlocalizedName(Survivalism.MODID + ".barrel");
+        setTranslationKey(Survivalism.MODID + ".barrel");
         setRegistryName("barrel");
         setSoundType(SoundType.WOOD);
         setLightOpacity(0);
@@ -79,7 +79,7 @@ public class BlockBarrel extends BlockBase {
         return null;
     }
 
-    private TileBarrel getTE(IBlockAccess access, BlockPos pos) {
+    public static TileBarrel getTE(IBlockAccess access, BlockPos pos) {
         TileEntity te = access.getTileEntity(pos);
         if (te instanceof TileBarrel) {
             return (TileBarrel) te;
@@ -103,13 +103,13 @@ public class BlockBarrel extends BlockBase {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
@@ -205,7 +205,7 @@ public class BlockBarrel extends BlockBase {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (worldIn.isRemote) {
             return;
@@ -240,7 +240,7 @@ public class BlockBarrel extends BlockBase {
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         IBlockState state = this.getDefaultState();
         if (meta >= 3) {

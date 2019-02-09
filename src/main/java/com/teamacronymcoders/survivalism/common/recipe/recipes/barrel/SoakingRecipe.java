@@ -10,7 +10,6 @@ public class SoakingRecipe extends RecipeBarrel {
     private ResourceLocation id;
     private FluidStack inputFluid;
     private Ingredient inputIngredient;
-    private int inputAmount;
     private ItemStack outputItemStack;
     private int decreaseAmount;
     private float decreaseChance;

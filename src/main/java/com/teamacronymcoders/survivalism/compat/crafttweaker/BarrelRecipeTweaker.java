@@ -133,7 +133,6 @@ public class BarrelRecipeTweaker {
         String name2;
         FluidStack inputFluid;
         Ingredient ingredient;
-        int inputAmount;
         ItemStack outputItemStack;
         int decreaseAmount;
         float decreaseChance;
@@ -152,7 +151,6 @@ public class BarrelRecipeTweaker {
             } else {
                 this.ingredient = CraftTweakerMC.getIngredient(ingredient);
             }
-            this.inputAmount = ingredient.getAmount();
             this.outputItemStack = CraftTweakerMC.getItemStack(outputItemStack);
             if (decreaseAmount > 0 || decreaseChance <= TileBarrel.TANK_CAPACITY) {
                 this.decreaseAmount = decreaseAmount;

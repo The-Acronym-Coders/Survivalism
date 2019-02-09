@@ -145,15 +145,15 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing != EnumFacing.DOWN && facing != EnumFacing.UP) {
-                return (T) inputItemHandler;
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputItemHandler);
             } else if (facing == EnumFacing.DOWN) {
-                return (T) outputItemHandler;
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputItemHandler);
             }
         }
 
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (facing == EnumFacing.DOWN) {
-                return (T) tank;
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
             }
         }
         return super.getCapability(capability, facing);

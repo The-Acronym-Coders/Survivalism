@@ -33,7 +33,7 @@ public class BlockCrushingVat extends BlockBase {
     public BlockCrushingVat() {
         super(Material.WOOD);
         setCreativeTab(Survivalism.TAB);
-        setUnlocalizedName(Survivalism.MODID + ".crushingvat");
+        setTranslationKey(Survivalism.MODID + ".crushingvat");
         setRegistryName("crushing_vat");
         setSoundType(SoundType.WOOD);
         setLightOpacity(0);
@@ -120,9 +120,9 @@ public class BlockCrushingVat extends BlockBase {
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getFront((meta & 3) + 2));
+        return getDefaultState().withProperty(FACING, EnumFacing.byIndex((meta & 3) + 2));
     }
 
     @Override
@@ -137,19 +137,19 @@ public class BlockCrushingVat extends BlockBase {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
