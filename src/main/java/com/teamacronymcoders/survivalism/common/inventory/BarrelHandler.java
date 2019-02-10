@@ -4,16 +4,16 @@ import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 
 public class BarrelHandler extends UpdatingItemStackHandler {
 
-	TileBarrel te;
+    TileBarrel te;
 
-	public BarrelHandler(int size, TileBarrel inv) {
-		super(size, inv);
-		te = inv;
-	}
+    public BarrelHandler(int size, TileBarrel inv) {
+        super(size, inv);
+        te = inv;
+    }
 
-	@Override
-	public int getSlots() {
-		return te.getState().getInvSize();
-	}
+    @Override
+    public int getSlots() {
+        return te.getState().getInvSize();
+    }
 
 }

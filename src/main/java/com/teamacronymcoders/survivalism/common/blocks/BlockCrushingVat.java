@@ -1,11 +1,8 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
-import javax.annotation.Nullable;
-
 import com.teamacronymcoders.base.blocks.BlockBase;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
-
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -24,119 +21,133 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 
+import javax.annotation.Nullable;
+
 public class BlockCrushingVat extends BlockBase {
 
-	public static final int GUI_ID = 2;
-	private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final int GUI_ID = 2;
+    private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-	public BlockCrushingVat() {
-		super(Material.WOOD);
-		setCreativeTab(Survivalism.TAB);
-		setTranslationKey(Survivalism.MODID + ".crushingvat");
-		setRegistryName("crushing_vat");
-		setSoundType(SoundType.WOOD);
-		setLightOpacity(0);
-	}
+    public BlockCrushingVat() {
+        super(Material.WOOD);
+        setCreativeTab(Survivalism.TAB);
+        setTranslationKey(Survivalism.MODID + ".crushingvat");
+        setRegistryName("crushing_vat");
+        setSoundType(SoundType.WOOD);
+        setLightOpacity(0);
+    }
 
-	@Override
-	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
-		return true;
-	}
+    @Nullable
+    public static TileCrushingVat getTE(World world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
+        return te instanceof TileCrushingVat ? (TileCrushingVat) te : null;
+    }
 
-	@Override
-	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-		super.harvestBlock(worldIn, player, pos, state, te, stack);
-	}
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
+        return true;
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileCrushingVat te = getTE(world, pos);
-		if (te != null) {
+    @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    }
 
-			ItemStack stack = te.getInputInv().getStackInSlot(0);
-			if (!stack.isEmpty()) InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-			stack = te.getOutputInv().getStackInSlot(0);
-			if (!stack.isEmpty()) InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileCrushingVat te = getTE(world, pos);
+        if (te != null) {
 
-		}
-	}
+            ItemStack stack = te.getInputInv().getStackInSlot(0);
+            if (!stack.isEmpty()) {
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+            stack = te.getOutputInv().getStackInSlot(0);
+            if (!stack.isEmpty()) {
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileCrushingVat();
-	}
+        }
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileCrushingVat();
+    }
 
-	@Nullable
-	public static TileCrushingVat getTE(World world, BlockPos pos) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileCrushingVat ? (TileCrushingVat) te : null;
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
-		TileCrushingVat vat = getTE(world, pos);
-		if (vat != null && entity instanceof EntityPlayer) vat.onJump((EntityPlayer) entity);
-	}
+    @Override
+    public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
+        TileCrushingVat vat = getTE(world, pos);
+        if (vat != null && entity instanceof EntityPlayer) {
+            vat.onJump((EntityPlayer) entity);
+        }
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		TileCrushingVat vat = getTE(world, pos);
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        TileCrushingVat vat = getTE(world, pos);
 
-		if (vat == null) return false;
-		if (world.isRemote) return true;
-		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getItem() == Items.BUCKET && vat.getTank().getFluidAmount() >= 1000) {
-			ItemStack full = FluidUtil.getFilledBucket(vat.getTank().getFluid());
-			if (!full.isEmpty()) {
-				stack.shrink(1);
-				vat.getTank().drain(1000, true);
-				player.addItemStackToInventory(full);
-				return true;
-			}
-		} else {
-			if (FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(stack), Integer.MAX_VALUE, player, true).success) return true;
-		}
+        if (vat == null) {
+            return false;
+        }
+        if (world.isRemote) {
+            return true;
+        }
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() == Items.BUCKET && vat.getTank().getFluidAmount() >= 1000) {
+            ItemStack full = FluidUtil.getFilledBucket(vat.getTank().getFluid());
+            if (!full.isEmpty()) {
+                stack.shrink(1);
+                vat.getTank().drain(1000, true);
+                player.addItemStackToInventory(full);
+                return true;
+            }
+        } else {
+            if (FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(stack), Integer.MAX_VALUE, player, true).success) {
+                return true;
+            }
+        }
 
-		player.openGui(Survivalism.INSTANCE, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
+        player.openGui(Survivalism.INSTANCE, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
+        return true;
+    }
 
-	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.byIndex((meta & 3) + 2));
-	}
+    @Override
+    @Deprecated
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(FACING, EnumFacing.byIndex((meta & 3) + 2));
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex() - 2;
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getIndex() - 2;
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, FACING);
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING);
+    }
 
-	@Override
-	@Deprecated
-	public boolean isFullBlock(IBlockState state) {
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@Deprecated
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    @Deprecated
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 }

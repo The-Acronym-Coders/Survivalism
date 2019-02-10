@@ -1,3 +1,4 @@
 package com.teamacronymcoders.survivalism.common.recipe;
 
-public class RecipeBarrel {}
+public class RecipeBarrel {
+}
