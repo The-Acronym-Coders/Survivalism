@@ -7,6 +7,7 @@ import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -21,6 +22,9 @@ import java.util.Random;
 
 @Mod(modid = Survivalism.MODID, name = Survivalism.NAME, version = Survivalism.VERSION, acceptedMinecraftVersions = Survivalism.MCVERSION, dependencies = Survivalism.DEPS)
 public class Survivalism extends BaseModFoundation<Survivalism> {
+	
+	static { FluidRegistry.enableUniversalBucket(); } 
+	
     public static final String MODID = "survivalism";
     public static final SurvivalismTab TAB = new SurvivalismTab();
     public static final List<IAction> LATE_ADDITIONS = new LinkedList<>();

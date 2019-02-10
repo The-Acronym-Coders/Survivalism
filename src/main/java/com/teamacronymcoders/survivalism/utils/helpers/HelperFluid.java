@@ -56,6 +56,7 @@ public class HelperFluid {
      * Some alterations has been made to make this code function properly with my enviroment.
      */
     public static void renderTiledFluid(int x, int y, int width, int height, float depth, FluidStack fluidStack) {
+    	if(fluidStack == null) return;
         TextureAtlasSprite fluidSprite = mc.getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill(fluidStack).toString());
         setColorRGBA(fluidStack.getFluid().getColor(fluidStack));
         renderTiledTextureAtlas(x, y, width, height, depth, fluidSprite, fluidStack.getFluid().isGaseous(fluidStack));

@@ -111,8 +111,6 @@ public class StorageFluidHandler implements IFluidHandler, IFluidTank {
             drained = stack.amount;
         }
 
-        FluidStack fluidStack = new FluidStack(stack, drained);
-
         if (doDrain) {
             stack.amount -= drained;
             if (stack.amount <= 0) {

@@ -1,97 +1,70 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
+import java.nio.charset.StandardCharsets;
+
+import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpdateBarrel, IMessage> {
-    private int x;
-    private int y;
-    private int z;
-    private int state;
-    private boolean sealed;
-    private int amountI;
-    private int amountO;
 
-    public MessageUpdateBarrel() {
-    }
+	private FluidStack inStack;
+	private FluidStack outStack;
 
-    public MessageUpdateBarrel(TileBarrel barrel) {
-        this.x = barrel.getPos().getX();
-        this.y = barrel.getPos().getY();
-        this.z = barrel.getPos().getZ();
-        this.state = barrel.getWorld().getBlockState(barrel.getPos()).getValue(BlockBarrel.BARREL_STATE).ordinal();
-        this.sealed = barrel.getWorld().getBlockState(barrel.getPos()).getValue(BlockBarrel.SEALED_STATE);
-        this.amountI = barrel.getInputTank().getFluidAmount();
-        this.amountO = barrel.getOutputTank().getFluidAmount();
-    }
+	public MessageUpdateBarrel() {
+	}
 
+	public MessageUpdateBarrel(TileBarrel te) {
+		this.inStack = te.getInput().getFluid();
+		this.outStack = te.getOutput().getFluid();
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
+	@Override
+	public void toBytes(ByteBuf buf) {
+		writeFluid(buf, inStack);
+		writeFluid(buf, outStack);
+	}
 
-        this.state = buf.readInt();
-        this.sealed = buf.readBoolean();
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		inStack = readFluid(buf);
+		outStack = readFluid(buf);
+	}
 
-        this.amountI = buf.readInt();
-        this.amountO = buf.readInt();
-    }
+	@Override
+	public IMessage onMessage(MessageUpdateBarrel message, MessageContext ctx) {
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrel) {
+				((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+				((GUIBarrel) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
+			}
+		});
+		return null;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.x);
-        buf.writeInt(this.y);
-        buf.writeInt(this.z);
+	private static FluidStack readFluid(ByteBuf buf) {
+		int amount = buf.readInt();
+		String name = buf.readCharSequence(buf.readInt(), StandardCharsets.UTF_8).toString();
+		return name.equals("null") ? null : new FluidStack(FluidRegistry.getFluid(name), amount);
+	}
 
-        buf.writeInt(this.state);
-        buf.writeBoolean(this.sealed);
-
-        buf.writeInt(this.amountI);
-        buf.writeInt(this.amountO);
-    }
-
-    @Override
-    public IMessage onMessage(MessageUpdateBarrel message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
-        return null;
-    }
-
-    private void handle(MessageUpdateBarrel message, MessageContext ctx) {
-        if (FMLClientHandler.instance().getClient().world != null) {
-            TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
-            if (te instanceof TileBarrel) {
-                TileBarrel barrel = (TileBarrel) te;
-                FluidTank i = barrel.getInputTank();
-                FluidTank o = barrel.getOutputTank();
-                barrel.setState(message.state);
-                barrel.setSealed(message.sealed);
-                if (i.getFluid() != null) {
-                    if (message.amountI == 0) {
-                        i.setFluid(null);
-                    } else {
-                        i.getFluid().amount = message.amountI;
-                    }
-                }
-
-                if (o.getFluid() != null) {
-                    if (message.amountO == 0) {
-                        o.setFluid(null);
-                    } else {
-                        o.getFluid().amount = message.amountO;
-                    }
-                }
-            }
-        }
-    }
+	private static void writeFluid(ByteBuf buf, FluidStack stack) {
+		if (stack == null) {
+			buf.writeInt(0);
+			buf.writeInt(4);
+			buf.writeCharSequence("null", StandardCharsets.UTF_8);
+		} else {
+			buf.writeInt(stack.amount);
+			String name = stack.getFluid().getName();
+			buf.writeInt(name.length());
+			buf.writeCharSequence(name, StandardCharsets.UTF_8);
+		}
+	}
 }

@@ -1,68 +1,57 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
+import java.nio.charset.StandardCharsets;
+
+import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageUpdateCrushingVat implements IMessage, IMessageHandler<MessageUpdateCrushingVat, IMessage> {
-    private int x;
-    private int y;
-    private int z;
-    private int amount;
 
-    public MessageUpdateCrushingVat() {
-    }
+	private FluidStack stack;
 
-    public MessageUpdateCrushingVat(TileCrushingVat vat) {
-        this.x = vat.getPos().getX();
-        this.y = vat.getPos().getY();
-        this.z = vat.getPos().getZ();
-        this.amount = vat.getTank().getFluidAmount();
-    }
+	public MessageUpdateCrushingVat() {
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
-        this.amount = buf.readInt();
-    }
+	public MessageUpdateCrushingVat(TileCrushingVat te) {
+		this.stack = te.getTank().getFluid();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.x);
-        buf.writeInt(this.y);
-        buf.writeInt(this.z);
-        buf.writeInt(this.amount);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		if (stack == null) {
+			buf.writeInt(0);
+			buf.writeInt(4);
+			buf.writeCharSequence("null", StandardCharsets.UTF_8);
+		} else {
+			buf.writeInt(stack.amount);
+			String name = stack.getFluid().getName();
+			buf.writeInt(name.length());
+			buf.writeCharSequence(name, StandardCharsets.UTF_8);
+		}
+	}
 
-    @Override
-    public IMessage onMessage(MessageUpdateCrushingVat message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> handle(message, ctx));
-        return null;
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		int amount = buf.readInt();
+		String name = buf.readCharSequence(buf.readInt(), StandardCharsets.UTF_8).toString();
+		stack = name.equals("null") ? null : new FluidStack(FluidRegistry.getFluid(name), amount);
+	}
 
-    private void handle(MessageUpdateCrushingVat message, MessageContext ctx) {
-        if (FMLClientHandler.instance().getClient().world != null) {
-            TileEntity te = FMLClientHandler.instance().getClient().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
-            if (te instanceof TileCrushingVat) {
-                TileCrushingVat vat = (TileCrushingVat) te;
-                FluidTank tank = vat.getTank();
-                if (tank.getFluid() != null) {
-                    if (message.amount == 0) {
-                        tank.setFluid(null);
-                    } else {
-                        tank.getFluid().amount = message.amount;
-                    }
-                }
-            }
-        }
-    }
+	@Override
+	public IMessage onMessage(MessageUpdateCrushingVat message, MessageContext ctx) {
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			if (Minecraft.getMinecraft().currentScreen instanceof GUICrushingVat) {
+				((GUICrushingVat) Minecraft.getMinecraft().currentScreen).setFluid(message.stack);
+			}
+		});
+		return null;
+	}
 }

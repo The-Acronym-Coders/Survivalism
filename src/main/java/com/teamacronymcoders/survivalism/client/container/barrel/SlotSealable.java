@@ -1,55 +1,37 @@
 package com.teamacronymcoders.survivalism.client.container.barrel;
 
-import com.teamacronymcoders.survivalism.common.ModBlocks;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
-import com.teamacronymcoders.survivalism.utils.storages.StorageEnumsBarrelStates;
+import com.teamacronymcoders.survivalism.utils.storages.BarrelState;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-import javax.annotation.Nonnull;
-
 public class SlotSealable extends SlotItemHandler {
 
-    private TileEntity te;
+	private TileBarrel te;
 
+	public SlotSealable(IItemHandler itemHandler, int index, int xPosition, int yPosition, TileBarrel te) {
+		super(itemHandler, index, xPosition, yPosition);
+		this.te = te;
+	}
 
-    public SlotSealable(IItemHandler itemHandler, int index, int xPosition, int yPosition, TileEntity te) {
-        super(itemHandler, index, xPosition, yPosition);
-        this.te = te;
-    }
+	@ObjectHolder("survivalism:barrel")
+	public static final Item BARREL = null;
 
-    @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
-        if (stack.getItem().equals(Item.getItemFromBlock(ModBlocks.blockBarrel))) {
-            return false;
-        }
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+		if (stack.getItem() == BARREL) return false;
+		if (te.isSealed()) return false;
+		if (te.getState() == BarrelState.SOAKING && getSlotIndex() == 1) return false;
+		return super.isItemValid(stack);
+	}
 
-        if (te instanceof TileBarrel) {
-            TileBarrel barrel = (TileBarrel) te;
-            if (barrel.checkSealedState(true)) {
-                return false;
-            }
-            if (barrel.checkBarrelState(StorageEnumsBarrelStates.SOAKING)) {
-                if (getSlotIndex() == 1) {
-                    return false;
-                }
-            }
-        }
-        return super.isItemValid(stack);
-    }
-
-    @Override
-    public boolean canTakeStack(EntityPlayer playerIn) {
-        if (te instanceof TileBarrel) {
-            TileBarrel barrel = (TileBarrel) te;
-            if (barrel.checkSealedState(true)) {
-                return false;
-            }
-        }
-        return super.canTakeStack(playerIn);
-    }
+	@Override
+	public boolean canTakeStack(EntityPlayer playerIn) {
+		return !te.isSealed() && super.canTakeStack(playerIn);
+	}
 }
