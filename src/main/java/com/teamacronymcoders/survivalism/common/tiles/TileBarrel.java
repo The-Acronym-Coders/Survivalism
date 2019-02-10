@@ -78,7 +78,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 		if (fluid != null && fluid.amount > 0) {
 			if (bRecipe == null || !bRecipe.matches(this)) bRecipe = BarrelRecipeManager.getBrewingRecipe(this);
 			if (bRecipe == null) return;
-			if (ticks++ >= bRecipe.getTicks() && output.fill(bRecipe.getOutput(), false) == bRecipe.getOutput().amount) {
+			if (ticks++ >= bRecipe.getTicks() && output.fillInternal(bRecipe.getOutput(), false) == bRecipe.getOutput().amount) {
 				ticks = 0;
 				input.drain(bRecipe.getInput().amount, true);
 				for (Map.Entry<Ingredient, Integer> ingredient : bRecipe.getInputItems().entrySet()) {
@@ -89,7 +89,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 						}
 					}
 				}
-				output.fill(bRecipe.getOutput(), true);
+				input.drainInternal(bRecipe.getInput(), true);
+				output.fillInternal(bRecipe.getOutput(), true);
 			}
 		}
 	}
@@ -106,8 +107,7 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 				if (!curOutput.isEmpty() && !ItemHandlerHelper.canItemStacksStack(curOutput, sRecipe.getOutput())) return;
 				if (!curOutput.isEmpty() && curOutput.getCount() + sRecipe.getOutput().getCount() > curOutput.getMaxStackSize()) return;
 				ticks = 0;
-				if (HelperMath.tryPercentage(sRecipe.getFluidUseChance())) 
-					input.getFluid().amount -= sRecipe.getInput().amount;
+				if (HelperMath.tryPercentage(sRecipe.getFluidUseChance())) input.getFluid().amount -= sRecipe.getInput().amount;
 				inv.getStackInSlot(0).shrink(1);
 				inv.insertItem(1, sRecipe.getOutput().copy(), false);
 			}

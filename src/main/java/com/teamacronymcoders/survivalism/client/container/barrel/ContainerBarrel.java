@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
 public class ContainerBarrel extends Container {
 
@@ -39,28 +38,25 @@ public class ContainerBarrel extends Container {
 		if (tile.getWorld().isRemote) return;
 		if (!firstSend) {
 			firstSend = true;
+			input = tile.getInput().getFluid();
+			output = tile.getOutput().getFluid();
 			sendMessage();
 		}
-		input = checkFluid(input, tile.getInput());
-		output = checkFluid(output, tile.getOutput());
+		input = checkFluid(input, tile.getInput().getFluid());
+		output = checkFluid(output, tile.getOutput().getFluid());
 	}
 
-	private FluidStack checkFluid(FluidStack stack, FluidTank tank) {
-		if (stack == null && tank.getFluid() == null) return null;
-		if (stack == null && tank.getFluid() != null) {
-			sendMessage();
-			return tank.getFluid().copy();
-		} else if (stack != null && tank.getFluid() == null) {
-			sendMessage();
-			return null;
-		} else if (stack.getFluid() != tank.getFluid().getFluid()) {
-			sendMessage();
-			return tank.getFluid().copy();
-		} else if (stack.amount != tank.getFluidAmount()) {
-			sendMessage();
-			return tank.getFluid().copy();
+	private FluidStack checkFluid(FluidStack stack, FluidStack tank) {
+		boolean sendUpdate = false;
+		if (stack == null && tank == null) return null;
+		if (stack == null && tank != null) sendUpdate = true;
+		if (stack != null && tank == null) sendUpdate = true;
+		if (tank != null && stack != null) {
+			if (!tank.getFluid().getName().equals(stack.getFluid().getName())) sendUpdate = true;
+			if (tank.amount != stack.amount) sendUpdate = true;
 		}
-		return stack;
+		if (sendUpdate) sendMessage();
+		return tank == null ? null : tank.copy();
 	}
 
 	private void sendMessage() {

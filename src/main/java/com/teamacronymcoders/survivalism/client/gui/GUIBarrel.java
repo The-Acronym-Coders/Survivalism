@@ -123,7 +123,7 @@ public class GUIBarrel extends GuiContainer {
 				int h = Math.round(offset - 1);
 				HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
 			}
-			if (te.getInput().getFluid() != null) {
+			if (te.getOutput().getFluid() != null) {
 				// Output
 				float hr = 48f / 16000f;
 				int outputTank = te.getOutput().getFluidAmount();
@@ -142,10 +142,10 @@ public class GUIBarrel extends GuiContainer {
 				drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
 			}
 		} else if (state == BarrelState.BREWING) {
-			if (te.getInput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
+			if (te.getInput().getFluid() != null && this.isPointInRegion(44, 18, 16, 47, x, y)) {
 				drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
 			}
-			if (te.getOutput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
+			if (te.getOutput().getFluid() != null && this.isPointInRegion(116, 18, 16, 47, x, y)) {
 				drawHoveringText(te.getOutput().getFluid().getLocalizedName(), x, y);
 			}
 		}

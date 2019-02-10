@@ -4,6 +4,9 @@ import java.util.Map;
 
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,8 +48,22 @@ public class BrewingRecipe {
 	}
 
 	public boolean matches(TileBarrel barrel) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean fluid = barrel.getInput().getFluid() != null && barrel.getInput().getFluid().containsFluid(input);
+		IntList usedSlots = new IntArrayList(3);
+		IntList matchedInputs = new IntArrayList(3);
+		int counter = 0;
+		for (Ingredient i : inputItems.keySet()) {
+			for (int idx = 0; idx < 3; idx++) {
+				ItemStack s = barrel.getInv().getStackInSlot(idx);
+				if (!matchedInputs.contains(counter) && i.apply(s) && inputItems.get(i) <= s.getCount() && !usedSlots.contains(idx)) {
+					usedSlots.add(idx);
+					matchedInputs.add(counter);
+				}
+			}
+			counter++;
+		}
+
+		return fluid && matchedInputs.size() == inputItems.size();
 	}
 
 }
