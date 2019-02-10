@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.client.container.barrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerBarrelStorage extends ContainerBarrel {
 
-	private TileBarrel tile;
-
-	public ContainerBarrelStorage(IInventory playerInv, TileBarrel tile) {
-		this.tile = tile;
+	public ContainerBarrelStorage(InventoryPlayer playerInv, TileBarrel tile) {
+		super(playerInv.player, tile);
 		addOwnSlots();
 		addPlayerSlots(playerInv);
 	}
@@ -43,11 +42,6 @@ public class ContainerBarrelStorage extends ContainerBarrel {
 		addSlotToContainer(new SlotSealable(itemHandler, 6, 62, 53, tile));
 		addSlotToContainer(new SlotSealable(itemHandler, 7, 80, 53, tile));
 		addSlotToContainer(new SlotSealable(itemHandler, 8, 98, 53, tile));
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return player.getDistanceSq(tile.getPos()) < 64;
 	}
 
 	@Override

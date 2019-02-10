@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import com.teamacronymcoders.survivalism.utils.storages.BarrelState;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GUIBarrel extends GuiContainer {
@@ -35,17 +37,23 @@ public class GUIBarrel extends GuiContainer {
 
 	private TileBarrel te;
 	private BarrelState state;
-	private int tooltipY;
 
 	public GUIBarrel(TileBarrel te, Container container) {
 		super(container);
 		this.te = te;
-		state = te.getState();
+		this.state = te.getState();
 		if (state == BarrelState.STORAGE) true_background = storage_background;
 		else if (state == BarrelState.BREWING) true_background = brewing_background;
 		else true_background = soaking_background;
 		xSize = WIDTH;
 		ySize = HEIGHT;
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
@@ -73,15 +81,15 @@ public class GUIBarrel extends GuiContainer {
 				}
 			}
 		});
-		buttonList.add(new GuiButtonExt(1, guiLeft + 61, guiTop - 18, 54, buttonH, "Sealed"));
+		buttonList.add(new GuiButtonExt(1, guiLeft + 61, guiTop - 18, 54, buttonH, te.isSealed() ? "Unseal" : "Seal"));
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			//TODO: Message send to server: cycle barrel
+			Survivalism.INSTANCE.getPacketHandler().sendToServer(new MessageBarrelButton(0));
 		} else if (button.id == 1) {
-			//TODO: Message send to server: seal barrel
+			Survivalism.INSTANCE.getPacketHandler().sendToServer(new MessageBarrelButton(1));
 		}
 	}
 
@@ -102,7 +110,6 @@ public class GUIBarrel extends GuiContainer {
 				float hr = 48f / 16000f;
 				float offset = amount * hr;
 				int y = Math.round(72 - offset);
-				tooltipY = y;
 				int h = Math.round(offset - 1);
 				HelperFluid.renderTiledFluid(80, y, 16, h, 1, te.getInput().getFluid());
 			}
@@ -113,7 +120,6 @@ public class GUIBarrel extends GuiContainer {
 				float hr = 48f / 16000f;
 				float offset = inputTank * hr;
 				int y = Math.round(65 - offset);
-				tooltipY = y;
 				int h = Math.round(offset - 1);
 				HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
 			}
@@ -123,20 +129,35 @@ public class GUIBarrel extends GuiContainer {
 				int outputTank = te.getOutput().getFluidAmount();
 				float offset = outputTank * hr;
 				int y = Math.round(65 - offset);
-				tooltipY = y;
 				int h = Math.round(offset - 1);
 				HelperFluid.renderTiledFluid(116, y, 16, h, 1, te.getOutput().getFluid());
 			}
 		}
 	}
 
-	//TODO: FIXME
 	@Override
-	protected void renderHoveredToolTip(int p_191948_1_, int p_191948_2_) {
-		if (p_191948_1_ >= 80 && p_191948_2_ <= 120 && p_191948_2_ >= tooltipY && p_191948_2_ <= 72) {
-			drawHoveringText(te.getInput().getFluid().getLocalizedName(), p_191948_1_, p_191948_2_);
+	protected void renderHoveredToolTip(int x, int y) {
+		if (state == BarrelState.SOAKING) {
+			if (te.getInput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
+				drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
+			}
+		} else if (state == BarrelState.BREWING) {
+			if (te.getInput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
+				drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
+			}
+			if (te.getOutput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
+				drawHoveringText(te.getOutput().getFluid().getLocalizedName(), x, y);
+			}
 		}
-
-		super.renderHoveredToolTip(p_191948_1_, p_191948_2_);
+		super.renderHoveredToolTip(x, y);
 	}
+
+	public void setInput(FluidStack stack) {
+		te.getInput().setFluid(stack);
+	}
+
+	public void setOutput(FluidStack stack) {
+		te.getOutput().setFluid(stack);
+	}
+
 }

@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.client.container.barrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerBarrelBrewing extends ContainerBarrel {
 
-	private TileBarrel tile;
-
-	public ContainerBarrelBrewing(IInventory playerInv, TileBarrel tile) {
-		this.tile = tile;
+	public ContainerBarrelBrewing(InventoryPlayer playerInv, TileBarrel tile) {
+		super(playerInv.player, tile);
 		addOwnSlots();
 		addPlayerSlots(playerInv);
 	}
@@ -37,16 +36,16 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
 		addSlotToContainer(new SlotSealable(itemHandler, 0, 80, 17, tile));
 		addSlotToContainer(new SlotSealable(itemHandler, 1, 80, 37, tile));
 		addSlotToContainer(new SlotSealable(itemHandler, 2, 80, 57, tile));
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return player.getDistanceSq(tile.getPos()) < 64;
+		addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		//TODO change this to check if the slot is enabled / disabled
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
 

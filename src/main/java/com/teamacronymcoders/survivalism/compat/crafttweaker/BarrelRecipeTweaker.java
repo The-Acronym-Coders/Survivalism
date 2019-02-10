@@ -33,96 +33,96 @@ public class BarrelRecipeTweaker {
 		Survivalism.LATE_ADDITIONS.add(new AddSoakingRecipe(input, inputItem, output, fluidUseChance, ticks));
 	}
 
-/*	
-	@ZenMethod
-	public static void addBrewingRecipe(ILiquidStack inputFluid, IIngredient[] inputIngredients, ILiquidStack outputFluid, int ticks) {
-		Survivalism.LATE_ADDITIONS.add(new addBrewingRecipe(inputFluid, inputIngredients, outputFluid, ticks));
-	}
+	/*	
+		@ZenMethod
+		public static void addBrewingRecipe(ILiquidStack inputFluid, IIngredient[] inputIngredients, ILiquidStack outputFluid, int ticks) {
+			Survivalism.LATE_ADDITIONS.add(new addBrewingRecipe(inputFluid, inputIngredients, outputFluid, ticks));
+		}
+		
+		
+		private static class addBrewingRecipe implements IAction {
+			FluidStack inputFluid;
+			List<String> names = new ArrayList<>();
+			Map<Ingredient, Integer> inputIngredientsMap = new HashMap<>(3);
+			FluidStack outputFluid;
+			int ticks;
 	
-	
-	private static class addBrewingRecipe implements IAction {
-		FluidStack inputFluid;
-		List<String> names = new ArrayList<>();
-		Map<Ingredient, Integer> inputIngredientsMap = new HashMap<>(3);
-		FluidStack outputFluid;
-		int ticks;
-
-		addBrewingRecipe(ILiquidStack inputFluid, IIngredient[] inputIngredients, ILiquidStack outputFluid, int ticks) {
-			this.inputFluid = CraftTweakerMC.getLiquidStack(inputFluid);
-			for (IIngredient ingredient : inputIngredients) {
-				this.names.add(ingredient.toCommandString());
-			}
-			for (IIngredient ingredient : inputIngredients) {
-				if (ingredient instanceof IItemStack) {
-					ItemStack stack = CraftTweakerMC.getItemStack((IItemStack) ingredient);
-					if (stack.hasTagCompound()) {
-						IngredientNBT nbt = (IngredientNBT) IngredientNBT.fromStacks(CraftTweakerMC.getItemStack(ingredient));
-						this.inputIngredientsMap.put(nbt, ingredient.getAmount());
+			addBrewingRecipe(ILiquidStack inputFluid, IIngredient[] inputIngredients, ILiquidStack outputFluid, int ticks) {
+				this.inputFluid = CraftTweakerMC.getLiquidStack(inputFluid);
+				for (IIngredient ingredient : inputIngredients) {
+					this.names.add(ingredient.toCommandString());
+				}
+				for (IIngredient ingredient : inputIngredients) {
+					if (ingredient instanceof IItemStack) {
+						ItemStack stack = CraftTweakerMC.getItemStack((IItemStack) ingredient);
+						if (stack.hasTagCompound()) {
+							IngredientNBT nbt = (IngredientNBT) IngredientNBT.fromStacks(CraftTweakerMC.getItemStack(ingredient));
+							this.inputIngredientsMap.put(nbt, ingredient.getAmount());
+						}
+					} else {
+						this.inputIngredientsMap.put(CraftTweakerMC.getIngredient(ingredient), ingredient.getAmount());
 					}
+				}
+				this.outputFluid = CraftTweakerMC.getLiquidStack(outputFluid);
+				this.ticks = ticks;
+			}
+	
+			@Override
+			public void apply() {
+				BrewingRecipe recipe = new BrewingRecipe();
+				if (inputFluid.amount <= 0 || inputFluid.amount >= TileBarrel.TANK_CAPACITY) {
+					CraftTweakerAPI.logError("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
 				} else {
-					this.inputIngredientsMap.put(CraftTweakerMC.getIngredient(ingredient), ingredient.getAmount());
+					recipe.setInputFluid(inputFluid);
 				}
-			}
-			this.outputFluid = CraftTweakerMC.getLiquidStack(outputFluid);
-			this.ticks = ticks;
-		}
-
-		@Override
-		public void apply() {
-			BrewingRecipe recipe = new BrewingRecipe();
-			if (inputFluid.amount <= 0 || inputFluid.amount >= TileBarrel.TANK_CAPACITY) {
-				CraftTweakerAPI.logError("Input Fluid: " + inputFluid.getLocalizedName() + " is either null or has an amount less than or equal to 0mb!");
-			} else {
-				recipe.setInputFluid(inputFluid);
-			}
-
-			if (inputIngredientsMap.size() <= 0 || inputIngredientsMap.size() > 3) {
-				CraftTweakerAPI.logError("Ingredient list for Brewing Recipe: " + inputFluid.getLocalizedName() + " can't be less than or equal to 0 and not greater than 3 ItemStacks big!");
-			} else {
-				recipe.setInputIngredientsMap(inputIngredientsMap);
-			}
-
-			if (outputFluid.amount <= 0 || outputFluid.amount >= TileBarrel.TANK_CAPACITY) {
-				CraftTweakerAPI.logError("Output Fluid: " + outputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
-			} else {
-				recipe.setOutputFluid(outputFluid);
-			}
-
-			if (ticks <= 0) {
-				CraftTweakerAPI.logError("Processing Ticks can't be less than or equal to 0");
-			} else {
-				recipe.setTicks(ticks);
-			}
-
-			RecipeStorage.getBarrelRecipes().add(recipe);
-		}
-
-		@Override
-		public String describe() {
-			StringBuilder sb = new StringBuilder();
-			if (SurvivalismConfigs.crtVerboseLogging) {
-				sb.append("Added Brewing Recipe: ").append("\n");
-				sb.append("Input Fluidstack: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append("\n");
-				sb.append("Input Ingredients: ").append("\n");
-				for (String name : names) {
-					sb.append(name).append("\n");
+	
+				if (inputIngredientsMap.size() <= 0 || inputIngredientsMap.size() > 3) {
+					CraftTweakerAPI.logError("Ingredient list for Brewing Recipe: " + inputFluid.getLocalizedName() + " can't be less than or equal to 0 and not greater than 3 ItemStacks big!");
+				} else {
+					recipe.setInputIngredientsMap(inputIngredientsMap);
 				}
-				sb.append("Output Fluid: ").append(outputFluid.getLocalizedName()).append(":").append(outputFluid.amount).append("\n");
-				sb.append("Ticks: ").append(ticks).append("\n");
-			} else {
-				sb.append("Added Brewing Recipe: ").append(" ");
-				sb.append(inputFluid.getLocalizedName()).append(" ");
-				for (String name : names) {
-					sb.append(name).append(" : ");
+	
+				if (outputFluid.amount <= 0 || outputFluid.amount >= TileBarrel.TANK_CAPACITY) {
+					CraftTweakerAPI.logError("Output Fluid: " + outputFluid.getLocalizedName() + " has an amount less than or equal to 0mb!");
+				} else {
+					recipe.setOutputFluid(outputFluid);
 				}
-				sb.append(outputFluid.getLocalizedName()).append(" ");
-
+	
+				if (ticks <= 0) {
+					CraftTweakerAPI.logError("Processing Ticks can't be less than or equal to 0");
+				} else {
+					recipe.setTicks(ticks);
+				}
+	
+				RecipeStorage.getBarrelRecipes().add(recipe);
 			}
-
-			return sb.toString();
+	
+			@Override
+			public String describe() {
+				StringBuilder sb = new StringBuilder();
+				if (SurvivalismConfigs.crtVerboseLogging) {
+					sb.append("Added Brewing Recipe: ").append("\n");
+					sb.append("Input Fluidstack: ").append(inputFluid.getLocalizedName()).append(":").append(inputFluid.amount).append("\n");
+					sb.append("Input Ingredients: ").append("\n");
+					for (String name : names) {
+						sb.append(name).append("\n");
+					}
+					sb.append("Output Fluid: ").append(outputFluid.getLocalizedName()).append(":").append(outputFluid.amount).append("\n");
+					sb.append("Ticks: ").append(ticks).append("\n");
+				} else {
+					sb.append("Added Brewing Recipe: ").append(" ");
+					sb.append(inputFluid.getLocalizedName()).append(" ");
+					for (String name : names) {
+						sb.append(name).append(" : ");
+					}
+					sb.append(outputFluid.getLocalizedName()).append(" ");
+	
+				}
+	
+				return sb.toString();
+			}
 		}
-	}
-*/
+	*/
 	private static class AddSoakingRecipe implements IAction {
 		String itemDesc;
 		String outDesc;
@@ -138,8 +138,8 @@ public class BarrelRecipeTweaker {
 			this.input = CraftTweakerMC.getLiquidStack(input);
 			this.inputItem = CraftTweakerMC.getIngredient(inputItem);
 			this.output = CraftTweakerMC.getItemStack(output);
-
 			this.ticks = ticks;
+			this.fluidUseChance = fluidUseChance;
 		}
 
 		@Override

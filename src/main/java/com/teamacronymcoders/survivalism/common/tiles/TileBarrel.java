@@ -5,14 +5,15 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelBrewing;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
 import com.teamacronymcoders.survivalism.common.ModBlocks;
 import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.defaults.TileBase;
+import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
-import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
@@ -20,6 +21,7 @@ import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import com.teamacronymcoders.survivalism.utils.storages.BarrelState;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -27,8 +29,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -44,21 +44,30 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 
 	protected FluidTank input = new FluidTank(TANK_CAPACITY);
 	protected FluidTank output = new FluidTank(TANK_CAPACITY);
-	protected ItemStackHandler inv;
+	protected ItemStackHandler inv = new BarrelHandler(STORAGE_SIZE, this);
 	protected int ticks = 0;
+	protected boolean poweredLastTick = false;
 
 	public TileBarrel() {
 		input.setCanDrain(false);
 		output.setCanFill(false);
-		inv = new UpdatingItemStackHandler(getState().getInvSize(), this);
 	}
 
 	@Override
 	public void update() {
-		updateSeal(world.isBlockPowered(pos));
+		if (world.isRemote) return;
+		if (obj != null) {
+			obj.run();
+			obj = null;
+		}
+		boolean powered = world.isBlockPowered(pos);
+		if (poweredLastTick != powered) updateSeal(powered);
+		poweredLastTick = powered;
 		BarrelState state = getState();
-		if (state == BarrelState.STORAGE || !isSealed()) return;
-		else if (state == BarrelState.BREWING) processBrewing();
+		if (state == BarrelState.STORAGE || !isSealed()) {
+			ticks = 0;
+			return;
+		} else if (state == BarrelState.BREWING) processBrewing();
 		else if (state == BarrelState.SOAKING) processSoaking();
 	}
 
@@ -97,7 +106,8 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 				if (!curOutput.isEmpty() && !ItemHandlerHelper.canItemStacksStack(curOutput, sRecipe.getOutput())) return;
 				if (!curOutput.isEmpty() && curOutput.getCount() + sRecipe.getOutput().getCount() > curOutput.getMaxStackSize()) return;
 				ticks = 0;
-				if (HelperMath.tryPercentage(sRecipe.getFluidUseChance())) input.drain(sRecipe.getInput().amount, true);
+				if (HelperMath.tryPercentage(sRecipe.getFluidUseChance())) 
+					input.getFluid().amount -= sRecipe.getInput().amount;
 				inv.getStackInSlot(0).shrink(1);
 				inv.insertItem(1, sRecipe.getOutput().copy(), false);
 			}
@@ -138,11 +148,10 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 		return super.hasCapability(capability, facing);
 	}
 
-	@Nullable
 	public BarrelState getState() {
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == ModBlocks.blockBarrel) return state.getValue(BlockBarrel.BARREL_STATE);
-		return null;
+		return BarrelState.STORAGE;
 	}
 
 	@Nullable
@@ -157,10 +166,10 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 		this.markDirty();
 	}
 
-	private void updateSeal(boolean powered) {
+	public void updateSeal(boolean seal) {
 		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() == ModBlocks.blockBarrel) {
-			world.setBlockState(pos, state.withProperty(BlockBarrel.SEALED, powered));
+			world.setBlockState(pos, state.withProperty(BlockBarrel.SEALED, seal));
 		}
 	}
 
@@ -183,10 +192,18 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
 		return new ContainerBarrelSoaking(inv, this);
 	}
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		if (oldState.getBlock() == ModBlocks.blockBarrel && newState.getBlock() == ModBlocks.blockBarrel) return oldState.getValue(BlockBarrel.BARREL_STATE) != newState.getValue(BlockBarrel.BARREL_STATE);
-		return super.shouldRefresh(world, pos, oldState, newState);
+	public void cycleType(EntityPlayerMP cycler) {
+		world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockBarrel.BARREL_STATE, getState().next()));
+		oneTickLater(() -> cycler.openGui(Survivalism.INSTANCE, 1, world, pos.getX(), pos.getY(), pos.getZ()));
+	}
+
+	/**
+	 * Sketchy shit so when someone cycles the barrel their gui updates correctly.  If we do it from cycleType above it fails.
+	 */
+	Runnable obj;
+
+	private void oneTickLater(Runnable r) {
+		this.obj = r;
 	}
 
 }

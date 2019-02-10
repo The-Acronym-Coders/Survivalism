@@ -141,27 +141,23 @@ public class BlockBarrel extends BlockBase {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		TileBarrel barrel = getTE(worldIn, pos);
-		if (worldIn.isRemote || barrel == null) return false;
+		if (worldIn.isRemote || barrel == null) return true;
 
 		if (!state.getValue(SEALED)) {
 			if (playerIn.getHeldItem(hand).getItem() == SPONGE) {
 				barrel.getInput().setFluid(null);
 				barrel.getOutput().setFluid(null);
-				//TODO:FIXME (won't work for buckets)
 			} else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
 				ItemStack stack = playerIn.getHeldItem(hand);
 				FluidStack fs = FluidUtil.getFluidContained(stack);
 				if (fs != null) {
 					if (fs.amount == 0) {
 						FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
-
 					}
 					if (fs.amount == 1000) {
 						FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
-
 					}
 				}
-
 				return true;
 			}
 		}

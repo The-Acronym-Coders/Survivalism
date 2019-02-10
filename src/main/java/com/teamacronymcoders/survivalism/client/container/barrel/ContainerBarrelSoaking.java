@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.client.container.barrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerBarrelSoaking extends ContainerBarrel {
 
-	private TileBarrel tile;
-
-	public ContainerBarrelSoaking(IInventory playerInv, TileBarrel tile) {
-		this.tile = tile;
+	public ContainerBarrelSoaking(InventoryPlayer playerInv, TileBarrel tile) {
+		super(playerInv.player, tile);
 		addOwnSlots();
 		addPlayerSlots(playerInv);
 	}
@@ -34,11 +33,13 @@ public class ContainerBarrelSoaking extends ContainerBarrel {
 		IItemHandler itemHandler = this.tile.getInv();
 		addSlotToContainer(new SlotSealable(itemHandler, 0, 44, 40, tile));
 		addSlotToContainer(new SlotSealable(itemHandler, 1, 116, 40, tile));
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return player.getDistanceSq(tile.getPos()) < 64;
+		addSlotToContainer(new SlotDisabled(itemHandler, 2, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
+		addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
 	}
 
 	@Override
