@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 @Mod(modid = Survivalism.MODID, name = Survivalism.NAME, version = Survivalism.VERSION, acceptedMinecraftVersions = Survivalism.MCVERSION, dependencies = Survivalism.DEPS)
 public class Survivalism extends BaseModFoundation<Survivalism> {
@@ -42,7 +41,6 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     }
 
     public Logger logger;
-//    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);

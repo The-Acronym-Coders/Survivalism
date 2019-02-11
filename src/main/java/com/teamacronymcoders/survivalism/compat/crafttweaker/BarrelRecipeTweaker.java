@@ -5,6 +5,7 @@ import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManage
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
@@ -16,16 +17,14 @@ import crafttweaker.mc1120.CraftTweaker;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.teamacronymcoders.survivalism.utils.helpers.HelperString.cleanCommandString;
 
 /**
  * Credit goes out to CritFlaw
@@ -46,7 +45,6 @@ public class BarrelRecipeTweaker {
     }
 
     private static class AddBrewingRecipe implements IAction {
-
         String name;
         FluidStack input;
         Map<Ingredient, Integer> inputItems = new HashMap<>();
@@ -60,17 +58,20 @@ public class BarrelRecipeTweaker {
                 CraftTweakerAPI.logError("Invalid inputs in brewing recipe for " + output.toCommandString());
             }
             for (int i = 0; i < inputItems.length; i++) {
-                this.inputItems.put(CraftTweakerMC.getIngredient(inputItems[i]), inputItemAmounts[i]);
-                names.add(inputItems[i].toCommandString());
+                if (CraftTweakerMC.getIngredient(inputItems[i]) != null) {
+                    this.inputItems.put(CraftTweakerMC.getIngredient(inputItems[i]), inputItemAmounts[i]);
+                    names.add(inputItems[i].toCommandString());
+                } else {
+                    CraftTweakerAPI.logError("Ingredient: " + inputItems[i].toCommandString() + ", Is Null or Invalid");
+                }
             }
             this.output = CraftTweakerMC.getLiquidStack(output);
             this.ticks = ticks;
-            this.name = String.format("%s_from_%s", output.toCommandString(), input.toCommandString());
+            this.name = String.format("%s_from_%s", cleanCommandString(output.toCommandString()).toLowerCase(), cleanCommandString(input.toCommandString()).toLowerCase());
         }
 
         @Override
         public void apply() {
-            //TODO: Error checking
             BarrelRecipeManager.register(new BrewingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItems, output, ticks));
         }
 
@@ -88,14 +89,12 @@ public class BarrelRecipeTweaker {
                 sb.append("Ticks: ").append(ticks).append("\n");
             } else {
                 sb.append("Added Brewing Recipe: ").append(" ");
-                sb.append(input.getLocalizedName()).append(" ");
+                sb.append(input.getLocalizedName()).append(" : ");
                 for (String name : names) {
                     sb.append(name).append(" : ");
                 }
-                sb.append(output.getLocalizedName()).append(" ");
-
+                sb.append(output.getLocalizedName());
             }
-
             return sb.toString();
         }
     }
@@ -122,7 +121,7 @@ public class BarrelRecipeTweaker {
         @Override
         public void apply() {
             //TODO: Error checking
-            BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, itemDesc), input, inputItem, output, fluidUseChance, ticks));
+            BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, HelperString.cleanCommandString(itemDesc)), input, inputItem, output, fluidUseChance, ticks));
         }
 
         @Override

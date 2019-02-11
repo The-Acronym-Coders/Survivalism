@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.compat.crafttweaker;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
@@ -19,10 +20,6 @@ import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-/**
- * Credit goes out to CritFlaw
- * Please and kindly go fluff yourself!
- */
 @ZenClass("mods.survivalism.CrushingVat")
 @ZenRegister
 public class VatRecipeTweaker {
@@ -47,7 +44,7 @@ public class VatRecipeTweaker {
         int jumps;
 
         private AddRecipe(IIngredient input, ILiquidStack output, IItemStack outputStack, float itemChance, int jumps) {
-            this.name = input.toCommandString();
+            this.name = HelperString.cleanCommandString(input.toCommandString());
             this.input = CraftTweakerMC.getIngredient(input);
             this.output = CraftTweakerMC.getLiquidStack(output);
             this.outputStack = CraftTweakerMC.getItemStack(outputStack);
