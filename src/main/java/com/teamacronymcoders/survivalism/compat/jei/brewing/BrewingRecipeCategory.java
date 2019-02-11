@@ -19,16 +19,13 @@ import java.util.List;
 import java.util.Set;
 
 public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapper> {
-
-    public static final String NAME = "survivalism.brewing";
-
-    private final IDrawable background;
-
     @Nonnull
     private final String localized;
-
+    public static final String NAME = "survivalism.brewing";
+    private final IDrawable background;
+    
     public BrewingRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing_no_inv.png"), 26, 8, 124, 100);
+        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing_no_inv.png"), 26, 8, 124, 80);
         this.localized = I18n.format("container.jei." + NAME + ".name");
     }
 

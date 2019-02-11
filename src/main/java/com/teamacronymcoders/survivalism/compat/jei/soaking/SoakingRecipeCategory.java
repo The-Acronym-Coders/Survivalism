@@ -20,11 +20,10 @@ import java.util.List;
 import java.util.Set;
 
 public class SoakingRecipeCategory implements IRecipeCategory<SoakingRecipeWrapper> {
-    public static final String NAME = "survivalism.soaking";
-
-    private final IDrawable background;
     @Nonnull
     private final String localized;
+    public static final String NAME = "survivalism.soaking";
+    private final IDrawable background;
 
     public SoakingRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 3, 124, 80);
