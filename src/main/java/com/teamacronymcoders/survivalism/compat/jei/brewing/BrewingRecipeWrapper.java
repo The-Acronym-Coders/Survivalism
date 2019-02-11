@@ -36,7 +36,11 @@ public class BrewingRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawString(HelperString.getDurationString(recipe.getTicks() / 20), 39, 70, 4210752, false);
-        minecraft.fontRenderer.drawString("hh:mm:ss", 39, 80, 4210752, false);
+        String input;
+        int xPos;
+
+        input = HelperString.getDurationString(recipe.getTicks() / 20);
+        xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
+        minecraft.fontRenderer.drawString(input, xPos, 70, 4210752, false);
     }
 }

@@ -32,16 +32,26 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        String input = "";
+        int xPos = 0;
+
         // Render Chance Output
-        if (recipe.getFluidUseChance() <= 0.0f | recipe.getFluidUseChance() >= 1.0f) {
-            minecraft.fontRenderer.drawString("--- Use Chance ---", 12, 0, 4210752, false);
-            minecraft.fontRenderer.drawString("100%", 52, 10, 4210752, false);
+        input = "--- Use Chance ---";
+        xPos = ((recipeWidth/2)-(minecraft.fontRenderer.getStringWidth(input)/2));
+        minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);
+
+        if (recipe.getFluidUseChance() <= 0.0f | recipe.getFluidUseChance() >= 1.0f){
+            input = "100%";
+            xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
         } else {
-            minecraft.fontRenderer.drawString("--- Use Chance ---", 10, 0, 4210752, false);
-            minecraft.fontRenderer.drawString(HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%", 52, 10, 4210752, false);
+            input = HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
+            xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
         }
+        minecraft.fontRenderer.drawString(input, xPos, 10, 4210752, false);
 
         // Render Ticks in HH:MM:SS
-        minecraft.fontRenderer.drawString(HelperString.getDurationString(recipe.getTicks() / 20), 42, 73, 4210752, false);
+        input = HelperString.getDurationString(recipe.getTicks() / 20);
+        xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
+        minecraft.fontRenderer.drawString(input, xPos, 73, 4210752, false);
     }
 }
