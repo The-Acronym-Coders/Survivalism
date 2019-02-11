@@ -13,3 +13,7 @@ state.barrel.soaking=Soaking
 epicurious.patchouli.time=Time:
 epicurious.patchouli.amount.decrease=Decrease Amount:
 epicurious.patchouli.chance=Decrease Chance:
+
+container.jei.survivalism.brewing.name=Brewing
+container.jei.survivalism.soaking.name=Soaking
+container.jei.survivalism.crushing.name=Crushing

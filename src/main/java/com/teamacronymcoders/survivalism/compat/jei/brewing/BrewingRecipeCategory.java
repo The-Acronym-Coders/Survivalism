@@ -8,26 +8,28 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapper> {
 
     public static final String NAME = "survivalism.brewing";
 
     private final IDrawable background;
-    private final IDrawable icon;
-    IGuiHelper helper;
+
+    @Nonnull
+    private final String localized;
 
     public BrewingRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(GUIBarrel.brewing_background, 30, 13, 116, 63);
-        this.icon = helper.createDrawable(new ModelResourceLocation("survivalism:barrel", "inventory"), 16, 16, 16, 16);
-        this.helper = helper;
+        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 30, 13, 116, 63);
+        this.localized = I18n.format("container.jei." + NAME + ".name");
     }
 
     @Override
@@ -37,7 +39,7 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
 
     @Override
     public String getTitle() {
-        return I18n.format("container.jei." + NAME + ".name");
+        return localized;
     }
 
     @Override
@@ -50,23 +52,19 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
         return this.background;
     }
 
-    @Nullable
-    @Override
-    public IDrawable getIcon() {
-        return icon;
-    }
-
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, BrewingRecipeWrapper recipeWrapper, IIngredients ingredients) {
-        float hr = 48f / 16000f;
-        int outputTank = recipeWrapper.recipe.getOutput().amount;
-        float offset = outputTank * hr;
-        int y = Math.round(65 - offset);
-        int h = Math.round(offset - 1);
+        // Init Slots
+        recipeLayout.getFluidStacks().init(0, true, 14, 4, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(1, false, 86, 4, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
 
-        recipeLayout.getFluidStacks().init(0, true, 14, y - 13, 16, h, TileBarrel.TANK_CAPACITY, true, null);
+
+        // Set Slots
         recipeLayout.getFluidStacks().set(0, recipeWrapper.recipe.getInput());
+        recipeLayout.getFluidStacks().set(1, recipeWrapper.recipe.getOutput());
 
+
+        // Triple Slot Madness~~
         Set<Ingredient> ingredientSet = recipeWrapper.recipe.getInputItems().keySet();
         Ingredient[] array = ingredientSet.toArray(new Ingredient[0]);
 
@@ -83,8 +81,5 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
             recipeLayout.getItemStacks().init(i, true, 49, val[i]);
             recipeLayout.getItemStacks().set(i, fxStacks);
         }
-
-        recipeLayout.getFluidStacks().init(1, false, 86, y - 13, 16, h, TileBarrel.TANK_CAPACITY, true, null);
-        recipeLayout.getFluidStacks().set(1, recipeWrapper.recipe.getOutput());
     }
 }
