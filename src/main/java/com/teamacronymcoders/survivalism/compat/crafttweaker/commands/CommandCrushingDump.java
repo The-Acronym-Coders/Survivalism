@@ -1,7 +1,5 @@
 package com.teamacronymcoders.survivalism.compat.crafttweaker.commands;
 
-import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
-import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
 import crafttweaker.CraftTweakerAPI;
