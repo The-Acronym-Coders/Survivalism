@@ -27,7 +27,7 @@ public class SoakingRecipeCategory implements IRecipeCategory<SoakingRecipeWrapp
     private final String localized;
 
     public SoakingRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 16, 124, 120);
+        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 3, 124, 80);
         this.localized = I18n.format("container.jei." + NAME + ".name");
     }
 
@@ -54,9 +54,9 @@ public class SoakingRecipeCategory implements IRecipeCategory<SoakingRecipeWrapp
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, SoakingRecipeWrapper recipeWrapper, IIngredients ingredients) {
         // Init Slots
-        recipeLayout.getItemStacks().init(0, true, 17, 23);
-        recipeLayout.getFluidStacks().init(0, true, 54, 8, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
-        recipeLayout.getItemStacks().init(1, false, 89, 23);
+        recipeLayout.getItemStacks().init(0, true, 17, 36);
+        recipeLayout.getFluidStacks().init(0, true, 54, 21, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
+        recipeLayout.getItemStacks().init(1, false, 89, 36);
 
         // Set Slots
         ItemStack[] stacks = recipeWrapper.recipe.getInputItem().getMatchingStacks();
