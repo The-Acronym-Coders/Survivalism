@@ -21,7 +21,7 @@ public class ModBlocks {
     public static BlockBarrel blockBarrel;
 
     @GameRegistry.ObjectHolder("survivalism:crushing_vat")
-    static BlockCrushingVat blockCrushingVat;
+    public static BlockCrushingVat blockCrushingVat;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
