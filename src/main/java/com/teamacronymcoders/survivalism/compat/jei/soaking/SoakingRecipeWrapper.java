@@ -32,8 +32,8 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        String input = "";
-        int xPos = 0;
+        String input;
+        int xPos;
 
         // Render Chance Output
         input = "--- Use Chance ---";

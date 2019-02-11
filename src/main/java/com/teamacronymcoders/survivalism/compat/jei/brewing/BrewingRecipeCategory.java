@@ -23,7 +23,7 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
     private final String localized;
     public static final String NAME = "survivalism.brewing";
     private final IDrawable background;
-    
+
     public BrewingRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing_no_inv.png"), 26, 8, 124, 80);
         this.localized = I18n.format("container.jei." + NAME + ".name");

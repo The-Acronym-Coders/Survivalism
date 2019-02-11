@@ -58,8 +58,7 @@ public class SoakingRecipeCategory implements IRecipeCategory<SoakingRecipeWrapp
         recipeLayout.getItemStacks().init(1, false, 89, 36);
 
         // Set Slots
-        ItemStack[] stacks = recipeWrapper.recipe.getInputItem().getMatchingStacks();
-        List<ItemStack> stackList = new ArrayList<>(Arrays.asList(stacks));
+        List<ItemStack> stackList = new ArrayList<>(Arrays.asList(recipeWrapper.recipe.getInputItem().getMatchingStacks()));
         recipeLayout.getItemStacks().set(0, stackList);
 
         recipeLayout.getFluidStacks().set(0, recipeWrapper.recipe.getInput());
