@@ -18,9 +18,6 @@ import net.minecraft.item.ItemStack;
 @JEIPlugin
 public class JEISurvivalismPlugin implements IModPlugin {
 
-    private static ItemStack barrel = new ItemStack(ModBlocks.blockBarrel);
-    private static ItemStack vat = new ItemStack(ModBlocks.blockCrushingVat);
-
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         IJeiHelpers helpers = registry.getJeiHelpers();
