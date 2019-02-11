@@ -21,14 +21,12 @@ import java.io.IOException;
 
 public class GUIBarrel extends GuiContainer {
 
+    private static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
+    private static final ResourceLocation soaking_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking.png");
     private static final int WIDTH = 180;
     private static final int HEIGHT = 163;
-
     private static final int buttonW = 18;
     private static final int buttonH = 19;
-
-    public static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
-    private static final ResourceLocation soaking_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking.png");
     private static final ResourceLocation storage_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_storage.png");
 
     private ResourceLocation true_background = null;
