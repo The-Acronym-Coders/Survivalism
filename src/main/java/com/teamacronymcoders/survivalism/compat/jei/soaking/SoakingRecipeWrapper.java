@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.soaking;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mezz.jei.api.ingredients.IIngredients;
@@ -8,7 +9,6 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,23 +35,37 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
         String input;
         int xPos;
 
+        // Render Output Marker
+        input = "+";
+        xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        minecraft.fontRenderer.drawString(input, xPos - 18, 32, 4210752, false);
+
+        input = "->";
+        xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        minecraft.fontRenderer.drawString(input, xPos + 18, 32, 4210752, false);
+
+        // Render Time
+        if (SurvivalismConfigs.timeOrTicks) {
+            input = HelperString.getDurationString(recipe.getTicks() / 20);
+            ;
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+            minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
+        } else {
+            input = "Ticks: " + recipe.getTicks();
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+            minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
+        }
+
         // Render Chance Output
-        input = "--- Use Chance ---";
-        xPos = ((recipeWidth/2)-(minecraft.fontRenderer.getStringWidth(input)/2));
+        if (recipe.getFluidUseChance() <= 0.0f | recipe.getFluidUseChance() >= 1.0f) {
+            input = "Use Chance: 100%";
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        } else {
+            input = "Use Chance: " + HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        }
         minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);
 
-        if (recipe.getFluidUseChance() <= 0.0f | recipe.getFluidUseChance() >= 1.0f){
-            input = "100%";
-            xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
-        } else {
-            input = HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
-            xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
-        }
-        minecraft.fontRenderer.drawString(input, xPos, 10, 4210752, false);
 
-        // Render Ticks in HH:MM:SS
-        input = HelperString.getDurationString(recipe.getTicks() / 20);
-        xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
-        minecraft.fontRenderer.drawString(input, xPos, 73, 4210752, false);
     }
 }

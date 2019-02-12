@@ -1,7 +1,6 @@
 package com.teamacronymcoders.survivalism.compat.jei.brewing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapper> {
+    public static final String NAME = "survivalism.brewing";
     @Nonnull
     private final String localized;
-    public static final String NAME = "survivalism.brewing";
     private final IDrawable background;
 
     public BrewingRecipeCategory(IGuiHelper helper) {

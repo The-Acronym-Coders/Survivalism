@@ -52,11 +52,11 @@ public class ProcessorSoakingRecipe implements IComponentProcessor {
                 return "Decrease Amount: " + recipe.getFluidUseChance();
             case "decreaseChance":
                 if (recipe.getFluidUseChance() < 0.0f || recipe.getFluidUseChance() > 1.0f) {
-                    return I18n.format("epicurious.patchouli.amount.decrease") + " " + "100%";
+                    return I18n.format("survivalism.patchouli.amount.decrease") + " " + "100%";
                 }
-                return I18n.format("epicurious.patchouli.chance") + " " + recipe.getFluidUseChance() * 100 + "%";
+                return I18n.format("survivalism.patchouli.chance") + " " + recipe.getFluidUseChance() * 100 + "%";
             case "time_label":
-                return I18n.format("epicurious.patchouli.time");
+                return I18n.format("survivalism.patchouli.time");
             case "time":
                 return HelperPatchouli.getDurationString(recipe.getTicks() / 20);
         }

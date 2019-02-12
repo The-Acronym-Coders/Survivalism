@@ -57,7 +57,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
             case "amountO":
                 return recipe.getOutput().amount + "mb";
             case "time_label":
-                return I18n.format("epicurious.patchouli.time");
+                return I18n.format("survivalism.patchouli.time");
             case "time":
                 return HelperPatchouli.getDurationString(recipe.getTicks() / 20);
         }

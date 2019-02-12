@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.brewing;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -36,9 +37,30 @@ public class BrewingRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        String input = HelperString.getDurationString(recipe.getTicks() / 20);;
-        int xPos = (recipeWidth-minecraft.fontRenderer.getStringWidth(input))/2;
+        String input;
+        int xPos;
 
-        minecraft.fontRenderer.drawString(input, xPos, 70, 4210752, false);
+        // Render Output Marker
+        input = "+";
+        xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        minecraft.fontRenderer.drawString(input, xPos - 18, 32, 4210752, false);
+
+        input = "=";
+        xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        minecraft.fontRenderer.drawString(input, xPos + 18, 32, 4210752, false);
+
+
+        // Render Time
+        if (SurvivalismConfigs.timeOrTicks) {
+            input = HelperString.getDurationString(recipe.getTicks() / 20);
+            ;
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+            minecraft.fontRenderer.drawString(input, xPos, 70, 4210752, false);
+        } else {
+            input = "Ticks: " + recipe.getTicks();
+            xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+            minecraft.fontRenderer.drawString(input, xPos, 70, 4210752, false);
+        }
+
     }
 }
