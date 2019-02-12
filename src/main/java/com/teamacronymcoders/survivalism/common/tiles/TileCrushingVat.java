@@ -6,7 +6,7 @@ import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +33,7 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     protected double jumps = 0.0D;
     protected int fluidLastJump;
 
-    public void onJump(EntityPlayer jumper) {
+    public void onJump(EntityLivingBase jumper) {
         boolean dirty = false;
 
         if (jumper == null || inputInv.getStackInSlot(0).isEmpty()) {
@@ -58,9 +58,7 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
         } else if (curRecipe == null) {
             return;
         }
-
         jumps += SurvivalismConfigs.baseJumpValue * VatRecipeManager.getBootsMultiplier(jumper);
-
         if (jumps >= curRecipe.getJumps() && canInsertResults()) {
             if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
                 outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
@@ -70,7 +68,6 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
             dirty = true;
             inputInv.getStackInSlot(0).shrink(1);
         }
-
         if (dirty) {
             markDirty();
         }

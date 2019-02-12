@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.common.recipe.vat;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -57,7 +57,7 @@ public class VatRecipe {
         return jumps;
     }
 
-    public boolean matches(EntityPlayer jumper, ItemStack stack) {
+    public boolean matches(EntityLivingBase jumper, ItemStack stack) {
         return input.apply(stack);
     }
 

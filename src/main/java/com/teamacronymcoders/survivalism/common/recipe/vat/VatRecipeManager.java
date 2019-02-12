@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -58,7 +58,7 @@ public class VatRecipeManager {
     }
 
     @Nullable
-    public static VatRecipe getRecipe(EntityPlayer jumper, ItemStack input) {
+    public static VatRecipe getRecipe(EntityLivingBase jumper, ItemStack input) {
         for (VatRecipe r : RECIPES.values()) {
             if (r.matches(jumper, input)) {
                 return r;
@@ -67,7 +67,7 @@ public class VatRecipeManager {
         return null;
     }
 
-    public static double getBootsMultiplier(EntityPlayer jumper) {
+    public static double getBootsMultiplier(EntityLivingBase jumper) {
         ItemStack boots = jumper.getItemStackFromSlot(EntityEquipmentSlot.FEET);
         if (boots.isEmpty()) {
             return 1;
