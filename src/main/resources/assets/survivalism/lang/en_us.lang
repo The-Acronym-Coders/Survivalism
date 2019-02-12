@@ -10,10 +10,12 @@ state.barrel.storage=Storage
 state.barrel.brewing=Brewing
 state.barrel.soaking=Soaking
 
-epicurious.patchouli.time=Time:
-epicurious.patchouli.amount.decrease=Decrease Amount:
-epicurious.patchouli.chance=Decrease Chance:
+survivalism.patchouli.time=Time:
+survivalism.patchouli.amount.decrease=Decrease Amount:
+survivalism.patchouli.chance=Decrease Chance:
 
 container.jei.survivalism.brewing.name=Brewing
 container.jei.survivalism.soaking.name=Soaking
 container.jei.survivalism.crushing.name=Crushing
+
+survivalism.no.output=No Output
