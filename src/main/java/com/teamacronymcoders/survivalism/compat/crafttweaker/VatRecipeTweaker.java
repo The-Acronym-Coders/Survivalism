@@ -90,7 +90,7 @@ public class VatRecipeTweaker {
 
         @Override
         public void apply() {
-            if (boots != Ingredient.EMPTY) {
+            if (boots == Ingredient.EMPTY) {
                 CraftTweakerAPI.logError("Cannot register boot multiplier for nothing.");
             }
             VatRecipeManager.registerBoots(boots, multiplier);
