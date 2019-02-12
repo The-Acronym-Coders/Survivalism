@@ -18,4 +18,8 @@ container.jei.survivalism.brewing.name=Brewing
 container.jei.survivalism.soaking.name=Soaking
 container.jei.survivalism.crushing.name=Crushing
 
-survivalism.no.output=No Output
+survivalism.jei.no.output=No Output
+survivalism.jei.full.chance=Use Chance: 100
+survivalism.jei.use.chance=Use Chance:
+survivalism.jei.ticks=Ticks:
+survivalism.jei.jumps=Jumps:

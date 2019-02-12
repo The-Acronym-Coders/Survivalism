@@ -8,6 +8,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -51,17 +52,17 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
             minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
         } else {
-            input = "Ticks: " + recipe.getTicks();
+            input = I18n.format("survivalism.jei.ticks") + " " + recipe.getTicks();
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
             minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
         }
 
         // Render Chance Output
         if (recipe.getFluidUseChance() <= 0.0f | recipe.getFluidUseChance() >= 1.0f) {
-            input = "Use Chance: 100%";
+            input = I18n.format("survivalism.jei.full.chance") + "%";
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
         } else {
-            input = "Use Chance: " + HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
+            input = I18n.format("survivalism.jei.use.chance") + " " + HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
         }
         minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);

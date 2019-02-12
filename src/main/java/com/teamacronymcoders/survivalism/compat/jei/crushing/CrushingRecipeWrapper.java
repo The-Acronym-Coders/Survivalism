@@ -6,6 +6,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class CrushingRecipeWrapper implements IRecipeWrapper {
         }
 
         // Render Jumps
-        input = "Jumps: " + recipe.getJumps();
+        input = I18n.format("survivalism.jei.jumps") + " " + recipe.getJumps();
         xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
         minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);
     }
