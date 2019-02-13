@@ -48,7 +48,6 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
         // Render Time
         if (SurvivalismConfigs.timeOrTicks) {
             input = HelperString.getDurationString(recipe.getTicks() / 20);
-            ;
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
             minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
         } else {
