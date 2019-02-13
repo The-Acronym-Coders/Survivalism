@@ -3,6 +3,8 @@ itemGroup.survivalism=Survivalism
 tile.survivalism.barrel.name=Barrel
 tile.survivalism.crushingvat.name=Crushing Vat
 
+info.survivalism.shift=Press Shift for More Information!
+
 state.barrel=Barrel State:
 state.sealed=Sealed:
 
@@ -10,17 +12,28 @@ state.barrel.storage=Storage
 state.barrel.brewing=Brewing
 state.barrel.soaking=Soaking
 
+survivalism.hwyla.items.input=Input Items:
+survivalism.hwyla.items.output=Output Items:
+
+survivalism.hwyla.tank.input=Input Tank:
+survivalism.hwyla.tank.input.empty=Input Tank: Empty
+survivalism.hwyla.tank.output= Output Tank:
+survivalism.hwyla.tank.output.empty=Output Tank: Empty
+
+survivalism.hwyla.barrel.state=State:
+survivalism.hwyla.barrel.sealed=Sealed:
+
 survivalism.patchouli.time=Time:
 survivalism.patchouli.amount.decrease=Decrease Amount:
 survivalism.patchouli.chance=Decrease Chance:
-
-container.jei.survivalism.brewing.name=Brewing
-container.jei.survivalism.soaking.name=Soaking
-container.jei.survivalism.crushing.name=Crushing
-container.jei.survivalism.multiplier.name=Boot Multiplier
 
 survivalism.jei.no.output=No Output
 survivalism.jei.full.chance=Use Chance: 100
 survivalism.jei.use.chance=Use Chance:
 survivalism.jei.ticks=Ticks:
 survivalism.jei.jumps=Jumps:
+
+container.jei.survivalism.brewing.name=Brewing
+container.jei.survivalism.soaking.name=Soaking
+container.jei.survivalism.crushing.name=Crushing
+container.jei.survivalism.multiplier.name=Boot Multiplier

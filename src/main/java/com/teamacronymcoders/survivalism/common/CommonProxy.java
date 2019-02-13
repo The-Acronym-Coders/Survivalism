@@ -35,7 +35,12 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel).setRegistryName(ModBlocks.blockBarrel.getRegistryName()));
+        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel){
+            @Override
+            public int getMetadata(int damage) {
+                return damage;
+            }
+        }.setRegistryName(ModBlocks.blockBarrel.getRegistryName()));
         event.getRegistry().register(new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(ModBlocks.blockCrushingVat.getRegistryName()));
     }
 

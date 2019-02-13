@@ -15,6 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
@@ -27,6 +28,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.datafix.walkers.BlockEntityTag;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -135,11 +137,6 @@ public class BlockBarrel extends BlockBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-
-    }
-
-    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileBarrel barrel = getTE(worldIn, pos);
         if (worldIn.isRemote || barrel == null) {
@@ -191,30 +188,32 @@ public class BlockBarrel extends BlockBase {
         }
     }
 
-    //TODO: FIXME
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            IBlockState state = getStateFromMeta(stack.getMetadata());
+            if (state.getValue(BARREL_STATE).ordinal() == 0) {
+                tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.storage"));
+            } else if (state.getValue(BARREL_STATE).ordinal() == 1) {
+                tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.brewing"));
+            } else if (state.getValue(BARREL_STATE).ordinal() == 2) {
+                tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.soaking"));
+            }
+
+            tooltip.add(TextFormatting.GRAY + I18n.format("state.sealed") + " " + TextFormatting.WHITE + state.getValue(SEALED));
+        } else {
+            tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+        }
+
         if (stack != null && stack.hasTagCompound()) {
             NBTTagCompound compound = stack.getTagCompound();
+            NBTTagCompound tag = stack.getSubCompound("BlockEntityTag");
+
 
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                if (compound.hasKey("barrel_state")) {
-                    if (compound.getInteger("barrel_state") == 0) {
-                        tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.storage"));
-                    } else if (compound.getInteger("barrel_state") == 1) {
-                        tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.brewing"));
-                    } else if (compound.getInteger("barrel_state") == 2) {
-                        tooltip.add(TextFormatting.GRAY + I18n.format("state.barrel") + " " + TextFormatting.WHITE + I18n.format("state.barrel.soaking"));
-                    }
-                }
-
-                if (compound.hasKey("sealed")) {
-                    tooltip.add(TextFormatting.GRAY + I18n.format("state.sealed") + " " + TextFormatting.WHITE + compound.getBoolean("sealed"));
-                }
-
-                if (compound.hasKey("inputTank")) {
+                if (compound != null && tag.hasKey("inputTank")) {
                     FluidTank fluidTank = new FluidTank(TileBarrel.TANK_CAPACITY);
-                    FluidStack fluidStack = fluidTank.readFromNBT(compound.getCompoundTag("inputTank")).getFluid();
+                    FluidStack fluidStack = fluidTank.readFromNBT(tag.getCompoundTag("inputTank")).getFluid();
                     if (fluidStack != null) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             tooltip.add(TextFormatting.GRAY + "Input: " + TextFormatting.WHITE + fluidStack.getLocalizedName() + ": " + fluidStack.amount);
@@ -224,9 +223,9 @@ public class BlockBarrel extends BlockBase {
                     }
                 }
 
-                if (compound.hasKey("outputTank")) {
+                if (compound != null && tag.hasKey("outputTank")) {
                     FluidTank fluidTank = new FluidTank(TileBarrel.TANK_CAPACITY);
-                    FluidStack fluidStack = fluidTank.readFromNBT(compound.getCompoundTag("outputTank")).getFluid();
+                    FluidStack fluidStack = fluidTank.readFromNBT(tag.getCompoundTag("outputTank")).getFluid();
                     if (fluidStack != null) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                             tooltip.add(TextFormatting.GRAY + "Output: " + TextFormatting.WHITE + fluidStack.getLocalizedName() + ": " + fluidStack.amount);
@@ -236,13 +235,13 @@ public class BlockBarrel extends BlockBase {
                     }
                 }
 
-                if (compound.hasKey("items")) {
+                if (compound != null && tag.hasKey("items")) {
                     if (Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
                         int c = 0;
                         int d = 0;
 
                         NonNullList<ItemStack> nonNullList = NonNullList.withSize(9, ItemStack.EMPTY);
-                        ItemStackHelper.loadAllItems(compound.getCompoundTag("items"), nonNullList);
+                        ItemStackHelper.loadAllItems(tag.getCompoundTag("items"), nonNullList);
 
                         tooltip.add("Inventory:");
 

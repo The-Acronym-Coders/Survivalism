@@ -9,6 +9,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
@@ -84,8 +85,8 @@ public class BlockCrushingVat extends BlockBase {
     @Override
     public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
         TileCrushingVat vat = getTE(world, pos);
-        if (vat != null && entity instanceof EntityPlayer) {
-            vat.onJump((EntityPlayer) entity);
+        if (vat != null && entity instanceof EntityLivingBase) {
+            vat.onJump((EntityLivingBase) entity);
         }
     }
 
