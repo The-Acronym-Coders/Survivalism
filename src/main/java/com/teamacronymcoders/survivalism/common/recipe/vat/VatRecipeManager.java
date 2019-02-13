@@ -67,6 +67,10 @@ public class VatRecipeManager {
         return null;
     }
 
+    public static Object2DoubleMap<Ingredient> getBOOTS() {
+        return BOOTS;
+    }
+
     public static double getBootsMultiplier(EntityLivingBase jumper) {
         ItemStack boots = jumper.getItemStackFromSlot(EntityEquipmentSlot.FEET);
         if (boots.isEmpty()) {

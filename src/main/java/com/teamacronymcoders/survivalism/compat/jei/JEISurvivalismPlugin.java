@@ -10,6 +10,8 @@ import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeCategor
 import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeWrapper;
 import com.teamacronymcoders.survivalism.compat.jei.crushing.CrushingRecipeCategory;
 import com.teamacronymcoders.survivalism.compat.jei.crushing.CrushingRecipeWrapper;
+import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueCategory;
+import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueWrapper;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeCategory;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeWrapper;
 import mezz.jei.api.IJeiHelpers;
@@ -17,6 +19,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 @JEIPlugin
@@ -28,7 +31,8 @@ public class JEISurvivalismPlugin implements IModPlugin {
         registry.addRecipeCategories(
                 new BrewingRecipeCategory(helpers.getGuiHelper()),
                 new SoakingRecipeCategory(helpers.getGuiHelper()),
-                new CrushingRecipeCategory(helpers.getGuiHelper())
+                new CrushingRecipeCategory(helpers.getGuiHelper()),
+                new MultiplierValueCategory(helpers.getGuiHelper())
         );
     }
 
@@ -48,5 +52,10 @@ public class JEISurvivalismPlugin implements IModPlugin {
         registry.addRecipes(VatRecipeManager.getRecipes(), CrushingRecipeCategory.NAME);
         registry.handleRecipes(VatRecipe.class, CrushingRecipeWrapper::new, CrushingRecipeCategory.NAME);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockCrushingVat), CrushingRecipeCategory.NAME);
+
+        // Multiplier Value
+        registry.addRecipes(VatRecipeManager.getBOOTS().keySet(), MultiplierValueCategory.NAME);
+        registry.handleRecipes(VatRecipeManager.getBOOTS().object2DoubleEntrySet().iterator(), MultiplierValueWrapper::new, MultiplierValueCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(Items.LEATHER_BOOTS));
     }
 }
