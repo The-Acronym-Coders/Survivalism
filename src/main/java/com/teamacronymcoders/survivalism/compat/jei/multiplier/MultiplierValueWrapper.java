@@ -28,6 +28,12 @@ public class MultiplierValueWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        double value2 = value.getDoubleValue();
+        String input;
+        int xPos;
+
+        input = value.getDoubleValue() * 100 + "%";
+        xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
+        minecraft.fontRenderer.drawString(input, xPos, 22, 4210752, false);
+
     }
 }

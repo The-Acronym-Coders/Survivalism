@@ -14,6 +14,7 @@ import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueCa
 import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueWrapper;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeCategory;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeWrapper;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -21,6 +22,8 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import java.util.Map;
 
 @JEIPlugin
 public class JEISurvivalismPlugin implements IModPlugin {
@@ -54,8 +57,8 @@ public class JEISurvivalismPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockCrushingVat), CrushingRecipeCategory.NAME);
 
         // Multiplier Value
-        registry.addRecipes(VatRecipeManager.getBOOTS().keySet(), MultiplierValueCategory.NAME);
-        registry.handleRecipes(VatRecipeManager.getBOOTS().object2DoubleEntrySet().iterator(), MultiplierValueWrapper::new, MultiplierValueCategory.NAME);
-        registry.addRecipeCatalyst(new ItemStack(Items.LEATHER_BOOTS));
+        registry.addRecipes(VatRecipeManager.getBOOTS().object2DoubleEntrySet(), MultiplierValueCategory.NAME);
+        registry.handleRecipes(Object2DoubleMap.Entry.class, MultiplierValueWrapper::new, MultiplierValueCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(Items.LEATHER_BOOTS), MultiplierValueCategory.NAME);
     }
 }

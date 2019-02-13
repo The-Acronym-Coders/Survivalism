@@ -17,6 +17,7 @@ survivalism.patchouli.chance=Decrease Chance:
 container.jei.survivalism.brewing.name=Brewing
 container.jei.survivalism.soaking.name=Soaking
 container.jei.survivalism.crushing.name=Crushing
+container.jei.survivalism.multiplier.name=Boot Multiplier
 
 survivalism.jei.no.output=No Output
 survivalism.jei.full.chance=Use Chance: 100
