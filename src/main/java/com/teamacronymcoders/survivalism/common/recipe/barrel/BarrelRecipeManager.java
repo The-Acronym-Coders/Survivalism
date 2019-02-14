@@ -2,7 +2,8 @@ package com.teamacronymcoders.survivalism.common.recipe.barrel;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,7 @@ public class BarrelRecipeManager {
     }
 
     @Nullable
-    public static BrewingRecipe getBrewingRecipe(TileBarrel barrel) {
+    public static BrewingRecipe getBrewingRecipe(TileBarrelBrewing barrel) {
         for (BrewingRecipe r : BREWING.values()) {
             if (r.matches(barrel)) {
                 return r;
@@ -60,7 +61,7 @@ public class BarrelRecipeManager {
     }
 
     @Nullable
-    public static SoakingRecipe getSoakingRecipe(TileBarrel barrel) {
+    public static SoakingRecipe getSoakingRecipe(TileBarrelSoaking barrel) {
         for (SoakingRecipe r : SOAKING.values()) {
             if (r.matches(barrel)) {
                 return r;

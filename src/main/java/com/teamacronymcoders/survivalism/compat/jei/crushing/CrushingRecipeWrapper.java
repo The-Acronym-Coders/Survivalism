@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CrushingRecipeWrapper implements IRecipeWrapper {
-
     public final VatRecipe recipe;
 
     public CrushingRecipeWrapper(VatRecipe recipe) {

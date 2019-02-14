@@ -5,6 +5,7 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +34,7 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
     public VatRecipe curRecipe;
     public double jumps = 0.0D;
     protected ItemStack failedMatch;
-    protected FluidTank tank = new FluidTank(TileBarrel.TANK_CAPACITY);
+    protected FluidTank tank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
     protected int fluidLastJump;

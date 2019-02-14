@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.common.blocks;
+package com.teamacronymcoders.survivalism.common.blocks.old;
 
 import com.teamacronymcoders.base.blocks.BlockBase;
 import com.teamacronymcoders.survivalism.Survivalism;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 public class BlockCrushingVat extends BlockBase {
 
-    public static final int GUI_ID = 2;
+    public static final int GUI_ID = 4;
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockCrushingVat() {

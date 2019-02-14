@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.utils;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.ModBlocks;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +17,7 @@ public class SurvivalismTab extends CreativeTabs {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(Item.getItemFromBlock(ModBlocks.blockBarrel));
+        return new ItemStack(Item.getItemFromBlock(Blocks.BARRIER));
     }
 
     @Override

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "minecraft:blocks/log_oak",
-		"1": "minecraft:blocks/obsidian",
+		"1": "minecraft:blocks/quartz_block_side",
 		"particle": "minecraft:blocks/log_oak"
 	},
 	"elements": [

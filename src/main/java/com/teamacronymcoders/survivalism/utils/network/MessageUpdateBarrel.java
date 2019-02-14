@@ -1,7 +1,10 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
 import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -16,13 +19,25 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
 
     private FluidStack inStack;
     private FluidStack outStack;
+    private TileBarrelBase te;
 
     public MessageUpdateBarrel() {
     }
 
-    public MessageUpdateBarrel(TileBarrel te) {
-        this.inStack = te.getInput().getFluid();
-        this.outStack = te.getOutput().getFluid();
+    public MessageUpdateBarrel(TileBarrelBase te) {
+        this.te = te;
+        if (te instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
+            this.inStack = brewing.getInput().getFluid();
+            this.outStack = brewing.getOutput().getFluid();
+        } else if (te instanceof TileBarrelSoaking) {
+            TileBarrelSoaking soaking = (TileBarrelSoaking) te;
+            this.inStack = soaking.getInput().getFluid();
+        } else {
+            TileBarrelStorage storage = (TileBarrelStorage) te;
+            this.inStack = storage.getInput().getFluid();
+        }
+
     }
 
     private static FluidStack readFluid(ByteBuf buf) {
@@ -60,8 +75,14 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
     public IMessage onMessage(MessageUpdateBarrel message, MessageContext ctx) {
         Minecraft.getMinecraft().addScheduledTask(() -> {
             if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrel) {
-                ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
-                ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
+                if (te instanceof TileBarrelBrewing) {
+                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
+                } else if (te instanceof TileBarrelSoaking) {
+                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                } else {
+                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                }
             }
         });
         return null;

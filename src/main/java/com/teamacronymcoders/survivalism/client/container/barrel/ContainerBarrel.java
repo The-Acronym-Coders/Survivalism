@@ -1,7 +1,10 @@
 package com.teamacronymcoders.survivalism.client.container.barrel;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,17 +14,17 @@ import net.minecraftforge.fluids.FluidStack;
 public class ContainerBarrel extends Container {
 
     protected EntityPlayer player;
-    protected TileBarrel tile;
+    protected TileBarrelBase tile;
     boolean firstSend = false;
     private FluidStack input;
     private FluidStack output;
 
-    public ContainerBarrel(EntityPlayer player, TileBarrel tile) {
+    public ContainerBarrel(EntityPlayer player, TileBarrelBase tile) {
         this.tile = tile;
         this.player = player;
     }
 
-    public TileBarrel getTile() {
+    public TileBarrelBase getTile() {
         return tile;
     }
 
@@ -38,12 +41,24 @@ public class ContainerBarrel extends Container {
         }
         if (!firstSend) {
             firstSend = true;
-            input = tile.getInput().getFluid();
-            output = tile.getOutput().getFluid();
+            if (tile instanceof TileBarrelBrewing) {
+                input = ((TileBarrelBrewing) tile).getInput().getFluid();
+                output = ((TileBarrelBrewing) tile).getOutput().getFluid();
+            } else if (tile instanceof TileBarrelSoaking) {
+                input = ((TileBarrelSoaking) tile).getInput().getFluid();
+            } else if (tile instanceof TileBarrelStorage) {
+                input = ((TileBarrelStorage) tile).getInput().getFluid();
+            }
             sendMessage();
         }
-        input = checkFluid(input, tile.getInput().getFluid());
-        output = checkFluid(output, tile.getOutput().getFluid());
+        if (tile instanceof TileBarrelBrewing) {
+            input = checkFluid(input, ((TileBarrelBrewing) tile).getInput().getFluid());
+            output = checkFluid(output, ((TileBarrelBrewing) tile).getOutput().getFluid());
+        } else if (tile instanceof  TileBarrelSoaking) {
+            input = checkFluid(input, ((TileBarrelSoaking) tile).getInput().getFluid());
+        } else if (tile instanceof TileBarrelStorage) {
+            input = checkFluid(input, ((TileBarrelStorage) tile).getInput().getFluid());
+        }
     }
 
     private FluidStack checkFluid(FluidStack stack, FluidStack tank) {

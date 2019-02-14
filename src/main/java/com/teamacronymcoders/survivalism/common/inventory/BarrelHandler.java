@@ -1,19 +1,17 @@
 package com.teamacronymcoders.survivalism.common.inventory;
 
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 
 public class BarrelHandler extends UpdatingItemStackHandler {
+    int size;
 
-    TileBarrel te;
-
-    public BarrelHandler(int size, TileBarrel inv) {
-        super(size, inv);
-        te = inv;
+    public BarrelHandler(int size, TileBarrelBase inv) {
+        super(inv);
+        this.size = size;
     }
 
     @Override
     public int getSlots() {
-        return te.getState().getInvSize();
+        return size;
     }
-
 }

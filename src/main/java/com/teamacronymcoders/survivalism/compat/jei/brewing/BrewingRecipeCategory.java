@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.brewing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -51,8 +51,8 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, BrewingRecipeWrapper recipeWrapper, IIngredients ingredients) {
         // Init Slots
-        recipeLayout.getFluidStacks().init(0, true, 18, 9, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
-        recipeLayout.getFluidStacks().init(1, false, 90, 9, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(0, true, 18, 9, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(1, false, 90, 9, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
 
 
         // Set Slots

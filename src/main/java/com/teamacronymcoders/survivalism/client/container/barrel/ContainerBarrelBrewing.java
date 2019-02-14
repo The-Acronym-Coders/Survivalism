@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.client.container.barrel;
 
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -10,7 +10,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ContainerBarrelBrewing extends ContainerBarrel {
 
-    public ContainerBarrelBrewing(InventoryPlayer playerInv, TileBarrel tile) {
+    public ContainerBarrelBrewing(InventoryPlayer playerInv, TileBarrelBrewing tile) {
         super(playerInv.player, tile);
         addOwnSlots();
         addPlayerSlots(playerInv);
@@ -52,11 +52,11 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileBarrel.STORAGE_SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileBarrel.STORAGE_SIZE, this.inventorySlots.size(), true)) {
+            if (index < 3) {
+                if (!this.mergeItemStack(itemstack1, 3, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileBarrel.STORAGE_SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, 3, false)) {
                 return ItemStack.EMPTY;
             }
 

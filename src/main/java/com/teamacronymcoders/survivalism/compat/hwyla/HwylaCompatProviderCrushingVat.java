@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.compat.hwyla;
 
-import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
+import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;

@@ -1,7 +1,9 @@
 package com.teamacronymcoders.survivalism.compat.jei.crushing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -10,12 +12,14 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWrapper> {
     public static final String NAME = "survivalism.crushing";
@@ -24,8 +28,10 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
     private final String localizedOutputError;
     private final IDrawable background;
 
+    private final Object2DoubleMap<Ingredient> doubleMap = VatRecipeManager.getBOOTS();
+
     public CrushingRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 12, 124, 60);
+        this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 12, 124, 90);
         this.localized = I18n.format("container.jei." + NAME + ".name");
         this.localizedOutputError = I18n.format("survivalism.jei.no.output");
     }
@@ -54,7 +60,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
     public void setRecipe(IRecipeLayout recipeLayout, CrushingRecipeWrapper recipeWrapper, IIngredients ingredients) {
         // Init Slots
         recipeLayout.getItemStacks().init(0, true, 17, 27);
-        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, TileBarrel.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
         recipeLayout.getItemStacks().init(1, false, 89, 27);
 
         // Set Slots
@@ -69,5 +75,13 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
             recipeLayout.getItemStacks().set(1, stack);
         }
 
+        // Adds Crushing Modifiers
+        recipeLayout.getItemStacks().init(2, false, 53, 55);
+        List<ItemStack> multiplierStacks = new ArrayList<>();
+        for (Map.Entry<Ingredient, Double> values : doubleMap.entrySet()) {
+            Ingredient ingredient = values.getKey();
+            multiplierStacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
+        }
+        recipeLayout.getItemStacks().set(2, multiplierStacks);
     }
 }

@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrel;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -35,10 +35,8 @@ public class MessageBarrelButton implements IMessage, IMessageHandler<MessageBar
         FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
             Container c = ctx.getServerHandler().player.openContainer;
             if (c instanceof ContainerBarrel) {
-                TileBarrel te = ((ContainerBarrel) c).getTile();
-                if (msg.id == 0) { //Cycle
-                    te.cycleType(ctx.getServerHandler().player);
-                } else if (msg.id == 1) { //Seal
+                TileBarrelBase te = ((ContainerBarrel) c).getTile();
+                if (msg.id == 0) {
                     te.updateSeal(!te.isSealed());
                 }
             }

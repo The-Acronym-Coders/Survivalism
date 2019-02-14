@@ -1,12 +1,26 @@
 package com.teamacronymcoders.survivalism;
 
 import com.teamacronymcoders.base.BaseModFoundation;
+import com.teamacronymcoders.base.registrysystem.BlockRegistry;
+import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
+import com.teamacronymcoders.survivalism.common.ModBlocks;
+import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
+import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
+import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
+import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +28,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
@@ -59,6 +74,22 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void beforeModuleHandlerInit(FMLPreInitializationEvent event) {
         SurvivalismConfigs.preInitLoad(event);
     }
+
+    @Override
+    public void registerBlocks(BlockRegistry registry) {
+        registry.register(new BlockBarrelBrewing());
+        registry.register(new BlockBarrelSoaking());
+        registry.register(new BlockBarrelStorage());
+//        registry.register(new BlockCrushingVat());
+
+        GameRegistry.registerTileEntity(TileBarrelBrewing.class, new ResourceLocation(Survivalism.MODID, "_barrel_brewing"));
+        GameRegistry.registerTileEntity(TileBarrelSoaking.class, new ResourceLocation(Survivalism.MODID, "_barrel_soaking"));
+        GameRegistry.registerTileEntity(TileBarrelStorage.class, new ResourceLocation(Survivalism.MODID, "_barrel_storage"));
+//        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
+    }
+
+    @Override
+    public void registerItems(ItemRegistry registry) {}
 
     @Override
     @Mod.EventHandler

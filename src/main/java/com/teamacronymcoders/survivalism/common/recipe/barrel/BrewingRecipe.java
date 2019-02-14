@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.common.recipe.barrel;
 
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,7 @@ public class BrewingRecipe {
         return ticks;
     }
 
-    public boolean matches(TileBarrel barrel) {
+    public boolean matches(TileBarrelBrewing barrel) {
         boolean fluid = barrel.getInput().getFluid() != null && barrel.getInput().getFluid().containsFluid(input);
         IntList usedSlots = new IntArrayList(3);
         IntList matchedInputs = new IntArrayList(3);

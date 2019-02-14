@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.common.recipe.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.RecipeBarrel;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +54,7 @@ public class SoakingRecipe extends RecipeBarrel {
         return ticks;
     }
 
-    public boolean matches(TileBarrel barrel) {
+    public boolean matches(TileBarrelSoaking barrel) {
         return barrel.getInput().getFluid().containsFluid(input) && inputItem.apply(barrel.getInv().getStackInSlot(0));
     }
 

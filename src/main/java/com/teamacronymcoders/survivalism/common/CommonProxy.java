@@ -1,10 +1,7 @@
 package com.teamacronymcoders.survivalism.common;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.client.GUIProxy;
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
-import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
+import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,24 +21,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().registerAll(
-                new BlockBarrel(),
-                new BlockCrushingVat()
-        );
 
-        GameRegistry.registerTileEntity(TileBarrel.class, new ResourceLocation(Survivalism.MODID, "_barrel"));
-        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel) {
-            @Override
-            public int getMetadata(int damage) {
-                return damage;
-            }
-        }.setRegistryName(ModBlocks.blockBarrel.getRegistryName()));
-        event.getRegistry().register(new ItemBlock(ModBlocks.blockCrushingVat).setRegistryName(ModBlocks.blockCrushingVat.getRegistryName()));
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -49,7 +29,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(Survivalism.INSTANCE, new GUIProxy());
+//        NetworkRegistry.INSTANCE.registerGuiHandler(Survivalism.INSTANCE, new GUIProxy());
     }
 
     public EntityPlayer getClientPlayer() {

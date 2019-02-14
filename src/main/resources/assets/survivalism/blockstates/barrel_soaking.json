@@ -1,0 +1,16 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "survivalism:chunky_barrel_soaking"
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}],
+        "sealed": {
+            "true": {
+                "model": "survivalism:chunky_barrel_soaking_sealed"
+            },
+            "false": {}
+        }
+    }
+}
