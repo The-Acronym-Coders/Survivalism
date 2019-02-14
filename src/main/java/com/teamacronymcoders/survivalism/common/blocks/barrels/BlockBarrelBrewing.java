@@ -1,5 +1,6 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
+import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
@@ -75,6 +76,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                     }
                     return true;
                 }
+                brewing.onBlockActivated(playerIn);
             }
         }
         return true;
@@ -84,11 +86,6 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileBarrelBrewing();
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
     }
 
     @Override
