@@ -151,6 +151,10 @@ public class BlockBarrel extends BlockBase {
                     stack.shrink(1);
                     playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
                 }
+                if (worldIn.isRemote) {
+                    barrel.updateClientInputFluid(barrel.getInput());
+                    barrel.updateClientOutputFluid(barrel.getOutput());
+                }
                 return true;
             } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                 ItemStack stack = playerIn.getHeldItem(hand);

@@ -75,20 +75,10 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
         if (poweredLastTick != powered) {
             updateSeal(powered);
         }
-        if (getInput().getFluidAmount() > 0) {
-            if (getInput().getFluidAmount() != prevInputAmount) {
-                prevInputAmount = getInput().getFluidAmount();
-                world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
-            }
-        }
 
-        if (getOutput().getFluidAmount() > 0) {
-            if (getOutput().getFluidAmount() != prevInputAmount) {
-                prevInputAmount = getOutput().getFluidAmount();
-                world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
-            }
-        }
-            
+        updateClientInputFluid(getInput());
+        updateClientOutputFluid(getOutput());
+
         poweredLastTick = powered;
         BarrelState state = getState();
         if (state == BarrelState.STORAGE || !isSealed()) {
@@ -98,6 +88,28 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
             processBrewing();
         } else if (state == BarrelState.SOAKING) {
             processSoaking();
+        }
+    }
+
+    public void updateClientInputFluid(FluidTank tank) {
+        if (tank != null) {
+            if (tank.getFluidAmount() >= 0) {
+                if (tank.getFluidAmount() != prevInputAmount) {
+                    prevInputAmount = tank.getFluidAmount();
+                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
+                }
+            }
+        }
+    }
+
+    public void updateClientOutputFluid(FluidTank tank) {
+        if (tank != null) {
+            if (getOutput().getFluidAmount() >= 0) {
+                if (getOutput().getFluidAmount() != prevInputAmount) {
+                    prevInputAmount = getOutput().getFluidAmount();
+                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
+                }
+            }
         }
     }
 
