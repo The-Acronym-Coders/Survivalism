@@ -149,8 +149,10 @@ public class BlockBarrel extends BlockBase {
                 ItemStack stack = playerIn.getHeldItem(hand);
                 barrel.getInput().setFluid(null);
                 barrel.getOutput().setFluid(null);
-                stack.shrink(1);
-                playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
+                if (!playerIn.capabilities.isCreativeMode) {
+                    stack.shrink(1);
+                    playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
+                }
                 return true;
             } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                 ItemStack stack = playerIn.getHeldItem(hand);
