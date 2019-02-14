@@ -187,12 +187,12 @@ public class TileBarrel extends TileBase implements ITickable, IUpdatingInventor
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (EnumFacing.DOWN == facing && getState() == BarrelState.BREWING) {
+            if (EnumFacing.DOWN == facing && getState() == BarrelState.BREWING && !isSealed()) {
                 return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(output);
             }
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(input);
         }
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
         }
         return super.getCapability(capability, facing);
