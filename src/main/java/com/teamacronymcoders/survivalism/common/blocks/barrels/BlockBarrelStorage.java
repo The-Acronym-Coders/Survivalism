@@ -130,6 +130,6 @@ public class BlockBarrelStorage extends BlockBarrelBase {
 
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
-        return null;
+        return TileBarrelStorage.class;
     }
 }

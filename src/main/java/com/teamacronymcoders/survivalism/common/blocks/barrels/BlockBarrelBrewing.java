@@ -194,6 +194,6 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
 
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
-        return null;
+        return TileBarrelBrewing.class;
     }
 }

@@ -175,6 +175,6 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
 
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
-        return null;
+        return TileBarrelSoaking.class;
     }
 }
