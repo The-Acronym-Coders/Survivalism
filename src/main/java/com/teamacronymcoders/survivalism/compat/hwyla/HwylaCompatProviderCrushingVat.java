@@ -22,23 +22,34 @@ public class HwylaCompatProviderCrushingVat implements IWailaDataProvider {
 
         if (config.getConfig("survivalism.crushing_vat")) {
             if (accessor.getBlock() instanceof BlockCrushingVat && te instanceof TileCrushingVat) {
-                ItemStack input = ((TileCrushingVat) te).getInputInv().getStackInSlot(0);
-                FluidTank tank = ((TileCrushingVat) te).getTank();
-                ItemStack output = ((TileCrushingVat) te).getOutputInv().getStackInSlot(0);
-                if (!input.isEmpty()) {
-                    currenttip.add(I18n.format("survivalism.hwyla.items.input") + " " + input.getDisplayName());
+                if (((TileCrushingVat) te).getInputInv() != null) {
+                    ItemStack input = ((TileCrushingVat) te).getInputInv().getStackInSlot(0);
+                    if (!input.isEmpty()) {
+                        currenttip.add(I18n.format("survivalism.hwyla.items.input") + " " + input.getCount() + "x " + input.getDisplayName());
+                    }
                 }
-
-                if (!output.isEmpty()) {
-                    currenttip.add(I18n.format("survivalism.hwyla.items.output") + " " + output.getDisplayName());
+                if (((TileCrushingVat) te).getOutputInv() != null) {
+                    ItemStack output = ((TileCrushingVat) te).getOutputInv().getStackInSlot(0);
+                    if (!output.isEmpty()) {
+                        currenttip.add(I18n.format("survivalism.hwyla.items.output") + " " + output.getCount() + "x " + output.getDisplayName());
+                    }
                 }
-
-                if (tank != null) {
-                    currenttip.add(I18n.format("survivalism.hwyla.tank.output") + " " + tank.getFluid());
+                if (((TileCrushingVat) te).getTank() != null) {
+                    FluidTank tank = ((TileCrushingVat) te).getTank();
+                    if (tank.getFluid() != null) {
+                        currenttip.add(tank.getFluid().getLocalizedName() + ": " + tank.getFluidAmount() + "/" + tank.getCapacity());
+                    }
+                }
+                if (((TileCrushingVat) te).curRecipe != null) {
+                    int jumps = ((TileCrushingVat) te).curRecipe.getJumps();
+                    double curJumps = ((TileCrushingVat) te).jumps;
+                    String jumpStr = curJumps + "/" + jumps;
+                    if (jumps != 0 && curJumps != 0.0d) {
+                        currenttip.add(I18n.format("survivalism.hwyla.jumps") + " " + jumpStr);
+                    }
                 }
             }
         }
-
         return currenttip;
     }
 }

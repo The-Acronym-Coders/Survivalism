@@ -6,12 +6,17 @@ import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,11 +31,11 @@ import javax.annotation.Nullable;
 public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
 
     protected ItemStack failedMatch;
-    protected VatRecipe curRecipe;
+    public VatRecipe curRecipe;
     protected FluidTank tank = new FluidTank(TileBarrel.TANK_CAPACITY);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
-    protected double jumps = 0.0D;
+    public double jumps = 0.0D;
     protected int fluidLastJump;
 
     public void onJump(EntityLivingBase jumper) {
@@ -143,6 +148,28 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
             }
         }
         return super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        this.readFromNBT(pkt.getNbtCompound());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
     }
 
     @Override
