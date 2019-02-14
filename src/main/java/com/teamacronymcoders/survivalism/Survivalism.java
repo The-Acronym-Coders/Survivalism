@@ -81,7 +81,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         registry.register(new BlockBarrelSoaking());
         registry.register(new BlockBarrelStorage());
 //        registry.register(new BlockCrushingVat());
-        
+
 //        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
     }
 

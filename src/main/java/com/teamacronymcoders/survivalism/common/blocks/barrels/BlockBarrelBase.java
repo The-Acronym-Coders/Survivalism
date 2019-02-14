@@ -28,19 +28,16 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlockBarrelBase extends BlockTEBase {
+public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEBase<T> {
     @GameRegistry.ObjectHolder("minecraft:sponge")
     public static final Item SPONGE = null;
     public static final PropertyBool SEALED = PropertyBool.create("sealed");
-    private final TileEntity te;
 
-
-    BlockBarrelBase(String name, TileEntity te) {
+    BlockBarrelBase(String name) {
         super(Material.WOOD, name);
         setCreativeTab(Survivalism.TAB);
         setSoundType(SoundType.WOOD);
         setLightOpacity(0);
-        this.te = te;
     }
 
     // Process Methods
@@ -137,21 +134,4 @@ public class BlockBarrelBase extends BlockTEBase {
         return state.getValue(SEALED) ? 1 : 0;
     }
 
-    @Override
-    public void getSubBlocks(@Nullable CreativeTabs creativeTab, @Nonnull NonNullList<ItemStack> list) {
-        for (IBlockState state : getBlockState().getValidStates()) {
-            list.add(new ItemStack(this, 1, getMetaFromState(state)));
-        }
-    }
-
-    @Nonnull
-    @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState blockState) {
-        return te;
-    }
-
-    @Override
-    public Class<? extends TileEntity> getTileEntityClass() {
-        return te.getClass();
-    }
 }

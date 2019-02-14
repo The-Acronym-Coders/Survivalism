@@ -28,7 +28,7 @@ import java.util.List;
 public class BlockBarrelStorage extends BlockBarrelBase {
 
     public BlockBarrelStorage() {
-        super("barrel_storage", new TileBarrelStorage());
+        super("barrel_storage");
         setTranslationKey("barrel_storage");
     }
 
@@ -128,4 +128,8 @@ public class BlockBarrelStorage extends BlockBarrelBase {
         }
     }
 
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return null;
+    }
 }

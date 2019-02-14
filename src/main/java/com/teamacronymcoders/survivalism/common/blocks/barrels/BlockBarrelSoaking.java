@@ -34,7 +34,7 @@ import java.util.List;
 public class BlockBarrelSoaking extends BlockBarrelBase {
 
     public BlockBarrelSoaking() {
-        super("barrel_soaking", new TileBarrelSoaking());
+        super("barrel_soaking");
         setTranslationKey("barrel_soaking");
     }
 
@@ -171,5 +171,10 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
             }
         }
+    }
+
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return null;
     }
 }

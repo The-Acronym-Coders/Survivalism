@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
@@ -27,13 +28,14 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockBarrelBrewing extends BlockBarrelBase {
 
     public BlockBarrelBrewing() {
-        super("barrel_brewing", new TileBarrelBrewing());
+        super("barrel_brewing");
         setTranslationKey("barrel_brewing");
     }
 
@@ -114,6 +116,13 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
     }
 
     @Override
+    public void getSubBlocks(@Nullable CreativeTabs creativeTab, @Nonnull NonNullList<ItemStack> list) {
+        for (IBlockState state : getBlockState().getValidStates()) {
+            list.add(new ItemStack(this, 1, getMetaFromState(state)));
+        }
+    }
+
+    @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             IBlockState state = getStateFromMeta(stack.getMetadata());
@@ -183,4 +192,8 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
         }
     }
 
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return null;
+    }
 }
