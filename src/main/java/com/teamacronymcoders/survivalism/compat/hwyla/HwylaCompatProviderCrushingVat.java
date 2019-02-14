@@ -1,15 +1,11 @@
 package com.teamacronymcoders.survivalism.compat.hwyla;
 
-import com.teamacronymcoders.survivalism.common.blocks.BlockBarrel;
 import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
-import com.teamacronymcoders.survivalism.common.tiles.TileBarrel;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidTank;

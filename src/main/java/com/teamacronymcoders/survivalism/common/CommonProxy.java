@@ -35,7 +35,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel){
+        event.getRegistry().register(new ItemBlock(ModBlocks.blockBarrel) {
             @Override
             public int getMetadata(int damage) {
                 return damage;

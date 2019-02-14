@@ -14,20 +14,14 @@ import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueCa
 import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueWrapper;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeCategory;
 import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeWrapper;
-import crafttweaker.api.item.IIngredient;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
-import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-
-import java.util.Map;
 
 @JEIPlugin
 public class JEISurvivalismPlugin implements IModPlugin {

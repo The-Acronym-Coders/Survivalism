@@ -26,9 +26,10 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
             if (accessor.getBlock() instanceof BlockBarrel && te instanceof TileBarrel) {
                 FluidTank input = ((TileBarrel) te).getInput();
                 FluidTank output = ((TileBarrel) te).getOutput();
+
                 if (input != null) {
-                    if (input.getFluid() == null ) {
-                         currenttip.add(I18n.format("survivalism.hwyla.tank.input.empty"));
+                    if (input.getFluid() == null) {
+                        currenttip.add(I18n.format("survivalism.hwyla.tank.input.empty"));
                     } else {
                         currenttip.add(I18n.format("survivalism.hwyla.tank.input") + " " + input.getFluid().getLocalizedName() + " : " + input.getFluid().amount + "/" + input.getCapacity());
                     }
