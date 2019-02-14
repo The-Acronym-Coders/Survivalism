@@ -17,6 +17,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -145,8 +146,12 @@ public class BlockBarrel extends BlockBase {
 
         if (!state.getValue(SEALED)) {
             if (playerIn.getHeldItem(hand).getItem() == SPONGE) {
+                ItemStack stack = playerIn.getHeldItem(hand);
                 barrel.getInput().setFluid(null);
                 barrel.getOutput().setFluid(null);
+                stack.shrink(1);
+                playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
+                return true;
             } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
                 ItemStack stack = playerIn.getHeldItem(hand);
                 FluidStack fs = FluidUtil.getFluidContained(stack);
