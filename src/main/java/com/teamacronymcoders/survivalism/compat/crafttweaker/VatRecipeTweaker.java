@@ -35,7 +35,6 @@ public class VatRecipeTweaker {
     }
 
     private static class AddRecipe implements IAction {
-
         String name;
         Ingredient input;
         FluidStack output;

@@ -29,10 +29,6 @@ import java.util.Map;
 
 import static com.teamacronymcoders.survivalism.utils.helpers.HelperString.cleanCommandString;
 
-/**
- * Credit goes out to CritFlaw
- * Please and kindly go fluff yourself!
- */
 @ZenClass("mods.survivalism.Barrel")
 @ZenRegister
 public class BarrelRecipeTweaker {
