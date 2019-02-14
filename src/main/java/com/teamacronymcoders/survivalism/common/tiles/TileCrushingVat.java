@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
 
 public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
 
-    protected ItemStack failedMatch;
     public VatRecipe curRecipe;
+    public double jumps = 0.0D;
+    protected ItemStack failedMatch;
     protected FluidTank tank = new FluidTank(TileBarrel.TANK_CAPACITY);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
-    public double jumps = 0.0D;
     protected int fluidLastJump;
 
     public void onJump(EntityLivingBase jumper) {

@@ -19,7 +19,6 @@ public class HwylaCompatProviderCrushingVat implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         TileEntity te = accessor.getTileEntity();
-
         if (config.getConfig("survivalism.crushing_vat")) {
             if (accessor.getBlock() instanceof BlockCrushingVat && te instanceof TileCrushingVat) {
                 if (((TileCrushingVat) te).getInputInv() != null) {
