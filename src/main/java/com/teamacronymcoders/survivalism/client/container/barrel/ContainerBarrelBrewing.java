@@ -30,7 +30,8 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
     }
 
     private void addOwnSlots() {
-        IItemHandler itemHandler = this.tile.getInv();
+        TileBarrelBrewing brewing = (TileBarrelBrewing) this.tile;
+        IItemHandler itemHandler = brewing.getInv();
         addSlotToContainer(new SlotSealable(itemHandler, 0, 80, 17, tile));
         addSlotToContainer(new SlotSealable(itemHandler, 1, 80, 37, tile));
         addSlotToContainer(new SlotSealable(itemHandler, 2, 80, 57, tile));

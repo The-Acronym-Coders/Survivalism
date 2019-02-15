@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.common.tiles.barrels;
 
 import com.teamacronymcoders.base.guisystem.IHasGui;
+import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
@@ -20,10 +23,7 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
     private int prevInputAmount = 0;
-
-    public TileBarrelStorage() {
-        super(9);
-    }
+    protected ItemStackHandler inv = new BarrelHandler(9, this);
 
     @Override
     public void update() {
@@ -36,11 +36,13 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         input.readFromNBT(compound.getCompoundTag("inputTank"));
+        inv.deserializeNBT(compound.getCompoundTag("items"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("inputTank", input.writeToNBT(new NBTTagCompound()));
+        compound.setTag("items", inv.serializeNBT());
         return super.writeToNBT(compound);
     }
 
@@ -52,12 +54,18 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !isSealed()) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(input);
         }
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
+        }
         return super.getCapability(capability, facing);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !isSealed()) {
+            return true;
+        }
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -69,6 +77,9 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
         return input;
     }
 
+    public ItemStackHandler getInv() {
+        return inv;
+    }
 
     // Client Update Methods
     public void updateClientInputFluid(FluidTank tank) {

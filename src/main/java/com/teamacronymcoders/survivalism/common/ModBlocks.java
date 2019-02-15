@@ -6,6 +6,7 @@ import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorag
 import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -52,5 +53,6 @@ public class ModBlocks {
             ItemStack item = items.get(i);
             ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_storage", "inventory"));
         }
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockCrushingVat), 0, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
     }
 }

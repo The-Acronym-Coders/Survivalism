@@ -22,11 +22,6 @@ import javax.annotation.Nullable;
 public abstract class TileBarrelBase extends TileEntity implements ITickable, IUpdatingInventory {
 
     protected boolean poweredLastTick = false;
-    protected ItemStackHandler inv;
-
-    public TileBarrelBase(int size) {
-        this.inv = new BarrelHandler(size, this);
-    }
 
     // Update Methods;
     @Override
@@ -86,42 +81,4 @@ public abstract class TileBarrelBase extends TileEntity implements ITickable, IU
         }
     }
 
-
-    // NBT Methods
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        inv.deserializeNBT(compound.getCompoundTag("items"));
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setTag("items", inv.serializeNBT());
-        return super.writeToNBT(compound);
-    }
-
-
-    // Capabilities
-    @Nullable
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
-        }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-
-    // Getters/Setters
-    public ItemStackHandler getInv() {
-        return inv;
-    }
 }

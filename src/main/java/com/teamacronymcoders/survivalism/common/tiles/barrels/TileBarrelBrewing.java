@@ -5,6 +5,7 @@ import com.teamacronymcoders.base.guisystem.IHasGui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelBrewing;
 import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelBrewing;
+import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
 import com.teamacronymcoders.survivalism.common.inventory.RangedFluidWrapper;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
@@ -24,9 +25,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Optional;
 
 public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHasGui {
 
@@ -36,9 +39,9 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     protected BrewingRecipe recipe;
     private int prevInputAmount = 0;
     private RangedFluidWrapper wrapper = new RangedFluidWrapper(getInput(), getOutput());
+    protected ItemStackHandler inv = new BarrelHandler(3, this);
 
     public TileBarrelBrewing() {
-        super(3);
         input.setCanDrain(false);
         output.setCanFill(false);
     }
@@ -57,12 +60,14 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
         super.readFromNBT(compound);
         input.readFromNBT(compound.getCompoundTag("inputTank"));
         output.readFromNBT(compound.getCompoundTag("outputTank"));
+        inv.deserializeNBT(compound.getCompoundTag("items"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("inputTank", input.writeToNBT(new NBTTagCompound()));
         compound.setTag("outputTank", output.writeToNBT(new NBTTagCompound()));
+        compound.setTag("items", inv.serializeNBT());
         return super.writeToNBT(compound);
     }
 
@@ -74,11 +79,17 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !isSealed()) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(wrapper);
         }
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
+        }
         return super.getCapability(capability, facing);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && !isSealed()) {
+            return true;
+        }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
             return true;
         }
@@ -123,6 +134,9 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
         return output;
     }
 
+    public ItemStackHandler getInv() {
+        return inv;
+    }
 
     // Client Update Methods
     public void updateClientInputFluid(FluidTank tank) {
@@ -149,12 +163,12 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
 
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return new GUIBarrelBrewing(this, new ContainerBarrelBrewing(entityPlayer.inventory, this));
+        return Optional.of(new GUIBarrelBrewing(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return new ContainerBarrelBrewing(entityPlayer.inventory, this);
+        return Optional.of(new ContainerBarrelBrewing(entityPlayer.inventory, this)).orElse(null);
     }
 
     public boolean onBlockActivated(EntityPlayer player) {

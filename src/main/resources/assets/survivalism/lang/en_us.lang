@@ -1,7 +1,9 @@
 itemGroup.survivalism=Survivalism
 
-tile.survivalism.barrel.name=Barrel
-tile.survivalism.crushingvat.name=Crushing Vat
+tile.survivalism.barrel_brewing.name=Brewing Barrel
+tile.survivalism.barrel_soaking.name=Soaking Barrel
+tile.survivalism.barrel_storage.name=Storage Barrel
+tile.survivalism.crushing_vat.name=Crushing Vat
 
 info.survivalism.shift=Press Shift for More Information!
 
