@@ -10,6 +10,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
@@ -23,9 +24,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -67,10 +70,15 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                     FluidStack fs = FluidUtil.getFluidContained(stack);
                     if (fs != null) {
                         if (fs.amount == 0) {
-                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
+                            if (FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, false) != FluidActionResult.FAILURE) {
+                                FluidUtil.tryFillContainerAndStow(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), playerIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), Integer.MAX_VALUE, playerIn, true);
+                            }
                         }
                         if (fs.amount == 1000) {
-                            FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
+                            if (FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, false) != FluidActionResult.FAILURE) {
+                                FluidUtil.tryEmptyContainerAndStow(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.UP), playerIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null), Integer.MAX_VALUE, playerIn, true);
+                            }
+
                         }
                     }
                     return true;
