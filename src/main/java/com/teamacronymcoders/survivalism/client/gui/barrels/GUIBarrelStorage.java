@@ -5,7 +5,6 @@ import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,7 +12,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.io.IOException;
 
-public class GUIBarrelStorage extends GuiContainer {
+public class GUIBarrelStorage extends GUIBarrel {
     private static final ResourceLocation storage_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_storage.png");
     private static final int WIDTH = 180;
     private static final int HEIGHT = 163;

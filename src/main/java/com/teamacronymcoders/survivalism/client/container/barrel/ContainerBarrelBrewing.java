@@ -17,7 +17,6 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
     }
 
     private void addPlayerSlots(IInventory playerInv) {
-
         for (int x = 0; x < 9; x++) {
             this.addSlotToContainer(new Slot(playerInv, x, 8 + (x * 18), 142));
         }
@@ -35,12 +34,6 @@ public class ContainerBarrelBrewing extends ContainerBarrel {
         addSlotToContainer(new SlotSealable(itemHandler, 0, 80, 17, tile));
         addSlotToContainer(new SlotSealable(itemHandler, 1, 80, 37, tile));
         addSlotToContainer(new SlotSealable(itemHandler, 2, 80, 57, tile));
-        addSlotToContainer(new SlotDisabled(itemHandler, 3, -100, -100));
-        addSlotToContainer(new SlotDisabled(itemHandler, 4, -100, -100));
-        addSlotToContainer(new SlotDisabled(itemHandler, 5, -100, -100));
-        addSlotToContainer(new SlotDisabled(itemHandler, 6, -100, -100));
-        addSlotToContainer(new SlotDisabled(itemHandler, 7, -100, -100));
-        addSlotToContainer(new SlotDisabled(itemHandler, 8, -100, -100));
     }
 
     @Override

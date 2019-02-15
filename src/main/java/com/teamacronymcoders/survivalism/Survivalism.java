@@ -4,22 +4,16 @@ import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
-import com.teamacronymcoders.survivalism.common.ModBlocks;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
 import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -43,7 +37,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public static final String NAME = "Survivalism";
     public static final String VERSION = "1.12.2-1.0.0";
     public static final String MCVERSION = "1.12,";
-    public static final String DEPS = "required_after:base;" + "before:patchouli;";
+    public static final String DEPS = "required-after:base;" + "before:patchouli;";
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
     @Mod.Instance(Survivalism.MODID)
@@ -80,13 +74,14 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         registry.register(new BlockBarrelBrewing());
         registry.register(new BlockBarrelSoaking());
         registry.register(new BlockBarrelStorage());
-//        registry.register(new BlockCrushingVat());
+        registry.register(new BlockCrushingVat());
 
-//        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
+        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
     }
 
     @Override
-    public void registerItems(ItemRegistry registry) {}
+    public void registerItems(ItemRegistry registry) {
+    }
 
     @Override
     @Mod.EventHandler

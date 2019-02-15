@@ -13,7 +13,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.io.IOException;
 
-public class GUIBarrelBrewing extends GuiContainer {
+public class GUIBarrelBrewing extends GUIBarrel {
     private static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
     private static final int WIDTH = 180;
     private static final int HEIGHT = 163;

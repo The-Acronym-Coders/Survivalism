@@ -54,7 +54,7 @@ public class ContainerBarrel extends Container {
         if (tile instanceof TileBarrelBrewing) {
             input = checkFluid(input, ((TileBarrelBrewing) tile).getInput().getFluid());
             output = checkFluid(output, ((TileBarrelBrewing) tile).getOutput().getFluid());
-        } else if (tile instanceof  TileBarrelSoaking) {
+        } else if (tile instanceof TileBarrelSoaking) {
             input = checkFluid(input, ((TileBarrelSoaking) tile).getInput().getFluid());
         } else if (tile instanceof TileBarrelStorage) {
             input = checkFluid(input, ((TileBarrelStorage) tile).getInput().getFluid());

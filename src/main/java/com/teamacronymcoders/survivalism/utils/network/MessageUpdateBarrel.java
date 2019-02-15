@@ -1,6 +1,9 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
-import com.teamacronymcoders.survivalism.client.gui.GUIBarrel;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrel;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelBrewing;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelSoaking;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelStorage;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
@@ -76,12 +79,12 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
         Minecraft.getMinecraft().addScheduledTask(() -> {
             if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrel) {
                 if (te instanceof TileBarrelBrewing) {
-                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
-                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
+                    ((GUIBarrelBrewing) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                    ((GUIBarrelBrewing) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
                 } else if (te instanceof TileBarrelSoaking) {
-                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                    ((GUIBarrelSoaking) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
                 } else {
-                    ((GUIBarrel) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
+                    ((GUIBarrelStorage) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
                 }
             }
         });

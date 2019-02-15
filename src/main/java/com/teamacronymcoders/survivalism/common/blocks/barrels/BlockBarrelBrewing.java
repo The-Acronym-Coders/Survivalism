@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
-import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;

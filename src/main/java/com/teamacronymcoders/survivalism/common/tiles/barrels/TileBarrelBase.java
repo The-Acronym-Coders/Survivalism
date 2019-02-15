@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.common.tiles.barrels;
 
-import com.teamacronymcoders.base.blocks.BlockTEBase;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;

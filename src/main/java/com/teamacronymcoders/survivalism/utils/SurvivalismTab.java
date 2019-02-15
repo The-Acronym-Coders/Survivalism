@@ -1,7 +1,6 @@
 package com.teamacronymcoders.survivalism.utils;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.ModBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;

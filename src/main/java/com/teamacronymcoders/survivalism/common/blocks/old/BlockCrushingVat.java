@@ -34,7 +34,6 @@ public class BlockCrushingVat extends BlockBase {
         super(Material.WOOD);
         setCreativeTab(Survivalism.TAB);
         setTranslationKey(Survivalism.MODID + ".crushingvat");
-        setRegistryName("crushing_vat");
         setSoundType(SoundType.WOOD);
         setLightOpacity(0);
     }
