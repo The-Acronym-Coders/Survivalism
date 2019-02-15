@@ -25,7 +25,6 @@ public abstract class TileBarrelBase extends TileEntity implements ITickable, IU
     protected ItemStackHandler inv;
 
     public TileBarrelBase(int size) {
-        super();
         this.inv = new BarrelHandler(size, this);
     }
 
@@ -92,7 +91,7 @@ public abstract class TileBarrelBase extends TileEntity implements ITickable, IU
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        inv.deserializeNBT(compound);
+        inv.deserializeNBT(compound.getCompoundTag("items"));
     }
 
     @Override
