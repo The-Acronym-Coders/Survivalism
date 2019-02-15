@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 
@@ -65,7 +66,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                         brewing.updateClientOutputFluid(brewing.getOutput());
                     }
                     return true;
-                } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
+                } else if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
                     ItemStack stack = playerIn.getHeldItem(hand);
                     FluidStack fs = FluidUtil.getFluidContained(stack);
                     if (fs != null) {
