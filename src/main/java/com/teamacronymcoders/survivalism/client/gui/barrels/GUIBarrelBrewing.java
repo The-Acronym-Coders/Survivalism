@@ -5,7 +5,6 @@ import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
