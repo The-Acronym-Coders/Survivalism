@@ -53,7 +53,6 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
         if (this.isSealed()) {
             processSoaking();
         }
-        updateClientInputFluid(getInput());
     }
 
     // NBT
@@ -132,18 +131,6 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
 
     public ItemStackHandler getInv() {
         return inv;
-    }
-
-    // Client Update Methods
-    public void updateClientInputFluid(FluidTank tank) {
-        if (tank != null) {
-            if (tank.getFluidAmount() >= 0) {
-                if (tank.getFluidAmount() != prevInputAmount) {
-                    prevInputAmount = tank.getFluidAmount();
-                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
-                }
-            }
-        }
     }
 
     @Override

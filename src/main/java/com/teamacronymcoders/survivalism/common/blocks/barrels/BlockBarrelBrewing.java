@@ -60,10 +60,6 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                         stack.shrink(1);
                         playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
                     }
-                    if (worldIn.isRemote) {
-                        brewing.updateClientInputFluid(brewing.getInput());
-                        brewing.updateClientOutputFluid(brewing.getOutput());
-                    }
                     return true;
                 } else if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
                     FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);

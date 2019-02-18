@@ -56,8 +56,6 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
         if (this.isSealed()) {
             processBrewing();
         }
-        updateClientInputFluid(getInput());
-        updateClientOutputFluid(getOutput());
     }
 
     // NBT
@@ -147,29 +145,6 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     @Override
     public void updateSlot(int slot, ItemStack stack) {
         this.markDirty();
-    }
-
-    // Client Update Methods
-    public void updateClientInputFluid(FluidTank tank) {
-        if (tank != null) {
-            if (tank.getFluidAmount() >= 0) {
-                if (tank.getFluidAmount() != prevInputAmount) {
-                    prevInputAmount = tank.getFluidAmount();
-                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
-                }
-            }
-        }
-    }
-
-    public void updateClientOutputFluid(FluidTank tank) {
-        if (tank != null) {
-            if (getOutput().getFluidAmount() >= 0) {
-                if (getOutput().getFluidAmount() != prevInputAmount) {
-                    prevInputAmount = getOutput().getFluidAmount();
-                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
-                }
-            }
-        }
     }
 
     @Override

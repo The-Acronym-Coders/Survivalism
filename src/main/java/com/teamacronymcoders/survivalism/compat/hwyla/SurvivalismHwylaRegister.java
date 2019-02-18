@@ -14,6 +14,8 @@ public class SurvivalismHwylaRegister implements IWailaPlugin {
         registrar.addConfig(Survivalism.MODID, "survivalism.barrel", "Barrel", true);
         registrar.addConfig(Survivalism.MODID, "survivalism.crushing_vat", "Crushing Vat", true);
         registrar.registerBodyProvider(new HwylaCompatProviderBarrel(), BlockBarrelBase.class);
+        registrar.registerNBTProvider(new HwylaCompatProviderBarrel(), BlockBarrelBase.class);
         registrar.registerBodyProvider(new HwylaCompatProviderCrushingVat(), BlockCrushingVat.class);
+
     }
 }
