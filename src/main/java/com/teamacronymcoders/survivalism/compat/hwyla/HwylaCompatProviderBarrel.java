@@ -16,6 +16,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -28,24 +31,22 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
         TileEntity te = accessor.getTileEntity();
         if (config.getConfig("survivalism.barrel")) {
             if (accessor.getBlock() instanceof BlockBarrelBase && te instanceof TileBarrelBase) {
-                String localKeyInput;
-                String localKeyOutput = "";
-
-                if (te instanceof TileBarrelBrewing) {
-                    localKeyInput = ((TileBarrelBrewing) te).getInput().getFluid().getUnlocalizedName();
-                    localKeyOutput = ((TileBarrelBrewing) te).getOutput().getFluid().getUnlocalizedName();
-                } else if (te instanceof TileBarrelSoaking) {
-                    localKeyInput = ((TileBarrelSoaking) te).getInput().getFluid().getUnlocalizedName();
-                } else {
-                    localKeyInput = ((TileBarrelStorage) te).getInput().getFluid().getUnlocalizedName();
-                }
+                NBTTagCompound compound = accessor.getNBTData();
 
                 currenttip.add(I18n.format("survivalism.hwyla.barrel.sealed") + " " + state.getValue(BlockBarrelBase.SEALED));
-                if (accessor.getNBTData().hasKey("inputA") && accessor.getNBTData().hasKey("inputC")) {
-                    currenttip.add(I18n.format(localKeyInput) + " : " + accessor.getNBTData().getInteger("inputA") + " / " + accessor.getNBTData().getInteger("inputC"));
+
+                if (accessor.getNBTData().hasKey("input")) {
+                    FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("input"));
+                    if (stack != null) {
+                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityI"));
+                    }
                 }
-                if (accessor.getNBTData().hasKey("outputA") && accessor.getNBTData().hasKey("outputC")) {
-                    currenttip.add(I18n.format(localKeyOutput) + " : " + accessor.getNBTData().getInteger("outputA") + " / " + accessor.getNBTData().getInteger("outputC"));
+
+                if (accessor.getNBTData().hasKey("output")) {
+                    FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("output"));
+                    if (stack != null) {
+                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityO"));
+                    }
                 }
             }
         }
@@ -58,20 +59,26 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
         if (te instanceof TileBarrelBase) {
             if (te instanceof TileBarrelBrewing) {
                 TileBarrelBrewing tile = (TileBarrelBrewing) te;
-                tag.setInteger("inputA", tile.getInput().getFluidAmount());
-                tag.setInteger("inputC", tile.getInput().getCapacity());
-
-                tag.setInteger("outputA", tile.getOutput().getFluidAmount());
-                tag.setInteger("outputC", tile.getOutput().getCapacity());
-
+                if (tile.getInput() != null) {
+                    tag.setInteger("capacityI", tile.getInput().getCapacity());
+                    tag.setTag("input", tile.getInput().writeToNBT(new NBTTagCompound()));
+                }
+                if (tile.getOutput() != null) {
+                    tag.setInteger("capacityO", tile.getOutput().getCapacity());
+                    tag.setTag("output", tile.getOutput().writeToNBT(new NBTTagCompound()));
+                }
             } else if (te instanceof TileBarrelSoaking) {
                 TileBarrelSoaking tile = (TileBarrelSoaking) te;
-                tag.setInteger("inputA", tile.getInput().getFluidAmount());
-                tag.setInteger("inputC", tile.getInput().getCapacity());
+                if (tile.getInput() != null) {
+                    tag.setInteger("capacityI", tile.getInput().getCapacity());
+                    tag.setTag("input", tile.getInput().writeToNBT(new NBTTagCompound()));
+                }
             } else {
                 TileBarrelStorage tile = (TileBarrelStorage) te;
-                tag.setInteger("inputA", tile.getInput().getFluidAmount());
-                tag.setInteger("inputC", tile.getInput().getCapacity());
+                if (tile.getInput() != null) {
+                    tag.setInteger("capacityI", tile.getInput().getCapacity());
+                    tag.setTag("input", tile.getInput().writeToNBT(new NBTTagCompound()));
+                }
             }
         }
         return tag;
