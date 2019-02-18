@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.client.gui;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.client.container.vat.ContainerVat;
+import com.teamacronymcoders.survivalism.client.container.ContainerVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import net.minecraft.client.gui.inventory.GuiContainer;

@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.client.container.vat;
+package com.teamacronymcoders.survivalism.client.container;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;

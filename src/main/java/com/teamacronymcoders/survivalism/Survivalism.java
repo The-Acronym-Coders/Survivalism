@@ -4,10 +4,10 @@ import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
+import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
-import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
@@ -75,8 +75,6 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         registry.register(new BlockBarrelSoaking());
         registry.register(new BlockBarrelStorage());
         registry.register(new BlockCrushingVat());
-
-        GameRegistry.registerTileEntity(TileCrushingVat.class, new ResourceLocation(Survivalism.MODID, "_crushingvat"));
     }
 
     @Override

@@ -5,9 +5,9 @@ import com.teamacronymcoders.base.guisystem.IHasGui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelBrewing;
 import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.RangedFluidWrapper;
+import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
@@ -43,7 +43,7 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     protected BrewingRecipe recipe;
     private int prevInputAmount = 0;
     private RangedFluidWrapper wrapper = new RangedFluidWrapper(getInput(), getOutput());
-    protected ItemStackHandler inv = new BarrelHandler(3, this);
+    private ItemStackHandler inv = new UpdatingItemStackHandler(3, this);
 
     public TileBarrelBrewing() {
         input.setCanDrain(false);
@@ -53,7 +53,9 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     @Override
     public void update() {
         super.update();
-        processBrewing();
+        if (this.isSealed()) {
+            processBrewing();
+        }
         updateClientInputFluid(getInput());
         updateClientOutputFluid(getOutput());
     }

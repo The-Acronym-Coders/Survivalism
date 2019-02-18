@@ -109,7 +109,7 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return new AxisAlignedBB(0, 0, 0, 1, 1.0625, 1);
+        return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
     }
 
     @Override

@@ -1,7 +1,12 @@
 package com.teamacronymcoders.survivalism.common.tiles.barrels;
 
+import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
-import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
+import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelSoaking;
+import com.teamacronymcoders.survivalism.common.inventory.SoakingWrapper;
+import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
@@ -24,14 +29,16 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHasGui {
 
     protected int ticks = 0;
     protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
     protected SoakingRecipe recipe;
+    protected UpdatingItemStackHandler inv = new UpdatingItemStackHandler(2, this);
+    protected SoakingWrapper wrapper = new SoakingWrapper(inv);
     private int prevInputAmount = 0;
-    protected ItemStackHandler inv = new BarrelHandler(2, this);
 
     public TileBarrelSoaking() {
         input.setCanDrain(false);
@@ -40,7 +47,9 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
     @Override
     public void update() {
         super.update();
-        processSoaking();
+        if (this.isSealed()) {
+            processSoaking();
+        }
         updateClientInputFluid(getInput());
     }
 
@@ -68,7 +77,7 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(input);
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isSealed()) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(wrapper);
         }
         return super.getCapability(capability, facing);
     }
@@ -134,13 +143,19 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
         }
     }
 
+
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return Optional.of(new GUIBarrelSoaking(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return Optional.of(new ContainerBarrelSoaking(entityPlayer.inventory, this)).orElse(null);
+    }
+
+    public boolean onBlockActivated(EntityPlayer player) {
+        GuiOpener.openTileEntityGui(Survivalism.INSTANCE, player, this.getWorld(), this.getPos());
+        return true;
     }
 }

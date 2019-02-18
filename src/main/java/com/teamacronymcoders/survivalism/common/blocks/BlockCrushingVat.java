@@ -1,6 +1,6 @@
-package com.teamacronymcoders.survivalism.common.blocks.old;
+package com.teamacronymcoders.survivalism.common.blocks;
 
-import com.teamacronymcoders.base.blocks.BlockBase;
+import com.teamacronymcoders.base.blocks.BlockTEBase;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import net.minecraft.block.SoundType;
@@ -25,13 +25,13 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import javax.annotation.Nullable;
 
-public class BlockCrushingVat extends BlockBase {
+public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
 
     public static final int GUI_ID = 4;
     private static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockCrushingVat() {
-        super(Material.WOOD);
+        super(Material.WOOD, "crushing_vat");
         setCreativeTab(Survivalism.TAB);
         setTranslationKey("crushing_vat");
         setSoundType(SoundType.WOOD);
@@ -155,5 +155,10 @@ public class BlockCrushingVat extends BlockBase {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return new AxisAlignedBB(0, 0, 0, 1, 0.625, 1);
+    }
+
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return TileCrushingVat.class;
     }
 }

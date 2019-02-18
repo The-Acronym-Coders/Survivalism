@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.common.blocks.barrels;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -10,9 +11,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
@@ -39,6 +41,30 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
     }
 
     @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileBarrelBase te = getTE(world, pos);
+        if (te instanceof TileBarrelSoaking) {
+            TileBarrelSoaking soaking = (TileBarrelSoaking) te;
+            ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
+            if (state.getValue(SEALED)) {
+                NBTTagCompound tag = new NBTTagCompound();
+                soaking.writeToNBT(tag);
+                stack.setTagCompound(new NBTTagCompound());
+                if (stack.getTagCompound() != null) {
+                    stack.getTagCompound().setTag("BlockEntityTag", tag);
+                }
+            } else {
+                for (int i = 0; i < soaking.getInv().getSlots(); i++) {
+                    ItemStack iStack = soaking.getInv().getStackInSlot(i);
+                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), iStack);
+                }
+            }
+            Block.spawnAsEntity(world, pos, stack);
+            super.breakBlock(world, pos, state);
+        }
+    }
+
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileBarrelBase barrel = getTE(worldIn, pos);
         if (worldIn.isRemote || barrel == null) {
@@ -46,35 +72,28 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
         }
 
         if (barrel instanceof TileBarrelSoaking) {
-            TileBarrelSoaking brewing = (TileBarrelSoaking) barrel;
+            TileBarrelSoaking soaking = (TileBarrelSoaking) barrel;
             if (!state.getValue(SEALED)) {
                 if (playerIn.getHeldItem(hand).getItem() == BlockBarrelBase.SPONGE) {
                     ItemStack stack = playerIn.getHeldItem(hand);
-                    brewing.getInput().setFluid(null);
+                    soaking.getInput().setFluid(null);
                     if (!playerIn.capabilities.isCreativeMode) {
                         stack.shrink(1);
                         playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
                     }
                     if (worldIn.isRemote) {
-                        brewing.updateClientInputFluid(brewing.getInput());
+                        soaking.updateClientInputFluid(soaking.getInput());
                     }
                     return true;
-                } else if (playerIn.getHeldItem(hand).getItem() instanceof ItemBucket) {
-                    ItemStack stack = playerIn.getHeldItem(hand);
-                    FluidStack fs = FluidUtil.getFluidContained(stack);
-                    if (fs != null) {
-                        if (fs.amount == 0) {
-                            FluidUtil.tryFillContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, EnumFacing.DOWN), Integer.MAX_VALUE, playerIn, true);
-                        }
-                        if (fs.amount == 1000) {
-                            FluidUtil.tryEmptyContainer(stack, FluidUtil.getFluidHandler(worldIn, pos, null), Integer.MAX_VALUE, playerIn, true);
-                        }
-                    }
+                } else if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+                    FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
                     return true;
                 }
             }
+            soaking.onBlockActivated(playerIn);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Nullable

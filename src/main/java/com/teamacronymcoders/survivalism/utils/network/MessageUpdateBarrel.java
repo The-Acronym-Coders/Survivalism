@@ -22,13 +22,11 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
 
     private FluidStack inStack;
     private FluidStack outStack;
-    private TileBarrelBase te;
 
     public MessageUpdateBarrel() {
     }
 
     public MessageUpdateBarrel(TileBarrelBase te) {
-        this.te = te;
         if (te instanceof TileBarrelBrewing) {
             TileBarrelBrewing brewing = (TileBarrelBrewing) te;
             this.inStack = brewing.getInput().getFluid();
@@ -40,7 +38,6 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
             TileBarrelStorage storage = (TileBarrelStorage) te;
             this.inStack = storage.getInput().getFluid();
         }
-
     }
 
     private static FluidStack readFluid(ByteBuf buf) {
@@ -78,10 +75,10 @@ public class MessageUpdateBarrel implements IMessage, IMessageHandler<MessageUpd
     public IMessage onMessage(MessageUpdateBarrel message, MessageContext ctx) {
         Minecraft.getMinecraft().addScheduledTask(() -> {
             if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrel) {
-                if (te instanceof TileBarrelBrewing) {
+                if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrelBrewing) {
                     ((GUIBarrelBrewing) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
                     ((GUIBarrelBrewing) Minecraft.getMinecraft().currentScreen).setOutput(message.outStack);
-                } else if (te instanceof TileBarrelSoaking) {
+                } else if (Minecraft.getMinecraft().currentScreen instanceof GUIBarrelSoaking) {
                     ((GUIBarrelSoaking) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);
                 } else {
                     ((GUIBarrelStorage) Minecraft.getMinecraft().currentScreen).setInput(message.inStack);

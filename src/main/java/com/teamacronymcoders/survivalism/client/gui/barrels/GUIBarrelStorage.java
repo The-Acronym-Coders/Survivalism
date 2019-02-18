@@ -66,7 +66,7 @@ public class GUIBarrelStorage extends GUIBarrel {
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(80, y, 16, h, 1, te.getInput().getFluid());
+            HelperFluid.renderTiledFluid(134, y - 2, 16, h, 1, te.getInput().getFluid());
         }
     }
 

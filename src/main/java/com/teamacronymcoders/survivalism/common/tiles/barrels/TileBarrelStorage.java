@@ -1,8 +1,11 @@
 package com.teamacronymcoders.survivalism.common.tiles.barrels;
 
+import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
-import com.teamacronymcoders.survivalism.common.inventory.BarrelHandler;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
+import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelStorage;
+import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -18,12 +21,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHasGui {
 
-    protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+    protected FluidTank input = new FluidTank(32000);
+    protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
     private int prevInputAmount = 0;
-    protected ItemStackHandler inv = new BarrelHandler(9, this);
 
     @Override
     public void update() {
@@ -95,11 +99,16 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return Optional.of(new GUIBarrelStorage(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return Optional.of(new ContainerBarrelStorage(entityPlayer.inventory, this)).orElse(null);
+    }
+
+    public boolean onBlockActivated(EntityPlayer player) {
+        GuiOpener.openTileEntityGui(Survivalism.INSTANCE, player, this.getWorld(), this.getPos());
+        return true;
     }
 }

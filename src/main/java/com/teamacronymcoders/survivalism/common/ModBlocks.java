@@ -1,9 +1,9 @@
 package com.teamacronymcoders.survivalism.common;
 
+import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
-import com.teamacronymcoders.survivalism.common.blocks.old.BlockCrushingVat;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
