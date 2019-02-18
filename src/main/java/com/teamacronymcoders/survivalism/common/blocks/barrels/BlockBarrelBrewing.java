@@ -83,11 +83,10 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        TileBarrelBase te = getTE(world, pos);
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
         if (te instanceof TileBarrelBrewing) {
             TileBarrelBrewing brewing = (TileBarrelBrewing) te;
-            ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
+            stack = new ItemStack(this, 1, getMetaFromState(state));
             if (state.getValue(SEALED)) {
                 NBTTagCompound tag = new NBTTagCompound();
                 brewing.writeToNBT(tag);
@@ -98,11 +97,12 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
             } else {
                 for (int i = 0; i < brewing.getInv().getSlots(); i++) {
                     ItemStack iStack = brewing.getInv().getStackInSlot(i);
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), iStack);
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), iStack);
                 }
             }
-            Block.spawnAsEntity(world, pos, stack);
-            super.breakBlock(world, pos, state);
+            Block.spawnAsEntity(worldIn, pos, stack);
+        } else {
+            super.harvestBlock(worldIn, player, pos, state, te, stack);
         }
     }
 
