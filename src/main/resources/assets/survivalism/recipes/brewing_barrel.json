@@ -1,0 +1,32 @@
+{
+  "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "type": "base:module_active",
+      "name": "Recipes",
+      "mod": "survivalism"
+    }
+  ],
+  "result": {
+    "item": "survivalism:barrel_brewing",
+    "data": 0
+  },
+  "pattern": [
+    "WSW",
+    "WFW",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "slabWood"
+    },
+    "F": {
+      "item": "minecraft:flower_pot"
+    }
+  }
+}

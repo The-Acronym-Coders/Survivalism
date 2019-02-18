@@ -1,0 +1,32 @@
+{
+  "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "type": "base:module_active",
+      "name": "Recipes",
+      "mod": "survivalism"
+    }
+  ],
+  "result": {
+    "item": "survivalism:barrel_storage",
+    "data": 0
+  },
+  "pattern": [
+    "WSW",
+    "WCW",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "slabWood"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "type": "base:module_active",
+      "name": "Recipes",
+      "mod": "survivalism"
+    }
+  ],
+  "result": {
+    "item": "survivalism:crushing_vat",
+    "data": 0
+  },
+  "pattern": [
+    "   ",
+    "W W",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "slabWood"
+    }
+  }
+}
