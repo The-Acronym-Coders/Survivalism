@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import net.minecraft.block.Block;
@@ -22,6 +23,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -49,6 +51,10 @@ public class BlockBarrelStorage extends BlockBarrelBase {
             if (state.getValue(SEALED)) {
                 NBTTagCompound tag = new NBTTagCompound();
                 storage.writeToNBT(tag);
+                tag.removeTag("x");
+                tag.removeTag("y");
+                tag.removeTag("z");
+                tag.removeTag("id");
                 stack.setTagCompound(new NBTTagCompound());
                 if (stack.getTagCompound() != null) {
                     stack.getTagCompound().setTag("BlockEntityTag", tag);
@@ -61,6 +67,20 @@ public class BlockBarrelStorage extends BlockBarrelBase {
             }
             Block.spawnAsEntity(world, pos, stack);
             super.breakBlock(world, pos, state);
+        }
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileBarrelStorage) {
+            TileBarrelStorage storage = (TileBarrelStorage) te;
+            if (stack.getTagCompound() != null) {
+                storage.deserializeNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+            }
         }
     }
 

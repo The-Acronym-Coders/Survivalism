@@ -62,7 +62,7 @@ public class GUIBarrelStorage extends GUIBarrel {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getInput().getFluid() != null) {
             int amount = te.getInput().getFluidAmount();
-            float hr = 48f / 16000f;
+            float hr = 48f / 32000;
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
