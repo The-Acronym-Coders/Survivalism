@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism.compat.crafttweaker;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
@@ -25,8 +24,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class VatRecipeTweaker {
 
     @ZenMethod
-    public static void addCrushingRecipe(IIngredient input, ILiquidStack output, int jumps, @Optional IItemStack outputStack, @Optional float itemChance) {
-        Survivalism.LATE_ADDITIONS.add(new AddRecipe(input, output, outputStack, itemChance, jumps));
+    public static void addCrushingRecipe(String identifier, IIngredient input, ILiquidStack output, int jumps, @Optional IItemStack outputStack, @Optional float itemChance) {
+        Survivalism.LATE_ADDITIONS.add(new AddRecipe(identifier, input, output, outputStack, itemChance, jumps));
     }
 
     @ZenMethod
@@ -42,8 +41,8 @@ public class VatRecipeTweaker {
         float itemChance;
         int jumps;
 
-        private AddRecipe(IIngredient input, ILiquidStack output, IItemStack outputStack, float itemChance, int jumps) {
-            this.name = HelperString.cleanCommandString(input.toCommandString());
+        private AddRecipe(String identifier, IIngredient input, ILiquidStack output, IItemStack outputStack, float itemChance, int jumps) {
+            this.name = identifier;
             this.input = CraftTweakerMC.getIngredient(input);
             this.output = CraftTweakerMC.getLiquidStack(output);
             this.outputStack = CraftTweakerMC.getItemStack(outputStack);

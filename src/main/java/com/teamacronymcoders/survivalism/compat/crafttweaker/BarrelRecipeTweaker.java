@@ -27,20 +27,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.teamacronymcoders.survivalism.utils.helpers.HelperString.cleanCommandString;
-
 @ZenClass("mods.survivalism.Barrel")
 @ZenRegister
 public class BarrelRecipeTweaker {
 
     @ZenMethod
-    public static void addSoakingRecipe(ILiquidStack input, IIngredient inputItem, IItemStack output, int ticks, @Optional float fluidUseChance) {
-        Survivalism.LATE_ADDITIONS.add(new AddSoakingRecipe(input, inputItem, output, fluidUseChance, ticks));
+    public static void addSoakingRecipe(String identifier, ILiquidStack input, IIngredient inputItem, IItemStack output, int ticks, @Optional float fluidUseChance) {
+        Survivalism.LATE_ADDITIONS.add(new AddSoakingRecipe(identifier, input, inputItem, output, fluidUseChance, ticks));
     }
 
     @ZenMethod
-    public static void addBrewingRecipe(ILiquidStack input, IIngredient[] inputItems, int[] inputItemAmounts, ILiquidStack output, int ticks) {
-        Survivalism.LATE_ADDITIONS.add(new AddBrewingRecipe(input, inputItems, inputItemAmounts, output, ticks));
+    public static void addBrewingRecipe(String identifier, ILiquidStack input, IIngredient[] inputItems, int[] inputItemAmounts, ILiquidStack output, int ticks) {
+        Survivalism.LATE_ADDITIONS.add(new AddBrewingRecipe(identifier, input, inputItems, inputItemAmounts, output, ticks));
     }
 
     private static class AddBrewingRecipe implements IAction {
@@ -51,7 +49,7 @@ public class BarrelRecipeTweaker {
         int ticks;
         List<String> names = new ArrayList<>();
 
-        AddBrewingRecipe(ILiquidStack input, IIngredient[] inputItems, int[] inputItemAmounts, ILiquidStack output, int ticks) {
+        AddBrewingRecipe(String identifier, ILiquidStack input, IIngredient[] inputItems, int[] inputItemAmounts, ILiquidStack output, int ticks) {
             this.input = CraftTweakerMC.getLiquidStack(input);
             if (inputItems.length > 3 || inputItems.length != inputItemAmounts.length) {
                 CraftTweakerAPI.logError("Invalid inputs in brewing recipe for " + output.toCommandString());
@@ -66,7 +64,7 @@ public class BarrelRecipeTweaker {
             }
             this.output = CraftTweakerMC.getLiquidStack(output);
             this.ticks = ticks;
-            this.name = String.format("%s_from_%s", cleanCommandString(output.toCommandString()).toLowerCase(), cleanCommandString(input.toCommandString()).toLowerCase());
+            this.name = identifier;
         }
 
         @Override
@@ -99,6 +97,7 @@ public class BarrelRecipeTweaker {
     }
 
     private static class AddSoakingRecipe implements IAction {
+        String name;
         String itemDesc;
         String outDesc;
         FluidStack input;
@@ -107,7 +106,8 @@ public class BarrelRecipeTweaker {
         float fluidUseChance;
         int ticks;
 
-        AddSoakingRecipe(ILiquidStack input, IIngredient inputItem, IItemStack output, float fluidUseChance, int ticks) {
+        AddSoakingRecipe(String identifier, ILiquidStack input, IIngredient inputItem, IItemStack output, float fluidUseChance, int ticks) {
+            this.name = identifier;
             this.itemDesc = inputItem.toCommandString();
             this.outDesc = output.toCommandString();
             this.input = CraftTweakerMC.getLiquidStack(input);
@@ -120,7 +120,7 @@ public class BarrelRecipeTweaker {
         @Override
         public void apply() {
             //TODO: Error checking
-            BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, HelperString.cleanCommandString(itemDesc)), input, inputItem, output, fluidUseChance, ticks));
+            BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItem, output, fluidUseChance, ticks));
         }
 
         @Override
