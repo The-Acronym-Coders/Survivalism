@@ -30,7 +30,6 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     protected FluidTank input = new FluidTank(32000);
     protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
-    private int prevInputAmount = 0;
 
     @Override
     public void update() {
@@ -89,12 +88,12 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new GUIBarrelStorage(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
+        return new GUIBarrelStorage(this, getContainer(entityPlayer, world, blockPos));
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new ContainerBarrelStorage(entityPlayer.inventory, this)).orElse(null);
+        return new ContainerBarrelStorage(entityPlayer.inventory, this);
     }
 
     public boolean onBlockActivated(EntityPlayer player) {

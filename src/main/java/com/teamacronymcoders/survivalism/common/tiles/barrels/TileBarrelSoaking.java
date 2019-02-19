@@ -8,6 +8,7 @@ import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.inventory.SoakingWrapper;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
@@ -41,7 +42,7 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
     protected SoakingRecipe recipe;
     protected UpdatingItemStackHandler inv = new UpdatingItemStackHandler(2, this);
     protected SoakingWrapper wrapper = new SoakingWrapper(inv);
-    private int prevInputAmount = 0;
+    private boolean working = false;
 
     public TileBarrelSoaking() {
         input.setCanDrain(false);
@@ -52,6 +53,12 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
         super.update();
         if (this.isSealed()) {
             processSoaking();
+            if (recipe != null) {
+                working = true;
+            }
+        } else {
+            ticks = 0;
+            working = false;
         }
     }
 
@@ -131,6 +138,18 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
 
     public ItemStackHandler getInv() {
         return inv;
+    }
+
+    public boolean getWorking() {
+        return working;
+    }
+
+    public SoakingRecipe getRecipe() {
+        return recipe;
+    }
+
+    public int getTicks() {
+        return ticks;
     }
 
     @Override

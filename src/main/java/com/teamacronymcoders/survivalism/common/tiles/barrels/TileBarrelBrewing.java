@@ -41,9 +41,9 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
     protected FluidTank output = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
     protected BrewingRecipe recipe;
-    private int prevInputAmount = 0;
     private RangedFluidWrapper wrapper = new RangedFluidWrapper(getInput(), getOutput());
     private ItemStackHandler inv = new UpdatingItemStackHandler(3, this);
+    private boolean working = false;
 
     public TileBarrelBrewing() {
         input.setCanDrain(false);
@@ -55,6 +55,12 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
         super.update();
         if (this.isSealed()) {
             processBrewing();
+            if (recipe != null) {
+                working = true;
+            }
+        } else {
+            ticks = 0;
+            working = false;
         }
     }
 
@@ -140,6 +146,18 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
 
     public ItemStackHandler getInv() {
         return inv;
+    }
+
+    public boolean getWorking() {
+        return working;
+    }
+
+    public BrewingRecipe getRecipe() {
+        return recipe;
+    }
+
+    public int getTicks() {
+        return ticks;
     }
 
     @Override
