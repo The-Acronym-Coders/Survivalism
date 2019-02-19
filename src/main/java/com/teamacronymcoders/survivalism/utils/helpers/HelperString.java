@@ -2,13 +2,6 @@ package com.teamacronymcoders.survivalism.utils.helpers;
 
 public class HelperString {
 
-    public static String cleanCommandString(String input) {
-        input.replace("<", "");
-        input.replace(":", "");
-        input.replace(">", "");
-        return input;
-    }
-
     public static String getDurationString(int seconds) {
 
         int hours = seconds / 3600;
