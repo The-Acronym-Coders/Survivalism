@@ -15,7 +15,7 @@ import static crafttweaker.mc1120.commands.SpecialMessagesChat.*;
 public class CommandCrushingDump extends CraftTweakerCommand {
 
     public CommandCrushingDump() {
-        super("brewIDDump");
+        super("crushIDDump");
     }
 
     @Override
