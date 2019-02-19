@@ -37,6 +37,10 @@ public abstract class TileBarrelBase extends TileEntity implements ITickable, IU
         this.markDirty();
     }
 
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
 
     // Sealing Methods
     public boolean isSealed() {
