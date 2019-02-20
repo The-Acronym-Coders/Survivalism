@@ -41,6 +41,32 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
         super("barrel_soaking");
         setTranslationKey("barrel_soaking");
     }
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileBarrelSoaking();
+    }
+
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return TileBarrelSoaking.class;
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileBarrelSoaking) {
+            TileBarrelSoaking soaking = (TileBarrelSoaking) te;
+            if (stack.getTagCompound() != null) {
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                soaking.getInv().deserializeNBT(compound.getCompoundTag("items"));
+                soaking.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
+            }
+        }
+    }
 
     @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
@@ -63,22 +89,6 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
             Block.spawnAsEntity(worldIn, pos, stack);
         } else {
             super.harvestBlock(worldIn, player, pos, state, te, stack);
-        }
-    }
-
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof TileBarrelSoaking) {
-            TileBarrelSoaking soaking = (TileBarrelSoaking) te;
-            if (stack.getTagCompound() != null) {
-                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-                soaking.getInv().deserializeNBT(compound.getCompoundTag("items"));
-                soaking.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
-            }
         }
     }
 
@@ -111,11 +121,7 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
         return false;
     }
 
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileBarrelSoaking();
-    }
+
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
@@ -174,10 +180,5 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
             }
         }
-    }
-
-    @Override
-    public Class<? extends TileEntity> getTileEntityClass() {
-        return TileBarrelSoaking.class;
     }
 }

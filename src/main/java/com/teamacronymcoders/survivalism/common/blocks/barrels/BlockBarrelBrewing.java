@@ -42,6 +42,58 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
         setTranslationKey("barrel_brewing");
     }
 
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileBarrelBrewing();
+    }
+
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return TileBarrelBrewing.class;
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
+            if (stack.getTagCompound() != null) {
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                brewing.getInv().deserializeNBT(compound.getCompoundTag("items"));
+                brewing.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
+                brewing.getOutput().readFromNBT(compound.getCompoundTag("outputTank"));
+            }
+        }
+    }
+
+    @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        if (te instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
+            stack = new ItemStack(this, 1, getMetaFromState(state));
+            if (state.getValue(SEALED)) {
+                NBTTagCompound tag = new NBTTagCompound();
+                brewing.writeToNBT(tag);
+                stack.setTagCompound(new NBTTagCompound());
+                if (stack.getTagCompound() != null) {
+                    stack.getTagCompound().setTag("BlockEntityTag", tag);
+                }
+            } else {
+                for (int i = 0; i < brewing.getInv().getSlots(); i++) {
+                    ItemStack iStack = brewing.getInv().getStackInSlot(i);
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), iStack);
+                }
+            }
+            Block.spawnAsEntity(worldIn, pos, stack);
+        } else {
+            super.harvestBlock(worldIn, player, pos, state, te, stack);
+        }
+    }
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileBarrelBase barrel = getTE(worldIn, pos);
@@ -70,53 +122,6 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
             return true;
         }
         return false;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileBarrelBrewing();
-    }
-
-    @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-        if (te instanceof TileBarrelBrewing) {
-            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
-            stack = new ItemStack(this, 1, getMetaFromState(state));
-            if (state.getValue(SEALED)) {
-                NBTTagCompound tag = new NBTTagCompound();
-                brewing.writeToNBT(tag);
-                stack.setTagCompound(new NBTTagCompound());
-                if (stack.getTagCompound() != null) {
-                    stack.getTagCompound().setTag("BlockEntityTag", tag);
-                }
-            } else {
-                for (int i = 0; i < brewing.getInv().getSlots(); i++) {
-                    ItemStack iStack = brewing.getInv().getStackInSlot(i);
-                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), iStack);
-                }
-            }
-            Block.spawnAsEntity(worldIn, pos, stack);
-        } else {
-            super.harvestBlock(worldIn, player, pos, state, te, stack);
-        }
-    }
-
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof TileBarrelBrewing) {
-            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
-            if (stack.getTagCompound() != null) {
-                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-                brewing.getInv().deserializeNBT(compound.getCompoundTag("items"));
-                brewing.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
-                brewing.getOutput().readFromNBT(compound.getCompoundTag("outputTank"));
-            }
-        }
     }
 
     @Override
@@ -187,10 +192,5 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
             }
         }
-    }
-
-    @Override
-    public Class<? extends TileEntity> getTileEntityClass() {
-        return TileBarrelBrewing.class;
     }
 }

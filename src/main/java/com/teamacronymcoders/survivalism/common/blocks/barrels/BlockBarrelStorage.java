@@ -43,6 +43,33 @@ public class BlockBarrelStorage extends BlockBarrelBase {
         setTranslationKey("barrel_storage");
     }
 
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileBarrelStorage();
+    }
+
+    @Override
+    public Class<? extends TileEntity> getTileEntityClass() {
+        return TileBarrelStorage.class;
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileBarrelStorage) {
+            TileBarrelStorage storage = (TileBarrelStorage) te;
+            if (stack.getTagCompound() != null) {
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                storage.getInv().deserializeNBT(compound.getCompoundTag("items"));
+                storage.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
+            }
+        }
+    }
+
     @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
         if (te instanceof TileBarrelStorage) {
@@ -64,22 +91,6 @@ public class BlockBarrelStorage extends BlockBarrelBase {
             Block.spawnAsEntity(worldIn, pos, stack);
         } else {
             super.harvestBlock(worldIn, player, pos, state, te, stack);
-        }
-    }
-
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof TileBarrelStorage) {
-            TileBarrelStorage storage = (TileBarrelStorage) te;
-            if (stack.getTagCompound() != null) {
-                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
-                storage.getInv().deserializeNBT(compound.getCompoundTag("items"));
-                storage.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
-            }
         }
     }
 
@@ -112,11 +123,7 @@ public class BlockBarrelStorage extends BlockBarrelBase {
         return false;
     }
 
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileBarrelStorage();
-    }
+
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
@@ -173,10 +180,5 @@ public class BlockBarrelStorage extends BlockBarrelBase {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
             }
         }
-    }
-
-    @Override
-    public Class<? extends TileEntity> getTileEntityClass() {
-        return TileBarrelStorage.class;
     }
 }

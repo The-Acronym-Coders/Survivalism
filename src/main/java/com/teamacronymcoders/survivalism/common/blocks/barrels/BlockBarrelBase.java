@@ -48,24 +48,21 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
         return null;
     }
 
-    public static TileBarrelBase getTE(IBlockAccess access, BlockPos pos) {
-        TileEntity te = access.getTileEntity(pos);
-        if (te instanceof TileBarrelBase) {
-            return (TileBarrelBase) te;
-        }
-        return null;
+    // Information Methods
+    @Nonnull
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, SEALED);
     }
 
-
-    // Information Methods
     @Override
     public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(SEALED) ? 1 : 0;
     }
 
     @Override
@@ -99,6 +96,16 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
     }
 
     @Override
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        return getStateFromMeta(meta);
+    }
+
+    @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+    }
+
+    @Override
     public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
         return side != null && side.getAxis() != EnumFacing.Axis.Y;
     }
@@ -110,22 +117,6 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
         }
     }
 
-    @Nonnull
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, SEALED);
-    }
-
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
-    }
-
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getStateFromMeta(meta);
-    }
-
     @Override
     public IBlockState getStateFromMeta(int meta) {
         if (meta == 0) {
@@ -133,11 +124,6 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
         } else {
             return getDefaultState().withProperty(SEALED, true);
         }
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(SEALED) ? 1 : 0;
     }
 
 }
