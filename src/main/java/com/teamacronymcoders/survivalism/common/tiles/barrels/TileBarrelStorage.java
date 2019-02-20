@@ -6,6 +6,7 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
 import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelStorage;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,10 +33,13 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     protected FluidTank input = new FluidTank(32000);
     protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
+    private FluidStack moarWater = FluidRegistry.getFluidStack("water", SurvivalismConfigs.rainFillRate);
 
     @Override
     public void update() {
-        super.update();
+        if (!this.isSealed() && input.getFluid() == null || moarWater.isFluidEqual(input.getFluid())) {
+            processRaining();
+        }
     }
 
     // NBT
@@ -51,6 +57,14 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
         return super.writeToNBT(compound);
     }
 
+    protected void processRaining() {
+        World world = getWorld();
+        if (!isSealed()) {
+            if (world.isRaining() && world.canBlockSeeSky(getPos())) {
+                input.fillInternal(moarWater.copy(), true);
+            }
+        }
+    }
 
     // Capabilities
     @Nullable

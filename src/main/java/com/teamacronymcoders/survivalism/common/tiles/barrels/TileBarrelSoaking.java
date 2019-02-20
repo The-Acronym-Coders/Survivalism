@@ -10,6 +10,7 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import net.minecraft.block.state.IBlockState;
@@ -25,6 +26,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -43,6 +45,7 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
     protected UpdatingItemStackHandler inv = new UpdatingItemStackHandler(2, this);
     protected SoakingWrapper wrapper = new SoakingWrapper(inv);
     private boolean working = false;
+    private FluidStack moarWater = FluidRegistry.getFluidStack("water", SurvivalismConfigs.rainFillRate);
 
     public TileBarrelSoaking() {
         input.setCanDrain(false);
@@ -59,6 +62,9 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
         } else {
             ticks = 0;
             working = false;
+            if (input.getFluid() == null || moarWater.isFluidEqual(input.getFluid())) {
+                processRaining();
+            }
         }
     }
 
@@ -126,6 +132,15 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
                 }
                 inv.getStackInSlot(0).shrink(1);
                 inv.insertItem(1, recipe.getOutput().copy(), false);
+            }
+        }
+    }
+
+    protected void processRaining() {
+        World world = getWorld();
+        if (!isSealed()) {
+            if (world.isRaining() && world.canBlockSeeSky(getPos())) {
+                input.fillInternal(moarWater.copy(), true);
             }
         }
     }
