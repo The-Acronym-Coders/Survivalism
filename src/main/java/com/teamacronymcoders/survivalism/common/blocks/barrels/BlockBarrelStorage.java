@@ -1,15 +1,12 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,7 +29,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -55,7 +51,8 @@ public class BlockBarrelStorage extends BlockBarrelBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {}
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
@@ -122,7 +119,6 @@ public class BlockBarrelStorage extends BlockBarrelBase {
         }
         return false;
     }
-
 
 
     @Override
