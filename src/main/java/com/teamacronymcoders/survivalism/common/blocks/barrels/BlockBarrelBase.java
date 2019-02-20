@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -101,6 +103,13 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
         return side != null && side.getAxis() != EnumFacing.Axis.Y;
     }
 
+    @Override
+    public void getSubBlocks(@Nullable CreativeTabs creativeTab, @Nonnull NonNullList<ItemStack> list) {
+        for (IBlockState state : getBlockState().getValidStates()) {
+            list.add(new ItemStack(this, 1, getMetaFromState(state)));
+        }
+    }
+
     @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
@@ -114,7 +123,7 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
+        return getStateFromMeta(meta);
     }
 
     @Override

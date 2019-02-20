@@ -75,7 +75,9 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
         if (te instanceof TileBarrelSoaking) {
             TileBarrelSoaking soaking = (TileBarrelSoaking) te;
             if (stack.getTagCompound() != null) {
-                soaking.deserializeNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                soaking.getInv().deserializeNBT(compound.getCompoundTag("items"));
+                soaking.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
             }
         }
     }
@@ -113,32 +115,6 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileBarrelSoaking();
-    }
-
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        if (meta == 0) {
-            return getDefaultState().withProperty(SEALED, false);
-        } else {
-            return getDefaultState().withProperty(SEALED, true);
-        }
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(SEALED) ? 1 : 0;
-    }
-
-    @Override
-    public void getSubBlocks(@Nullable CreativeTabs creativeTab, @Nonnull NonNullList<ItemStack> list) {
-        for (IBlockState state : getBlockState().getValidStates()) {
-            list.add(new ItemStack(this, 1, getMetaFromState(state)));
-        }
     }
 
     @Override

@@ -111,15 +111,11 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
         if (te instanceof TileBarrelBrewing) {
             TileBarrelBrewing brewing = (TileBarrelBrewing) te;
             if (stack.getTagCompound() != null) {
-                brewing.deserializeNBT(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("BlockEntityTag");
+                brewing.getInv().deserializeNBT(compound.getCompoundTag("items"));
+                brewing.getInput().readFromNBT(compound.getCompoundTag("inputTank"));
+                brewing.getOutput().readFromNBT(compound.getCompoundTag("outputTank"));
             }
-        }
-    }
-
-    @Override
-    public void getSubBlocks(@Nullable CreativeTabs creativeTab, @Nonnull NonNullList<ItemStack> list) {
-        for (IBlockState state : getBlockState().getValidStates()) {
-            list.add(new ItemStack(this, 1, getMetaFromState(state)));
         }
     }
 
