@@ -37,14 +37,14 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
                 if (compound.hasKey("input")) {
                     FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("input"));
                     if (stack != null) {
-                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityI"));
+                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityI") + " mb");
                     }
                 }
 
                 if (compound.hasKey("output")) {
                     FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("output"));
                     if (stack != null) {
-                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityO"));
+                        currenttip.add(stack.getLocalizedName() + " : " + stack.amount + " / " + compound.getInteger("capacityO") + " mb");
                     }
                 }
 

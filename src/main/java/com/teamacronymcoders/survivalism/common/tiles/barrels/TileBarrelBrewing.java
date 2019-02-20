@@ -115,6 +115,7 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
                 recipe = BarrelRecipeManager.getBrewingRecipe(this);
             }
             if (recipe == null) {
+                working = false;
                 return;
             }
             if (ticks++ >= recipe.getTicks() && output.fillInternal(recipe.getOutput(), false) == recipe.getOutput().amount) {
