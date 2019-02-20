@@ -1,8 +1,13 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -32,7 +37,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrelStorage extends BlockBarrelBase {
+public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvider {
 
     public BlockBarrelStorage() {
         super("barrel_storage");
@@ -174,6 +179,19 @@ public class BlockBarrelStorage extends BlockBarrelBase {
                 }
             } else if (!tooltip.contains(TextFormatting.GRAY + I18n.format("info.survivalism.shift"))) {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+            }
+        }
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        probeInfo.text("Sealed: " + blockState.getValue(BlockBarrelBase.SEALED));
+        if (te instanceof TileBarrelStorage) {
+            TileBarrelStorage storage = (TileBarrelStorage) te;
+            FluidStack input = storage.getInput().getFluid();
+            if (input != null) {
+                probeInfo.text("Input: " + input.getLocalizedName() + ": " + input.amount + " / " + storage.getInput().getCapacity());
             }
         }
     }

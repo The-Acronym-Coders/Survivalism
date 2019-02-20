@@ -1,8 +1,15 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
+import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -32,7 +39,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrelSoaking extends BlockBarrelBase {
+public class BlockBarrelSoaking extends BlockBarrelBase implements TOPInfoProvider {
 
     public BlockBarrelSoaking() {
         super("barrel_soaking");
@@ -176,6 +183,27 @@ public class BlockBarrelSoaking extends BlockBarrelBase {
                 }
             } else if (!tooltip.contains(TextFormatting.GRAY + I18n.format("info.survivalism.shift"))) {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+            }
+        }
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        probeInfo.text("Sealed: " + blockState.getValue(BlockBarrelBase.SEALED));
+        if (te instanceof TileBarrelSoaking) {
+            TileBarrelSoaking soaking = (TileBarrelSoaking) te;
+            FluidStack input = soaking.getInput().getFluid();
+            probeInfo.text("Working: " + soaking.getWorking());
+            if (input != null) {
+                probeInfo.text("Input: " + input.getLocalizedName() + ": " + input.amount + " / " + soaking.getInput().getCapacity());
+            }
+            if (soaking.getRecipe() != null) {
+                int ticksLeft = (soaking.getRecipe().getTicks() - soaking.getTicks()) / 20;
+                if (soaking.getWorking()) {
+                    probeInfo.horizontal().text("Time Left: " + HelperString.getDurationString(ticksLeft));
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor())).progress(soaking.getTicks(), soaking.getRecipe().getTicks(), probeInfo.defaultProgressStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).showText(false).alternateFilledColor(Coloring.fromHex("6b92c1").getIntColor()));
+                }
             }
         }
     }

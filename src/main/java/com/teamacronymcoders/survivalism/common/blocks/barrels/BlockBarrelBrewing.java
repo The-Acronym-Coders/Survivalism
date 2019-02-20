@@ -1,8 +1,15 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
+import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.NumberFormat;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -32,7 +39,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrelBrewing extends BlockBarrelBase {
+public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvider {
 
     public BlockBarrelBrewing() {
         super("barrel_brewing");
@@ -188,6 +195,31 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                 }
             } else if (!tooltip.contains(TextFormatting.GRAY + I18n.format("info.survivalism.shift"))) {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+            }
+        }
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        probeInfo.text("Sealed: " + blockState.getValue(BlockBarrelBase.SEALED));
+        if (te instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
+            FluidStack input = brewing.getInput().getFluid();
+            FluidStack output = brewing.getOutput().getFluid();
+            probeInfo.text("Working: " + brewing.getWorking());
+            if (input != null) {
+                probeInfo.text("Input: " + input.getLocalizedName() + ": " + input.amount + " / " + brewing.getInput().getCapacity());
+            }
+            if (output != null) {
+                probeInfo.text("Output: " + output.getLocalizedName() + ": " + output.amount + " / " + brewing.getOutput().getCapacity());
+            }
+            if (brewing.getRecipe() != null) {
+                int ticksLeft = (brewing.getRecipe().getTicks() - brewing.getTicks()) / 20;
+                if (brewing.getWorking()) {
+                    probeInfo.horizontal().text("Time Left: " + HelperString.getDurationString(ticksLeft));
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor())).progress(brewing.getTicks(), brewing.getRecipe().getTicks(), probeInfo.defaultProgressStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).showText(false).alternateFilledColor(Coloring.fromHex("6b92c1").getIntColor()));
+                }
             }
         }
     }

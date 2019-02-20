@@ -49,7 +49,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         FluidRegistry.enableUniversalBucket();
     }
 
-    public Logger logger;
+    public static Logger logger;
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);
