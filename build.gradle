@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "${modVersion}-" + getVersion()
+version = "${mc_version}-" + getVersion()
 group = modGroup
 archivesBaseName = modBaseGroup
 
