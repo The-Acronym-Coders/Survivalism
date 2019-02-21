@@ -10,8 +10,10 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -53,6 +56,15 @@ public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvid
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
         return TileBarrelStorage.class;
+    }
+
+    public void initModels() {
+        NonNullList<ItemStack> items = NonNullList.create();
+        this.getSubBlocks(CreativeTabs.SEARCH, items);
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_storage", "inventory"));
+        }
     }
 
     @Override
