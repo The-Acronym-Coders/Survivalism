@@ -2,11 +2,17 @@ package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -23,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -32,11 +39,20 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrelStorage extends BlockBarrelBase {
+public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvider {
 
     public BlockBarrelStorage() {
         super("barrel_storage");
         setTranslationKey("barrel_storage");
+    }
+
+    public void initModels() {
+        NonNullList<ItemStack> items = NonNullList.create();
+        this.getSubBlocks(CreativeTabs.SEARCH, items);
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_storage", "inventory"));
+        }
     }
 
     @Nullable
@@ -174,6 +190,19 @@ public class BlockBarrelStorage extends BlockBarrelBase {
                 }
             } else if (!tooltip.contains(TextFormatting.GRAY + I18n.format("info.survivalism.shift"))) {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+            }
+        }
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        probeInfo.text("Sealed: " + blockState.getValue(BlockBarrelBase.SEALED));
+        if (te instanceof TileBarrelStorage) {
+            TileBarrelStorage storage = (TileBarrelStorage) te;
+            FluidStack input = storage.getInput().getFluid();
+            if (input != null) {
+                probeInfo.text("Input: " + input.getLocalizedName() + ": " + input.amount + " / " + storage.getInput().getCapacity());
             }
         }
     }

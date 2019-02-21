@@ -10,7 +10,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "${modVersion}-" + getVersion()
+
+version = "${mc_version}-" + getVersion()
+
 group = modGroup
 archivesBaseName = modBaseGroup
 
@@ -58,6 +60,16 @@ repositories{
         url "https://maven.thiakil.com"
     }
 
+    maven {
+        name 'The One Probe'
+        url "http://maven.tterrag.com/"
+    }
+
+    maven {
+        name = 'CoFH Maven'
+        url = "http://maven.covers1624.net" 
+    }
+
 }
 
 dependencies {
@@ -71,10 +83,7 @@ dependencies {
 
     // Addon Support
     deobfCompile "patchouli:Patchouli:1.0:13"
-//    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${crafttweaker_version}"
-//    deobfCompile "CraftTweaker2:CraftTweaker2-API:1.12-${crafttweaker_version}"
-//    deobfCompile "CraftTweaker2:ZenScript:1.12-${crafttweaker_version}"
-    
+    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.14-7"
 }
 
 processResources {
@@ -97,7 +106,8 @@ processResources {
 }
 
 String getVersion() {
-    String version = "${base_version}"
+    String version = "${modVersion}"
+
     String branch = project.hasProperty("branch") ? project.branch : ""
 
     if(branch != "") {

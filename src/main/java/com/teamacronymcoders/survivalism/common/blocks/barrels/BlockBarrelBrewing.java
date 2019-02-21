@@ -1,12 +1,20 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
+import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -23,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -32,11 +41,20 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockBarrelBrewing extends BlockBarrelBase {
+public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvider {
 
     public BlockBarrelBrewing() {
         super("barrel_brewing");
         setTranslationKey("barrel_brewing");
+    }
+
+    public void initModels() {
+        NonNullList<ItemStack> items = NonNullList.create();
+        this.getSubBlocks(CreativeTabs.SEARCH, items);
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_brewing", "inventory"));
+        }
     }
 
     @Nullable
@@ -188,6 +206,31 @@ public class BlockBarrelBrewing extends BlockBarrelBase {
                 }
             } else if (!tooltip.contains(TextFormatting.GRAY + I18n.format("info.survivalism.shift"))) {
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.survivalism.shift"));
+            }
+        }
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        probeInfo.text("Sealed: " + blockState.getValue(BlockBarrelBase.SEALED));
+        if (te instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) te;
+            FluidStack input = brewing.getInput().getFluid();
+            FluidStack output = brewing.getOutput().getFluid();
+            probeInfo.text("Working: " + brewing.getWorking());
+            if (input != null) {
+                probeInfo.text("Input: " + input.getLocalizedName() + ": " + input.amount + " / " + brewing.getInput().getCapacity());
+            }
+            if (output != null) {
+                probeInfo.text("Output: " + output.getLocalizedName() + ": " + output.amount + " / " + brewing.getOutput().getCapacity());
+            }
+            if (brewing.getRecipe() != null) {
+                int ticksLeft = (brewing.getRecipe().getTicks() - brewing.getTicks()) / 20;
+                if (brewing.getWorking()) {
+                    probeInfo.horizontal().text("Time Left: " + HelperString.getDurationString(ticksLeft));
+                    probeInfo.horizontal(probeInfo.defaultLayoutStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor())).progress(brewing.getTicks(), brewing.getRecipe().getTicks(), probeInfo.defaultProgressStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).showText(false).alternateFilledColor(Coloring.fromHex("6b92c1").getIntColor()));
+                }
             }
         }
     }

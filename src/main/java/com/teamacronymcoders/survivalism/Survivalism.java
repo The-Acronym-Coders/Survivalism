@@ -8,13 +8,11 @@ import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
-import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +20,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
@@ -44,12 +41,11 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public static Survivalism INSTANCE;
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     public static CommonProxy proxy;
+    public static Logger logger;
 
     static {
         FluidRegistry.enableUniversalBucket();
     }
-
-    public Logger logger;
 
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);
