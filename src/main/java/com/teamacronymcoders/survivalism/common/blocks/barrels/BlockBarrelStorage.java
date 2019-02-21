@@ -46,6 +46,15 @@ public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvid
         setTranslationKey("barrel_storage");
     }
 
+    public void initModels() {
+        NonNullList<ItemStack> items = NonNullList.create();
+        this.getSubBlocks(CreativeTabs.SEARCH, items);
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_storage", "inventory"));
+        }
+    }
+
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -55,15 +64,6 @@ public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvid
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
         return TileBarrelStorage.class;
-    }
-
-    public void initModels() {
-        NonNullList<ItemStack> items = NonNullList.create();
-        this.getSubBlocks(CreativeTabs.SEARCH, items);
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack item = items.get(i);
-            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_storage", "inventory"));
-        }
     }
 
     @Override

@@ -48,6 +48,15 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
         setTranslationKey("barrel_brewing");
     }
 
+    public void initModels() {
+        NonNullList<ItemStack> items = NonNullList.create();
+        this.getSubBlocks(CreativeTabs.SEARCH, items);
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_brewing", "inventory"));
+        }
+    }
+
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -57,15 +66,6 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
         return TileBarrelBrewing.class;
-    }
-
-    public void initModels() {
-        NonNullList<ItemStack> items = NonNullList.create();
-        this.getSubBlocks(CreativeTabs.SEARCH, items);
-        for (int i = 0; i < items.size(); i++) {
-            ItemStack item = items.get(i);
-            ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_brewing", "inventory"));
-        }
     }
 
     @Override
