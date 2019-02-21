@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.compat.theoneprobe;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;

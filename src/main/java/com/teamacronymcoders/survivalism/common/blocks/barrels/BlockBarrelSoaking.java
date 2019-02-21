@@ -2,7 +2,6 @@ package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;

@@ -14,6 +14,15 @@ import java.util.List;
 public class TheOneProbeModule extends ModuleBase {
     private static boolean registered;
 
+    private static void register() {
+        if (registered) {
+            return;
+        }
+
+        registered = true;
+        FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.teamacronymcoders.survivalism.compat.theoneprobe.TOPHandler");
+    }
+
     @Override
     public List<IDependency> getDependencies(List<IDependency> dependencies) {
         dependencies.add(new ModDependency("theoneprobe"));
@@ -23,15 +32,6 @@ public class TheOneProbeModule extends ModuleBase {
     @Override
     public String getName() {
         return "TheOneProbe";
-    }
-
-    private static void register() {
-        if (registered) {
-            return;
-        }
-
-        registered = true;
-        FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.teamacronymcoders.survivalism.compat.theoneprobe.TOPHandler");
     }
 
     @Override

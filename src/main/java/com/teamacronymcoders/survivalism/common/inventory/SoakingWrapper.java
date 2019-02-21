@@ -2,7 +2,6 @@ package com.teamacronymcoders.survivalism.common.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +9,7 @@ public class SoakingWrapper implements IItemHandler {
 
     UpdatingItemStackHandler handler;
 
-    public SoakingWrapper (UpdatingItemStackHandler handler) {
+    public SoakingWrapper(UpdatingItemStackHandler handler) {
         this.handler = handler;
     }
 

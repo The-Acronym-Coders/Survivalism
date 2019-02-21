@@ -8,7 +8,6 @@ import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.NumberFormat;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

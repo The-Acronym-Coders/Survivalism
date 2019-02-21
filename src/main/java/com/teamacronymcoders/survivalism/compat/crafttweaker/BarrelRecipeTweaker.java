@@ -5,7 +5,6 @@ import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManage
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
