@@ -10,7 +10,9 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
+
 version = "${mc_version}-" + getVersion()
+
 group = modGroup
 archivesBaseName = modBaseGroup
 
@@ -105,6 +107,7 @@ processResources {
 
 String getVersion() {
     String version = "${modVersion}"
+
     String branch = project.hasProperty("branch") ? project.branch : ""
 
     if(branch != "") {
