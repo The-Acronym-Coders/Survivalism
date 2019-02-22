@@ -179,12 +179,12 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
 
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new GUIBarrelBrewing(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
+        return new GUIBarrelBrewing(this, getContainer(entityPlayer, world, blockPos));
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new ContainerBarrelBrewing(entityPlayer.inventory, this)).orElse(null);
+        return new ContainerBarrelBrewing(entityPlayer.inventory, this);
     }
 
     public boolean onBlockActivated(EntityPlayer player) {

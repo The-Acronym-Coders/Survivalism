@@ -1,5 +1,9 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
+import com.teamacronymcoders.base.guisystem.IHasGui;
+import com.teamacronymcoders.survivalism.client.container.ContainerVat;
+import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
+import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
@@ -8,7 +12,10 @@ import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -29,7 +36,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
+public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInventory {
 
     public VatRecipe curRecipe;
     public double jumps = 0.0D;
@@ -188,5 +195,15 @@ public class TileCrushingVat extends TileEntity implements IUpdatingInventory {
 
     public FluidTank getTank() {
         return tank;
+    }
+
+    @Override
+    public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
+        return new GUICrushingVat(this, getContainer(entityPlayer, world, blockPos));
+    }
+
+    @Override
+    public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
+        return new ContainerVat(entityPlayer.inventory, this);
     }
 }
