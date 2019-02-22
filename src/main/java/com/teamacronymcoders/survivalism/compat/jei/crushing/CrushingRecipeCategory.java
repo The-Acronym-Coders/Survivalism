@@ -75,13 +75,13 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
             recipeLayout.getItemStacks().set(1, stack);
         }
 
-        // Adds Crushing Modifiers
-        recipeLayout.getItemStacks().init(2, false, 53, 55);
-        List<ItemStack> multiplierStacks = new ArrayList<>();
-        for (Map.Entry<Ingredient, Double> values : doubleMap.entrySet()) {
-            Ingredient ingredient = values.getKey();
-            multiplierStacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
-        }
-        recipeLayout.getItemStacks().set(2, multiplierStacks);
+//        // Adds Crushing Modifiers
+//        recipeLayout.getItemStacks().init(2, false, 53, 55);
+//        List<ItemStack> multiplierStacks = new ArrayList<>();
+//        for (Map.Entry<Ingredient, Double> values : doubleMap.entrySet()) {
+//            Ingredient ingredient = values.getKey();
+//            multiplierStacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
+//        }
+//        recipeLayout.getItemStacks().set(2, multiplierStacks);
     }
 }
