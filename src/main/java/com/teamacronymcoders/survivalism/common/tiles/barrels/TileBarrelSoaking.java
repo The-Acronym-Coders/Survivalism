@@ -26,6 +26,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -164,6 +166,7 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
         return new GUIBarrelSoaking(this, getContainer(entityPlayer, world, blockPos));
     }
