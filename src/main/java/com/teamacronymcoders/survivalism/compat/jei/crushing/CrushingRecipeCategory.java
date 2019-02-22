@@ -9,6 +9,7 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,8 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
     private final String localized;
     private final String localizedOutputError;
     private final IDrawable background;
+
+    static int recipeWidth;
 
     private final Object2DoubleMap<Ingredient> doubleMap = VatRecipeManager.getBOOTS();
 
@@ -58,6 +61,8 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, CrushingRecipeWrapper recipeWrapper, IIngredients ingredients) {
+//        Minecraft minecraft = Minecraft.getMinecraft();
+
         // Init Slots
         recipeLayout.getItemStacks().init(0, true, 17, 27);
         recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
@@ -83,5 +88,9 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
 //            multiplierStacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
 //        }
 //        recipeLayout.getItemStacks().set(2, multiplierStacks);
+//
+//        String input = ;
+//        int xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;;
+//        minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);
     }
 }

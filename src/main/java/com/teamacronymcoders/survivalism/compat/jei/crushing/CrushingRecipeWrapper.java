@@ -35,6 +35,8 @@ public class CrushingRecipeWrapper implements IRecipeWrapper {
         String input;
         int xPos;
 
+        CrushingRecipeCategory.recipeWidth = recipeWidth;
+
         // Render Output Marker
         input = "->";
         xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
