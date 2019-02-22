@@ -58,7 +58,7 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
     protected void processRaining() {
         World world = getWorld();
         if (!isSealed()) {
-            if (world.isRaining() && world.canBlockSeeSky(getPos())) {
+            if (world.isRaining() && world.canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
                 input.fillInternal(moarWater.copy(), true);
             }
         }
