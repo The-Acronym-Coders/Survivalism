@@ -165,12 +165,12 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
 
     @Override
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new GUIBarrelSoaking(this, getContainer(entityPlayer, world, blockPos))).orElse(null);
+        return new GUIBarrelSoaking(this, getContainer(entityPlayer, world, blockPos));
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return Optional.of(new ContainerBarrelSoaking(entityPlayer.inventory, this)).orElse(null);
+        return new ContainerBarrelSoaking(entityPlayer.inventory, this);
     }
 
     public boolean onBlockActivated(EntityPlayer player) {

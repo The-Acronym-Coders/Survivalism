@@ -114,7 +114,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
             }
         }
 
-        player.openGui(Survivalism.INSTANCE, GUI_ID, world, pos.getX(), pos.getY(), pos.getZ());
+        vat.onBlockActivated(player);
         return true;
     }
 

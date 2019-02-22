@@ -87,22 +87,18 @@ public class ContainerVat extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        //TODO change this to check if the slot is enabled / disabled
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
-
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-
-            if (index < 2) {
-                if (!this.mergeItemStack(itemstack1, 2, this.inventorySlots.size(), true)) {
+            if (index == 0) {
+                if (!this.mergeItemStack(itemstack1, 0, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, 2, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, 0, false)) {
                 return ItemStack.EMPTY;
             }
-
             if (itemstack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
