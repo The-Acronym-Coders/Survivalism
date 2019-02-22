@@ -1,6 +1,8 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
+import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
+import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.ContainerVat;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
 import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
@@ -205,5 +207,10 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
         return new ContainerVat(entityPlayer.inventory, this);
+    }
+
+    public boolean onBlockActivated(EntityPlayer player) {
+        GuiOpener.openTileEntityGui(Survivalism.INSTANCE, player, this.getWorld(), this.getPos());
+        return true;
     }
 }
