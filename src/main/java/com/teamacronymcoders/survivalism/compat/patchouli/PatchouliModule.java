@@ -32,8 +32,8 @@ public class PatchouliModule extends ModuleBase {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         ResourceLocation brewing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
-        ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
-        ResourceLocation soaking = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
+        ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "templates/crushing.json");
+        ResourceLocation soaking = new ResourceLocation(Survivalism.MODID, "templates/soaking.json");
 
         Supplier<InputStream> brewSupplier = () -> {
             try {
