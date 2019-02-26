@@ -1,6 +1,8 @@
 package com.teamacronymcoders.survivalism;
 
+import com.teamacronymcoders.base.Base;
 import com.teamacronymcoders.base.BaseModFoundation;
+import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
@@ -10,6 +12,9 @@ import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoakin
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
+import com.teamacronymcoders.survivalism.utils.commands.CommandBrewing;
+import com.teamacronymcoders.survivalism.utils.commands.CommandCrushing;
+import com.teamacronymcoders.survivalism.utils.commands.CommandSoaking;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
@@ -20,6 +25,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.server.command.CommandTreeBase;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
@@ -42,6 +49,9 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     public static CommonProxy proxy;
     public static Logger logger;
+
+    private CommandTreeBase baseCommand = new CommandSubBase(MODID);
+    private final static CommandSubBase dumps = new CommandSubBase("dumps");
 
     static {
         FluidRegistry.enableUniversalBucket();
@@ -93,8 +103,25 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         }
     }
 
+    @Mod.EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+        setup();
+        event.registerServerCommand(this.getBaseCommand());
+    }
+
     @Override
     public Survivalism getInstance() {
         return this;
+    }
+
+    private CommandTreeBase getBaseCommand() {
+        return baseCommand;
+    }
+
+    private static void setup() {
+        Survivalism.INSTANCE.getBaseCommand().addSubcommand(dumps);
+        dumps.addSubcommand(new CommandBrewing());
+        dumps.addSubcommand(new CommandCrushing());
+        dumps.addSubcommand(new CommandSoaking());
     }
 }
