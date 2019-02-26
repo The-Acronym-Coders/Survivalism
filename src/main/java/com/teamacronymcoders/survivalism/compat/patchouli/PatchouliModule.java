@@ -6,6 +6,7 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class PatchouliModule extends ModuleBase {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) {
         ResourceLocation brewing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
         ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
         ResourceLocation soaking = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
@@ -57,4 +58,5 @@ public class PatchouliModule extends ModuleBase {
         PatchouliAPI.instance.registerTemplateAsBuiltin(new ResourceLocation(Survivalism.MODID, "crushing"), crushSupplier);
         PatchouliAPI.instance.registerTemplateAsBuiltin(new ResourceLocation(Survivalism.MODID, "soaking"), soakSupplier);
     }
+
 }
