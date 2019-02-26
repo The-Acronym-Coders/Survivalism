@@ -22,9 +22,9 @@ public class PatchouliModule extends ModuleBase {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        ResourceLocation brewing = new ResourceLocation(Survivalism.MODID, "patchouli_books/survivalism/en_us/templates/brewing.json");
-        ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "patchouli_books/survivalism/en_us/templates/brewing.json");
-        ResourceLocation soaking = new ResourceLocation(Survivalism.MODID, "patchouli_books/survivalism/en_us/templates/brewing.json");
+        ResourceLocation brewing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
+        ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
+        ResourceLocation soaking = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
 
         Supplier<InputStream> brewSupplier = () -> {
             try {
