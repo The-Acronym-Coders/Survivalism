@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.patchouli.componentProcessors;
+package com.teamacronymcoders.survivalism.compat.patchouli;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
@@ -26,7 +26,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
     @Override
     public void setup(IVariableProvider<String> iVariableProvider) {
         ResourceLocation id = new ResourceLocation(iVariableProvider.get("recipeID"));
-        BarrelRecipeManager.getBrewingRecipe(id);
+        recipe = BarrelRecipeManager.getBrewingRecipe(id);
     }
 
     private void initRecipeVars() {
