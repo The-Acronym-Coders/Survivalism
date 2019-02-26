@@ -82,7 +82,7 @@ dependencies {
     deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
 
     // Addon Support
-    deobfCompile "patchouli:Patchouli:1.0:13"
+    deobfCompile "vazkii.patchouli:Patchouli:1.0-18.91"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.14-7"
 }
 
