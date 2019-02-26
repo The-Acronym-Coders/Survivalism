@@ -7,6 +7,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -38,5 +39,6 @@ public class CommandCrushing extends CommandBase {
             logger.info(recipe.getID().toString());
         }
         logger.info("#####################");
+        sender.sendMessage(new TextComponentString("Crushing ID's has been dumped to Log"));
     }
 }

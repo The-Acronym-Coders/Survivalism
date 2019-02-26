@@ -119,7 +119,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     }
 
     private static void setup() {
-        Base.instance.getBaseCommand().addSubcommand(dumps);
+        Survivalism.INSTANCE.getBaseCommand().addSubcommand(dumps);
         dumps.addSubcommand(new CommandBrewing());
         dumps.addSubcommand(new CommandCrushing());
         dumps.addSubcommand(new CommandSoaking());
