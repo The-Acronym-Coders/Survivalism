@@ -8,6 +8,8 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.io.IOException;
@@ -30,6 +32,7 @@ public class PatchouliModule extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void preInit(FMLPreInitializationEvent event) {
         ResourceLocation brewing = new ResourceLocation(Survivalism.MODID, "templates/brewing.json");
         ResourceLocation crushing = new ResourceLocation(Survivalism.MODID, "templates/crushing.json");
