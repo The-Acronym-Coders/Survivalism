@@ -1,0 +1,90 @@
+ {
+ 	"processor": "com.teamacronymcoders.survivalism.compat.patchouli.ProcessorSoakingRecipe",
+ 	"components": [
+ 		{
+ 			"type": "header",
+ 			"text": "#name",
+			"x": -1,
+			"y": -1
+ 		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 12
+		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 35
+		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 95
+		},
+ 		{
+ 			"type": "item",
+ 			"item": "#inputFluid",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 50,
+ 			"y": 50
+ 		},
+		{
+			"type": "text",
+			"text": "#amountI",
+			"x": 50,
+			"y": 70
+		},
+		{
+			"type": "text",
+			"text": "+",
+			"x": 37,
+ 			"y": 53
+		},
+ 		{
+ 			"type": "item",
+ 			"item": "#ingredient",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 10,
+ 			"y": 50
+ 		},
+ 		{
+ 			"type": "text",
+ 			"text": "=",
+ 			"x": 77,
+ 			"y": 53
+ 		},
+ 		{
+ 			"type": "item",
+ 			"item": "#itemstack",
+ 			"framed": "true",
+ 			"x": 90,
+ 			"y": 50
+ 		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 80
+		},
+		{
+			"type": "text",
+			"text": "#decreaseChance",
+			"x": 20,
+			"y": 84
+		},
+		{
+			"type": "text",
+			"text": "#time",
+			"x": 45,
+			"y": 17
+		},
+		{
+			"type": "text",
+			"text": "hh:mm:ss",
+			"x": 45,
+			"y": 24
+		}
+ 	]
+ }

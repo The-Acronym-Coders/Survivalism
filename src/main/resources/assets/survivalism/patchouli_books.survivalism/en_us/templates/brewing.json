@@ -1,0 +1,91 @@
+ {
+ 	"processor": "com.teamacronymcoders.survivalism.compat.patchouli.ProcessorBrewingRecipe",
+ 	"components": [
+ 		{
+ 			"type": "header",
+ 			"text": "#name",
+			"x": -1,
+			"y": -1
+ 		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 12
+		},
+ 		{
+ 			"type": "item",
+ 			"item": "#inputFluid",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 10,
+ 			"y": 50
+ 		},
+		{
+			"type": "text",
+			"text": "#amountI",
+			"x": 10,
+			"y": 70
+		},
+ 		{
+ 			"type": "item",
+ 			"item": "#ingredient0",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 50,
+ 			"y": 30
+ 		},
+ 		{
+ 			"type": "item",
+ 			"item": "#ingredient1",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 50,
+ 			"y": 50
+ 		},
+ 		{
+ 			"type": "item",
+ 			"item": "#ingredient2",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 50,
+ 			"y": 70
+ 		},
+ 		{
+ 			"type": "item",
+ 			"item": "#outputFluid",
+ 			"framed": "true",
+ 			"link_recipe": "true",
+ 			"x": 90,
+ 			"y": 50
+ 		},
+		{
+			"type": "text",
+			"text": "#amountO",
+			"x": 90,
+			"y": 70
+		},
+		{
+			"type": "separator",
+			"x": 0,
+			"y": 100
+		},
+ 		{
+ 			"type": "text",
+ 			"text": "#time_label",
+ 			"x": 50,
+ 			"y": 110
+ 		},
+		{
+			"type": "text",
+			"text": "#time",
+			"x": 45,
+			"y": 120
+		},
+		{
+			"type": "text",
+			"text": "hh:mm:ss",
+			"x": 45,
+			"y": 130
+		}
+ 	]
+ }

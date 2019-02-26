@@ -1,13 +1,13 @@
-package com.teamacronymcoders.survivalism.compat.patchouli.componentProcessors;
+package com.teamacronymcoders.survivalism.compat.patchouli;
 
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
-import net.minecraft.init.Items;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.FluidUtil;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -17,7 +17,6 @@ public class ProcessorCrushingRecipe implements IComponentProcessor {
     private Ingredient ingredient;
     private ItemStack fluid;
     private ItemStack output;
-
     private VatRecipe recipe;
 
     @Override
@@ -28,28 +27,39 @@ public class ProcessorCrushingRecipe implements IComponentProcessor {
 
     private void initRecipeVars() {
         ingredient = recipe.getInput();
-        fluid = new ItemStack(Items.BUCKET, 1);
-        fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).fill(new FluidStack(recipe.getOutput().getFluid(), 1000), true);
-        output = recipe.getOutputStack();
+        fluid = FluidUtil.getFilledBucket(recipe.getOutput());
+        if (recipe.getOutputStack() != ItemStack.EMPTY || recipe.getOutputStack() != null) {
+            output = recipe.getOutputStack();
+        } else {
+            ItemStack stack = new ItemStack(Blocks.BARRIER);
+            stack.setStackDisplayName("No Output");
+            output = stack;
+        }
     }
 
     @Override
     public String process(String s) {
         initRecipeVars();
         switch (s) {
+            case "name":
+                return recipe.getOutput().getLocalizedName();
             case "input":
                 return PatchouliAPI.instance.serializeIngredient(ingredient);
             case "fluid":
                 return PatchouliAPI.instance.serializeItemStack(fluid);
             case "output":
                 return PatchouliAPI.instance.serializeItemStack(output);
+            case "amount":
+                return recipe.getOutput().amount + "mb";
             case "chance":
-                if (recipe.getItemChance() <= 0 || recipe.getItemChance() >= 1) {
-                    return "100%";
+                if (recipe.getOutputStack() != ItemStack.EMPTY) {
+                    if (recipe.getItemChance() <= 0 || recipe.getItemChance() >= 1) {
+                        return "100%";
+                    }
+                    return recipe.getItemChance() * 100 + "%";
                 }
-                return recipe.getItemChance() * 100 + "%";
             case "jumps":
-                return String.valueOf(recipe.getJumps());
+                return "Jumps: " + recipe.getJumps();
         }
         return null;
     }
