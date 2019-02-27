@@ -77,13 +77,16 @@ dependencies {
     deobfCompile "com.teamacronymcoders.base:base:${mc_version}-${base_version}-SNAPSHOT.+"
 
     // Ease-of-Use Tools:
-    deobfCompile "mezz.jei:jei_1.12.2:4.14.4.264"
-    deobfCompile "mcp.mobius.waila:Hwyla:1.8.21-B36_1.12"
-    deobfCompile "com.azanor.baubles:Baubles:1.12-1.5.2"
+    deobfCompile "mezz.jei:jei_1.12.2:${jei_version}"
+    deobfCompile "mcp.mobius.waila:Hwyla:${hwyla_version}"
+    deobfCompile "com.azanor.baubles:Baubles:${baubles_version}"
 
     // Addon Support
-    deobfCompile "vazkii.patchouli:Patchouli:1.0-18.91"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.14-7"
+    deobfCompile "vazkii.patchouli:Patchouli:${patchouli_version}"
+    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
 }
 
 processResources {
