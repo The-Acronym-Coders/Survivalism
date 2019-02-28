@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 
 public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHasGui {
 
-    protected FluidTank input = new FluidTank(32000);
+    protected FluidTank input = new FluidTank(SurvivalismConfigs.storageTankSize);
     protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
     private FluidStack moarWater = FluidRegistry.getFluidStack("water", SurvivalismConfigs.rainFillRate);
 

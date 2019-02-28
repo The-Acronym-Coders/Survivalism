@@ -38,7 +38,7 @@ import java.util.Optional;
 public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHasGui {
 
     protected int ticks = 0;
-    protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+    protected FluidTank input = new FluidTank(SurvivalismConfigs.soakingTankSize);
     protected SoakingRecipe recipe;
     protected UpdatingItemStackHandler inv = new UpdatingItemStackHandler(2, this);
     protected SoakingWrapper wrapper = new SoakingWrapper(inv);

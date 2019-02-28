@@ -39,8 +39,8 @@ import java.util.Optional;
 public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHasGui, IUpdatingInventory {
 
     protected int ticks = 0;
-    protected FluidTank input = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
-    protected FluidTank output = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+    protected FluidTank input = new FluidTank(SurvivalismConfigs.brewingInputSize);
+    protected FluidTank output = new FluidTank(SurvivalismConfigs.brewingOutputSize);
     protected BrewingRecipe recipe;
     private RangedFluidWrapper wrapper = new RangedFluidWrapper(getInput(), getOutput());
     private ItemStackHandler inv = new UpdatingItemStackHandler(3, this);

@@ -13,6 +13,11 @@ public class SurvivalismConfigs {
     public static int rainFillRate;
     public static boolean canBarrelsFillInRain;
 
+    public static int brewingInputSize;
+    public static int brewingOutputSize;
+    public static int soakingTankSize;
+    public static int storageTankSize;
+
     private static ConfigRegistry configRegistry = Survivalism.INSTANCE.getRegistry(ConfigRegistry.class, "CONFIG");
 
     public static void preInitLoad(FMLPreInitializationEvent event) {
@@ -27,11 +32,20 @@ public class SurvivalismConfigs {
         ConfigEntry timeOrTicks = new ConfigEntry("jei", "TimeOrTicks", Property.Type.BOOLEAN, "false", "Set to true if it should display time in HH:MM:SS instead of Ticks?");
         ConfigEntry rainFillRate = new ConfigEntry("barrel_general", "rainFillRate", Property.Type.INTEGER, "5", "The rate per tick which the barrel fills with water if it's raining and the barrel is left un-sealed to an open sky", false);
         ConfigEntry canBarrelsFillInRain = new ConfigEntry("barrel_general", "canBarrelsFillInRain", Property.Type.BOOLEAN, "true", "Decides if the barrel should fill if it's raining and left open to the sky", false);
+        ConfigEntry brewingInputSize = new ConfigEntry("brewing_barrel", "brewingInputSize", Property.Type.INTEGER, "16000", "Brewing Input Tank Size", false);
+        ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
+        ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
+        ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
+
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
         configRegistry.addEntry(timeOrTicks);
         configRegistry.addEntry(rainFillRate);
         configRegistry.addEntry(canBarrelsFillInRain);
+        configRegistry.addEntry(brewingInputSize);
+        configRegistry.addEntry(brewingOutputSize);
+        configRegistry.addEntry(soakingTankSize);
+        configRegistry.addEntry(storageTankSize);
     }
 
     private static void getValues() {
@@ -40,5 +54,9 @@ public class SurvivalismConfigs {
         timeOrTicks = configRegistry.getBoolean("timeOrTicks", false);
         rainFillRate = configRegistry.getInt("rainFillRate", 5);
         canBarrelsFillInRain = configRegistry.getBoolean("canBarrelsFillInRain", true);
+        brewingInputSize = configRegistry.getInt("brewingInputSize", 16000);
+        brewingOutputSize = configRegistry.getInt("brewingOutputSize", 16000);
+        soakingTankSize = configRegistry.getInt("soakingTankSize", 16000);
+        storageTankSize = configRegistry.getInt("storageTankSize", 32000);
     }
 }
