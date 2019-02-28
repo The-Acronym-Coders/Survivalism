@@ -1,12 +1,13 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateDryingRack;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.teamacronymcoders.survivalism.common.recipe.drying.modifiers.DryingModifierManager;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import net.minecraft.block.BlockAir;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -16,7 +17,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
@@ -33,6 +33,9 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
         processDrying();
     }
 
+    // TODO: Config Check & Check Below Block for Air Block
+    // TODO: Implement Biome Modifier for Drying Speed
+    // TODO: Implement Drying Modifier for the Block Below
     protected void processDrying() {
         ItemStack stack = handler.getStackInSlot(0);
         if (stack != ItemStack.EMPTY) {
@@ -44,23 +47,59 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
                 working = false;
                 return;
             }
-
-            if (getWorld().isRaining() && getWorld().canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-                ticks = 0;
-                working = false;
-            } else {
-                working = true;
-            }
-
-            if (ticks++ >= recipe.getTicks()) {
-                handler.setStackInSlot(0, recipe.getOutput());
-                ticks = 0;
-                working = false;
-                Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateDryingRack(this), getPos(), getWorld().provider.getDimension());
-            }
+            getTicksToApply();
+            doRainCheck();
+            doProcessHandling();
         } else {
             working = false;
         }
+    }
+
+    protected void getTicksToApply() {
+        if (SurvivalismConfigs.checkForEmptySpaceOrDryingBlock) {
+            BlockPos checkPos = getPos().down();
+            double block_modifier = DryingModifierManager.getModifier(world.getBlockState(checkPos));
+            double biome_modifier = DryingModifierManager.getModifier(world.getBiome(checkPos));
+            Double ticksToAdd = (1d * block_modifier) * biome_modifier;
+            ticks += ticksToAdd.intValue();
+        } else {
+            ticks++;
+        }
+    }
+
+    protected void doRainCheck() {
+        if (getWorld().isRaining() && getWorld().canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
+            ticks = 0;
+            working = false;
+        } else {
+            working = true;
+        }
+    }
+
+    protected void doProcessHandling() {
+        if (ticks >= recipe.getTicks()) {
+            handler.setStackInSlot(0, recipe.getOutput());
+            ticks = 0;
+            working = false;
+            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 8);
+        }
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        this.writeToNBT(nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        this.readFromNBT(packet.getNbtCompound());
     }
 
     @Override

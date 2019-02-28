@@ -1,17 +1,13 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.render.DryingRackTESR;
-import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.TileDryingRack;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateDryingRack;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -80,7 +76,7 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
                         currentStack.setCount(1);
                         te.setStack(currentStack);
                         playerIn.openContainer.detectAndSendChanges();
-                        Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateDryingRack(te), pos, worldIn.provider.getDimension());
+                        worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     }
                 } else {
                     ItemStack stack = te.getStack();
@@ -88,10 +84,10 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
                     if (!playerIn.inventory.addItemStackToInventory(stack)) {
                         EntityItem entityItem = new EntityItem(worldIn, pos.getX(), pos.getY()+1, pos.getZ(), stack);
                         worldIn.spawnEntity(entityItem);
-                        Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateDryingRack(te), pos, worldIn.provider.getDimension());
+                        worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     } else {
                         playerIn.openContainer.detectAndSendChanges();
-                        Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateDryingRack(te), pos, worldIn.provider.getDimension());
+                        worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     }
                 }
             }
