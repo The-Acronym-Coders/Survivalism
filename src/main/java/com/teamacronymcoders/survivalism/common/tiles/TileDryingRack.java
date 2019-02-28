@@ -1,9 +1,12 @@
 package com.teamacronymcoders.survivalism.common.tiles;
 
+import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
+import com.teamacronymcoders.survivalism.utils.network.MessageUpdateDryingRack;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -11,7 +14,9 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
@@ -33,8 +38,10 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
         if (stack != ItemStack.EMPTY) {
             if (recipe == null || !recipe.matches(this)) {
                 recipe = DryingRackRecipeManager.getDryingRecipe(this);
+                working = true;
             }
             if (recipe == null) {
+                working = false;
                 return;
             }
 
@@ -48,28 +55,12 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
             if (ticks++ >= recipe.getTicks()) {
                 handler.setStackInSlot(0, recipe.getOutput());
                 ticks = 0;
+                working = false;
+                Survivalism.INSTANCE.getPacketHandler().sendToAllAround(new MessageUpdateDryingRack(this), getPos(), getWorld().provider.getDimension());
             }
         } else {
             working = false;
         }
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        this.readFromNBT(pkt.getNbtCompound());
     }
 
     @Override
