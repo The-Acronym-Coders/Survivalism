@@ -7,6 +7,7 @@ import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
 import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
+import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
@@ -81,6 +82,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         registry.register(new BlockBarrelSoaking());
         registry.register(new BlockBarrelStorage());
         registry.register(new BlockCrushingVat());
+        registry.register(new BlockDryingRack());
     }
 
     @Override
@@ -92,15 +94,15 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         proxy.init(event);
+        if (Loader.isModLoaded("crafttweaker")) {
+            LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);
+        }
     }
 
     @Override
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        if (Loader.isModLoaded("crafttweaker")) {
-            LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);
-        }
     }
 
     @Mod.EventHandler
