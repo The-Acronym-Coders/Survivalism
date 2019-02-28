@@ -118,7 +118,6 @@ public class BarrelRecipeTweaker {
 
         @Override
         public void apply() {
-            //TODO: Error checking
             BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItem, output, fluidUseChance, ticks));
         }
 

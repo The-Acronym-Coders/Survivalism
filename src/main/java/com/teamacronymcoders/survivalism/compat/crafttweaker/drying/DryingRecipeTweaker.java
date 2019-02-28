@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.crafttweaker;
+package com.teamacronymcoders.survivalism.compat.crafttweaker.drying;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;

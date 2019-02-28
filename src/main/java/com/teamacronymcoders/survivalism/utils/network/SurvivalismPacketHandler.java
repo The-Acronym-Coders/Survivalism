@@ -18,6 +18,5 @@ public class SurvivalismPacketHandler {
         Survivalism.INSTANCE.getPacketHandler().registerPacket(MessageBarrelButton.class, MessageBarrelButton.class, Side.SERVER);
         Survivalism.INSTANCE.getPacketHandler().registerPacket(MessageUpdateCrushingVat.class, MessageUpdateCrushingVat.class, Side.CLIENT);
         Survivalism.INSTANCE.getPacketHandler().registerPacket(MessageUpdateBarrel.class, MessageUpdateBarrel.class, Side.CLIENT);
-        Survivalism.INSTANCE.getPacketHandler().registerPacket(MessageUpdateDryingRack.class, MessageUpdateDryingRack.class, Side.CLIENT);
     }
 }
