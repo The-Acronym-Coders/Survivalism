@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "survivalism:chunky_drying_rack"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}
