@@ -84,9 +84,9 @@ dependencies {
     // Addon Support
     deobfCompile "vazkii.patchouli:Patchouli:${patchouli_version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
-    //deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
-    //deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
-    //deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
+    deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
 }
 
 processResources {
