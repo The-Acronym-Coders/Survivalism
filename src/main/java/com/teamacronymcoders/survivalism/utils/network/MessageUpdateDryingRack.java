@@ -26,14 +26,14 @@ public class MessageUpdateDryingRack implements IMessage, IMessageHandler<Messag
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        buf.writeLong(pos.toLong());
-        ByteBufUtils.writeItemStack(buf, stack);
+        pos = BlockPos.fromLong(buf.readLong());
+        stack = ByteBufUtils.readItemStack(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.readLong();
-        ByteBufUtils.readItemStack(buf);
+        buf.writeLong(pos.toLong());
+        ByteBufUtils.writeItemStack(buf, stack);
     }
 
     @Override

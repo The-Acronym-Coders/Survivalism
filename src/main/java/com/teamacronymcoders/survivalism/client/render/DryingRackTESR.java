@@ -30,8 +30,9 @@ public class DryingRackTESR extends TileEntitySpecialRenderer<TileDryingRack> {
             GlStateManager.enableLighting();
             GlStateManager.pushMatrix();
 
-            GlStateManager.translate(.5, .3, .5);
-            GlStateManager.scale(.4f, .4f, .4f);
+            GlStateManager.translate(.5, .145, .5);
+            GlStateManager.scale(.6f, .6f, .6f);
+            GlStateManager.rotate(270, 1f, 0f, 0f);
 
             Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 
