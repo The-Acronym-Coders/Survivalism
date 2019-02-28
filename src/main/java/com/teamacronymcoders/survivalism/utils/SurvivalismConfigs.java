@@ -7,16 +7,31 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class SurvivalismConfigs {
+    //Crafttweaker
     public static boolean crtVerboseLogging;
-    public static double baseJumpValue;
+
+    //JEI
     public static boolean timeOrTicks;
+
+    // General Barrels
     public static int rainFillRate;
     public static boolean canBarrelsFillInRain;
 
+    // Brewing
     public static int brewingInputSize;
     public static int brewingOutputSize;
+
+    // Soaking
     public static int soakingTankSize;
+
+    // Storage
     public static int storageTankSize;
+
+    // Crushing Vat
+    public static double baseJumpValue;
+
+    // Drying Rack
+    public static boolean checkForEmptySpaceOrDryingBlock;
 
     private static ConfigRegistry configRegistry = Survivalism.INSTANCE.getRegistry(ConfigRegistry.class, "CONFIG");
 
@@ -36,6 +51,7 @@ public class SurvivalismConfigs {
         ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
         ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
         ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
+        ConfigEntry checkForEmptySpaceOrDryingBlock = new ConfigEntry("checkForEmptySpaceOrDryingBlock", "checkForEmptySpaceOrDryingBlock", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -46,6 +62,7 @@ public class SurvivalismConfigs {
         configRegistry.addEntry(brewingOutputSize);
         configRegistry.addEntry(soakingTankSize);
         configRegistry.addEntry(storageTankSize);
+        configRegistry.addEntry(checkForEmptySpaceOrDryingBlock);
     }
 
     private static void getValues() {
@@ -58,5 +75,6 @@ public class SurvivalismConfigs {
         brewingOutputSize = configRegistry.getInt("brewingOutputSize", 16000);
         soakingTankSize = configRegistry.getInt("soakingTankSize", 16000);
         storageTankSize = configRegistry.getInt("storageTankSize", 32000);
+        checkForEmptySpaceOrDryingBlock = configRegistry.getBoolean("checkForEmptySpaceOrDryingBlock", true);
     }
 }
