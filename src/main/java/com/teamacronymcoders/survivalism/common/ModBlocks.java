@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.common;
 
 import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
+import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
@@ -29,6 +30,9 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder("survivalism:crushing_vat")
     public static BlockCrushingVat blockCrushingVat;
 
+    @GameRegistry.ObjectHolder("survivalism:drying_rack")
+    public static BlockDryingRack blockDryingRack;
+
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -36,6 +40,7 @@ public class ModBlocks {
         brewing.initModels();
         soaking.initModels();
         storage.initModels();
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockCrushingVat), 0, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
+        blockCrushingVat.initModel();
+        blockDryingRack.initModel();
     }
 }
