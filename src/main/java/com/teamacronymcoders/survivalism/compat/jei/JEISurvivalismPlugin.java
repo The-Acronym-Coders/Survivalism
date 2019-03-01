@@ -4,8 +4,8 @@ import com.teamacronymcoders.survivalism.common.ModBlocks;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeCategory;
 import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeWrapper;
 import com.teamacronymcoders.survivalism.compat.jei.crushing.CrushingRecipeCategory;
@@ -50,12 +50,12 @@ public class JEISurvivalismPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.soaking), SoakingRecipeCategory.NAME);
 
         // Crushing
-        registry.addRecipes(VatRecipeManager.getRecipes(), CrushingRecipeCategory.NAME);
-        registry.handleRecipes(VatRecipe.class, CrushingRecipeWrapper::new, CrushingRecipeCategory.NAME);
+        registry.addRecipes(CrushingRecipeManager.getRecipes(), CrushingRecipeCategory.NAME);
+        registry.handleRecipes(CrushingRecipe.class, CrushingRecipeWrapper::new, CrushingRecipeCategory.NAME);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockCrushingVat), CrushingRecipeCategory.NAME);
 
         // Multiplier Value
-        registry.addRecipes(VatRecipeManager.getBOOTS().object2DoubleEntrySet(), MultiplierValueCategory.NAME);
+        registry.addRecipes(CrushingRecipeManager.getBOOTS().object2DoubleEntrySet(), MultiplierValueCategory.NAME);
         registry.handleRecipes(Object2DoubleMap.Entry.class, MultiplierValueWrapper::new, MultiplierValueCategory.NAME);
         registry.addRecipeCatalyst(new ItemStack(Items.LEATHER_BOOTS), MultiplierValueCategory.NAME);
     }

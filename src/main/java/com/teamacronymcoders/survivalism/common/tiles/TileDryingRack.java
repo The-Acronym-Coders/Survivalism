@@ -6,8 +6,6 @@ import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeMa
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.drying.modifiers.DryingModifierManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import net.minecraft.block.BlockAir;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -56,7 +54,7 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
     }
 
     protected void getTicksToApply() {
-        if (SurvivalismConfigs.checkForEmptySpaceOrDryingBlock) {
+        if (SurvivalismConfigs.doesDryingRackHaveModifiers) {
             BlockPos checkPos = getPos().down();
             double block_modifier = DryingModifierManager.getModifier(world.getBlockState(checkPos));
             double biome_modifier = DryingModifierManager.getModifier(world.getBiome(checkPos));

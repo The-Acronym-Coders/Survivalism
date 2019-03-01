@@ -30,8 +30,13 @@ public class SurvivalismConfigs {
     // Crushing Vat
     public static double baseJumpValue;
 
+    // Mixing Vat
+    public static int mixingInputTankSize;
+    public static int mixingSecondaryTankSize;
+    public static int mixingOutputTankSize;
+
     // Drying Rack
-    public static boolean checkForEmptySpaceOrDryingBlock;
+    public static boolean doesDryingRackHaveModifiers;
 
     private static ConfigRegistry configRegistry = Survivalism.INSTANCE.getRegistry(ConfigRegistry.class, "CONFIG");
 
@@ -51,7 +56,10 @@ public class SurvivalismConfigs {
         ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
         ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
         ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
-        ConfigEntry checkForEmptySpaceOrDryingBlock = new ConfigEntry("checkForEmptySpaceOrDryingBlock", "checkForEmptySpaceOrDryingBlock", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
+        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("doesDryingRackHaveModifiers", "doesDryingRackHaveModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
+        ConfigEntry mixingInputTankSize = new ConfigEntry("mixing_vat", "mixingInputTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Input Tank Size", false);
+        ConfigEntry mixingSecondaryTankSize = new ConfigEntry("mixing_vat", "mixingSecondaryTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Secondary Tank Size", false);
+        ConfigEntry mixingOutputTankSize = new ConfigEntry("mixing_vat", "mixingOutputTankSize", Property.Type.INTEGER, "32000", "Mixing Vat Output Tank Size", false);
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -62,7 +70,10 @@ public class SurvivalismConfigs {
         configRegistry.addEntry(brewingOutputSize);
         configRegistry.addEntry(soakingTankSize);
         configRegistry.addEntry(storageTankSize);
-        configRegistry.addEntry(checkForEmptySpaceOrDryingBlock);
+        configRegistry.addEntry(doesDryingRackHaveModifiers);
+        configRegistry.addEntry(mixingInputTankSize);
+        configRegistry.addEntry(mixingSecondaryTankSize);
+        configRegistry.addEntry(mixingOutputTankSize);
     }
 
     private static void getValues() {
@@ -75,6 +86,9 @@ public class SurvivalismConfigs {
         brewingOutputSize = configRegistry.getInt("brewingOutputSize", 16000);
         soakingTankSize = configRegistry.getInt("soakingTankSize", 16000);
         storageTankSize = configRegistry.getInt("storageTankSize", 32000);
-        checkForEmptySpaceOrDryingBlock = configRegistry.getBoolean("checkForEmptySpaceOrDryingBlock", true);
+        doesDryingRackHaveModifiers = configRegistry.getBoolean("doesDryingRackHaveModifiers", true);
+        mixingInputTankSize = configRegistry.getInt("mixingInputTankSize", 16000);
+        mixingSecondaryTankSize = configRegistry.getInt("mixingSecondaryTankSize", 16000);
+        mixingOutputTankSize = configRegistry.getInt("mixingOutputTankSize", 32000);
     }
 }
