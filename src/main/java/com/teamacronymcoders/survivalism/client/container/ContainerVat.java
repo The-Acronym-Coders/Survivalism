@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.client.container;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.network.MessageUpdateCrushingVat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
