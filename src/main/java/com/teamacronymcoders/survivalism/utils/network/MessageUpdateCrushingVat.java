@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.utils.network;
 
 import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
-import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidRegistry;

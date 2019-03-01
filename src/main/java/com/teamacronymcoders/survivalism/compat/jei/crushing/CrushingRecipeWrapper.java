@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.compat.jei.crushing;
 
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CrushingRecipeWrapper implements IRecipeWrapper {
-    public final VatRecipe recipe;
+    public final CrushingRecipe recipe;
 
-    public CrushingRecipeWrapper(VatRecipe recipe) {
+    public CrushingRecipeWrapper(CrushingRecipe recipe) {
         this.recipe = recipe;
     }
 

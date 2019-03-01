@@ -1,8 +1,8 @@
 package com.teamacronymcoders.survivalism.compat.crafttweaker;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
@@ -53,8 +53,8 @@ public class VatRecipeTweaker {
         @Override
         public void apply() {
             ResourceLocation name = new ResourceLocation(CraftTweaker.MODID, this.name);
-            VatRecipe recipe = new VatRecipe(name, input, output, outputStack, itemChance, jumps);
-            VatRecipeManager.register(recipe);
+            CrushingRecipe recipe = new CrushingRecipe(name, input, output, outputStack, itemChance, jumps);
+            CrushingRecipeManager.register(recipe);
         }
 
         @Override
@@ -91,7 +91,7 @@ public class VatRecipeTweaker {
             if (boots == Ingredient.EMPTY) {
                 CraftTweakerAPI.logError("Cannot register boot multiplier for nothing.");
             }
-            VatRecipeManager.registerBoots(boots, multiplier);
+            CrushingRecipeManager.registerBoots(boots, multiplier);
         }
 
         @Override

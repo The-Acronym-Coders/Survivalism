@@ -1,8 +1,8 @@
 package com.teamacronymcoders.survivalism.utils.commands;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -34,8 +34,8 @@ public class CommandCrushing extends CommandBase {
         Logger logger = Survivalism.logger;
         logger.info("Crushing Recipe ID's: ");
         logger.info("#####################");
-        List<VatRecipe> recipes = VatRecipeManager.getRecipes();
-        for (VatRecipe recipe : recipes) {
+        List<CrushingRecipe> recipes = CrushingRecipeManager.getRecipes();
+        for (CrushingRecipe recipe : recipes) {
             logger.info(recipe.getID().toString());
         }
         logger.info("#####################");

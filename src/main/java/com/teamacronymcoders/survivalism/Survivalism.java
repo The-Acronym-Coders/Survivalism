@@ -1,12 +1,11 @@
 package com.teamacronymcoders.survivalism;
 
-import com.teamacronymcoders.base.Base;
 import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.base.registrysystem.BlockRegistry;
 import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
-import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
+import com.teamacronymcoders.survivalism.common.blocks.vats.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;

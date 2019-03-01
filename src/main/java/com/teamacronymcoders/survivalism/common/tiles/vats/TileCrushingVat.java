@@ -1,15 +1,14 @@
-package com.teamacronymcoders.survivalism.common.tiles;
+package com.teamacronymcoders.survivalism.common.tiles.vats;
 
 import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.ContainerVat;
-import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelSoaking;
 import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
@@ -42,7 +41,7 @@ import javax.annotation.Nullable;
 
 public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInventory {
 
-    public VatRecipe curRecipe;
+    public CrushingRecipe curRecipe;
     public double jumps = 0.0D;
     protected ItemStack failedMatch;
     protected FluidTank tank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
@@ -65,7 +64,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         }
 
         if ((curRecipe == null || !curRecipe.matches(jumper, inputInv.getStackInSlot(0))) && inputInv.getStackInSlot(0) != failedMatch) {
-            curRecipe = VatRecipeManager.getRecipe(jumper, inputInv.getStackInSlot(0));
+            curRecipe = CrushingRecipeManager.getRecipe(jumper, inputInv.getStackInSlot(0));
             if (curRecipe == null) {
                 failedMatch = inputInv.getStackInSlot(0);
                 return;
@@ -75,7 +74,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         } else if (curRecipe == null) {
             return;
         }
-        jumps += SurvivalismConfigs.baseJumpValue * VatRecipeManager.getBootsMultiplier(jumper);
+        jumps += SurvivalismConfigs.baseJumpValue * CrushingRecipeManager.getBootsMultiplier(jumper);
         if (jumps >= curRecipe.getJumps() && canInsertResults()) {
             if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
                 outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);

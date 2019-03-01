@@ -1,8 +1,8 @@
-package com.teamacronymcoders.survivalism.common.blocks;
+package com.teamacronymcoders.survivalism.common.blocks.vats;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.tiles.TileCrushingVat;
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -80,11 +80,6 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileCrushingVat();
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
     }
 
     @Override

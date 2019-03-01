@@ -1,8 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.patchouli;
 
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipe;
-import com.teamacronymcoders.survivalism.common.recipe.vat.VatRecipeManager;
-import net.minecraft.client.resources.I18n;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -17,12 +16,12 @@ public class ProcessorCrushingRecipe implements IComponentProcessor {
     private Ingredient ingredient;
     private ItemStack fluid;
     private ItemStack output;
-    private VatRecipe recipe;
+    private CrushingRecipe recipe;
 
     @Override
     public void setup(IVariableProvider<String> iVariableProvider) {
         ResourceLocation id = new ResourceLocation(iVariableProvider.get("recipeID"));
-        this.recipe = VatRecipeManager.getRecipeByID(id);
+        this.recipe = CrushingRecipeManager.getRecipeByID(id);
     }
 
     private void initRecipeVars() {

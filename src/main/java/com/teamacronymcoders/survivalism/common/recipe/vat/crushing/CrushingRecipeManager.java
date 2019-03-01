@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.common.recipe.vat;
+package com.teamacronymcoders.survivalism.common.recipe.vat.crushing;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VatRecipeManager {
+public class CrushingRecipeManager {
 
-    private static final Map<ResourceLocation, VatRecipe> RECIPES = new HashMap<>();
+    private static final Map<ResourceLocation, CrushingRecipe> RECIPES = new HashMap<>();
     private static final Object2DoubleMap<Ingredient> BOOTS = new Object2DoubleOpenHashMap<>();
 
     static {
@@ -29,15 +29,15 @@ public class VatRecipeManager {
         registerBoots(Items.DIAMOND_BOOTS, 3.0);
     }
 
-    public static List<VatRecipe> getRecipes() {
+    public static List<CrushingRecipe> getRecipes() {
         return ImmutableList.copyOf(RECIPES.values());
     }
 
-    public static VatRecipe getRecipeByID(ResourceLocation id) {
+    public static CrushingRecipe getRecipeByID(ResourceLocation id) {
         return RECIPES.get(id);
     }
 
-    public static void register(VatRecipe recipe) {
+    public static void register(CrushingRecipe recipe) {
         Preconditions.checkNotNull(recipe.getID(), "Cannot register Vat Recipe with null name.");
         Preconditions.checkNotNull(recipe.getInput(), "Cannot register Vat Recipe with null input.");
         Preconditions.checkNotNull(recipe.getOutput(), "Cannot register Vat Recipe with null fluid output.");
@@ -58,8 +58,8 @@ public class VatRecipeManager {
     }
 
     @Nullable
-    public static VatRecipe getRecipe(EntityLivingBase jumper, ItemStack input) {
-        for (VatRecipe r : RECIPES.values()) {
+    public static CrushingRecipe getRecipe(EntityLivingBase jumper, ItemStack input) {
+        for (CrushingRecipe r : RECIPES.values()) {
             if (r.matches(jumper, input)) {
                 return r;
             }
