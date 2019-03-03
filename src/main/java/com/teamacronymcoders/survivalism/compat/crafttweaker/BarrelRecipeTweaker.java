@@ -51,7 +51,7 @@ public class BarrelRecipeTweaker {
         AddBrewingRecipe(String identifier, ILiquidStack input, IIngredient[] inputItems, int[] inputItemAmounts, ILiquidStack output, int ticks) {
             this.input = CraftTweakerMC.getLiquidStack(input);
             if (inputItems.length > 3 || inputItems.length != inputItemAmounts.length) {
-                CraftTweakerAPI.logError("Invalid inputs in brewing recipe for " + output.toCommandString());
+                CraftTweakerAPI.logError("Invalid inputs in blockBarrelBrewing recipe for " + output.toCommandString());
             }
             for (int i = 0; i < inputItems.length; i++) {
                 if (CraftTweakerMC.getIngredient(inputItems[i]) != null) {
@@ -118,7 +118,13 @@ public class BarrelRecipeTweaker {
 
         @Override
         public void apply() {
-            BarrelRecipeManager.register(new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItem, output, fluidUseChance, ticks));
+            SoakingRecipe recipe;
+            if (fluidUseChance != 0.0f) {
+                recipe = new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItem, output, fluidUseChance, ticks);
+            } else {
+                recipe = new SoakingRecipe(new ResourceLocation(CraftTweaker.MODID, name), input, inputItem, output, ticks);
+            }
+            BarrelRecipeManager.register(recipe);
         }
 
         @Override

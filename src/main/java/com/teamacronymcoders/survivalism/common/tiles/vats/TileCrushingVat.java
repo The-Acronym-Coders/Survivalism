@@ -3,14 +3,13 @@ package com.teamacronymcoders.survivalism.common.tiles.vats;
 import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.client.container.ContainerVat;
+import com.teamacronymcoders.survivalism.client.container.ContainerCrushing;
 import com.teamacronymcoders.survivalism.client.gui.GUICrushingVat;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
@@ -44,7 +43,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     public CrushingRecipe curRecipe;
     public double jumps = 0.0D;
     protected ItemStack failedMatch;
-    protected FluidTank tank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+    protected FluidTank tank = new FluidTank(SurvivalismConfigs.crushingTankSize);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
     protected int fluidLastJump;
@@ -208,7 +207,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return new ContainerVat(entityPlayer.inventory, this);
+        return new ContainerCrushing(entityPlayer.inventory, this);
     }
 
     public boolean onBlockActivated(EntityPlayer player) {

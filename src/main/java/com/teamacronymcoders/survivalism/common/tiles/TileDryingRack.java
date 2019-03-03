@@ -19,9 +19,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 
-public class TileDryingRack extends TileEntity implements ITickable, IUpdatingInventory{
+public class TileDryingRack extends TileEntity implements ITickable, IUpdatingInventory {
 
-    private UpdatingItemStackHandler handler = new UpdatingItemStackHandler(1, this);
+    private UpdatingItemStackHandler handler = new UpdatingItemStackHandler(1, this) {
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+    };
     private DryingRecipe recipe;
     private int ticks;
     private boolean working = false;
@@ -58,8 +63,8 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
             BlockPos checkPos = getPos().down();
             double block_modifier = DryingModifierManager.getModifier(world.getBlockState(checkPos));
             double biome_modifier = DryingModifierManager.getModifier(world.getBiome(checkPos));
-            Double ticksToAdd = (1d * block_modifier) * biome_modifier;
-            ticks += ticksToAdd.intValue();
+            double ticksToAdd = (1d * block_modifier) * biome_modifier;
+            ticks += Math.round(ticksToAdd);
         } else {
             ticks++;
         }

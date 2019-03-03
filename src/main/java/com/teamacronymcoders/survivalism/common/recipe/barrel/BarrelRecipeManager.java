@@ -37,7 +37,7 @@ public class BarrelRecipeManager {
         Preconditions.checkNotNull(recipe.getInputItems(), "Cannot register Brewing Recipe with null item input.");
         Preconditions.checkNotNull(recipe.getInput(), "Cannot register Brewing Recipe with null input.");
         Preconditions.checkNotNull(recipe.getOutput(), "Cannot register Brewing Recipe with null output.");
-        Preconditions.checkArgument(!BREWING.containsKey(recipe.getID()), String.format("Cannot use duplicate ID %s for a brewing recipe.", recipe.getID()));
+        Preconditions.checkArgument(!BREWING.containsKey(recipe.getID()), String.format("Cannot use duplicate ID %s for a blockBarrelBrewing recipe.", recipe.getID()));
         BREWING.put(recipe.getID(), recipe);
     }
 
@@ -46,7 +46,7 @@ public class BarrelRecipeManager {
         Preconditions.checkNotNull(recipe.getInputItem(), "Cannot register Soaking Recipe with null item input.");
         Preconditions.checkNotNull(recipe.getInput(), "Cannot register Soaking Recipe with null input.");
         Preconditions.checkNotNull(recipe.getOutput(), "Cannot register Soaking Recipe with null output.");
-        Preconditions.checkArgument(!SOAKING.containsKey(recipe.getID()), String.format("Cannot use duplicate ID %s for a soaking recipe.", recipe.getID()));
+        Preconditions.checkArgument(!SOAKING.containsKey(recipe.getID()), String.format("Cannot use duplicate ID %s for a blockBarrelSoaking recipe.", recipe.getID()));
         SOAKING.put(recipe.getID(), recipe);
     }
 

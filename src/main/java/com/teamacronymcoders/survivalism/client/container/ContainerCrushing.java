@@ -13,14 +13,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerVat extends Container {
+public class ContainerCrushing extends Container {
 
     boolean firstSend = false;
     private TileCrushingVat tile;
     private FluidStack stack;
     private EntityPlayer player;
 
-    public ContainerVat(InventoryPlayer playerInv, TileCrushingVat tile) {
+    public ContainerCrushing(InventoryPlayer playerInv, TileCrushingVat tile) {
         this.tile = tile;
         addPlayerSlots(playerInv);
         addOwnSlots();

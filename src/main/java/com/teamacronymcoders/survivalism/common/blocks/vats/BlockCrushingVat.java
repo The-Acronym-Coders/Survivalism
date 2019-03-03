@@ -2,6 +2,7 @@ package com.teamacronymcoders.survivalism.common.blocks.vats;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.common.items.ItemMixingSpoon;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -40,14 +42,14 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
         setLightOpacity(0);
     }
 
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
-    }
-
     @Nullable
     public static TileCrushingVat getTE(World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         return te instanceof TileCrushingVat ? (TileCrushingVat) te : null;
+    }
+
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
     }
 
     @Override
@@ -116,7 +118,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
         }
 
         vat.onBlockActivated(player);
-        return true;
+        return false;
     }
 
     @Override

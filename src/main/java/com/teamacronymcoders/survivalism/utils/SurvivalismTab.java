@@ -14,7 +14,7 @@ public class SurvivalismTab extends CreativeTabs {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModBlocks.storage);
+        return new ItemStack(ModBlocks.blockBarrelStorage);
     }
 
     @Override

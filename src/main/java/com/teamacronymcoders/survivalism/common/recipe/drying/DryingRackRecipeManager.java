@@ -25,7 +25,7 @@ public class DryingRackRecipeManager {
         Preconditions.checkNotNull(recipe.getId(), "Cannot register Drying Recipe with null name.");
         Preconditions.checkNotNull(recipe.getInput(), "Cannot register Drying Recipe with null ingredient input.");
         Preconditions.checkNotNull(recipe.getOutput(), "Cannot register Drying Recipe with null ItemStack output.");
-        Preconditions.checkArgument(!DRYING.containsKey(recipe.getId()), String.format("Cannot use duplicate ID %s for a soaking recipe.", recipe.getId()));
+        Preconditions.checkArgument(!DRYING.containsKey(recipe.getId()), String.format("Cannot use duplicate ID %s for a drying recipe.", recipe.getId()));
         DRYING.put(recipe.getId(), recipe);
     }
 

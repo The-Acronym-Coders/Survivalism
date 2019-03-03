@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.crafttweaker;
+package com.teamacronymcoders.survivalism.compat.crafttweaker.vats;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
@@ -21,7 +21,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.survivalism.CrushingVat")
 @ZenRegister
-public class VatRecipeTweaker {
+public class CrushingRecipeTweaker {
 
     @ZenMethod
     public static void addCrushingRecipe(String identifier, IIngredient input, ILiquidStack output, int jumps, @Optional IItemStack outputStack, @Optional float itemChance) {
@@ -53,7 +53,14 @@ public class VatRecipeTweaker {
         @Override
         public void apply() {
             ResourceLocation name = new ResourceLocation(CraftTweaker.MODID, this.name);
-            CrushingRecipe recipe = new CrushingRecipe(name, input, output, outputStack, itemChance, jumps);
+            CrushingRecipe recipe;
+            if (outputStack != ItemStack.EMPTY && itemChance != 0.0f) {
+                recipe = new CrushingRecipe(name, input, output, outputStack, itemChance, jumps);
+            } else if (outputStack != ItemStack.EMPTY) {
+                recipe = new CrushingRecipe(name, input, output, outputStack, jumps);
+            } else {
+                recipe = new CrushingRecipe(name, input, output, jumps);
+            }
             CrushingRecipeManager.register(recipe);
         }
 

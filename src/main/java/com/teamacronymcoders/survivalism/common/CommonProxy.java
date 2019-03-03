@@ -21,7 +21,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-//        NetworkRegistry.INSTANCE.registerGuiHandler(Survivalism.INSTANCE, new GUIProxy());
+
     }
 
     public EntityPlayer getClientPlayer() {

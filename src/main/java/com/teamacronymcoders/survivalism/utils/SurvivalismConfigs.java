@@ -29,6 +29,7 @@ public class SurvivalismConfigs {
 
     // Crushing Vat
     public static double baseJumpValue;
+    public static int crushingTankSize;
 
     // Mixing Vat
     public static int mixingInputTankSize;
@@ -56,10 +57,11 @@ public class SurvivalismConfigs {
         ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
         ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
         ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
-        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("doesDryingRackHaveModifiers", "doesDryingRackHaveModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
+        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("drying_rack", "doesDryingRackHaveModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
         ConfigEntry mixingInputTankSize = new ConfigEntry("mixing_vat", "mixingInputTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Input Tank Size", false);
         ConfigEntry mixingSecondaryTankSize = new ConfigEntry("mixing_vat", "mixingSecondaryTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Secondary Tank Size", false);
         ConfigEntry mixingOutputTankSize = new ConfigEntry("mixing_vat", "mixingOutputTankSize", Property.Type.INTEGER, "32000", "Mixing Vat Output Tank Size", false);
+        ConfigEntry crushingTankSize = new ConfigEntry("crushing_vat", "crushingTankSize", Property.Type.INTEGER, "16000", "Crushing Tank Capacity", false);
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -74,6 +76,7 @@ public class SurvivalismConfigs {
         configRegistry.addEntry(mixingInputTankSize);
         configRegistry.addEntry(mixingSecondaryTankSize);
         configRegistry.addEntry(mixingOutputTankSize);
+        configRegistry.addEntry(crushingTankSize);
     }
 
     private static void getValues() {
@@ -90,5 +93,6 @@ public class SurvivalismConfigs {
         mixingInputTankSize = configRegistry.getInt("mixingInputTankSize", 16000);
         mixingSecondaryTankSize = configRegistry.getInt("mixingSecondaryTankSize", 16000);
         mixingOutputTankSize = configRegistry.getInt("mixingOutputTankSize", 32000);
+        crushingTankSize = configRegistry.getInt("crushingTankSize", 16000);
     }
 }
