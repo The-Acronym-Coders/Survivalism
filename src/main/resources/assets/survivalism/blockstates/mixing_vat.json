@@ -1,0 +1,16 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "survivalism:chunky_mixing_vat"
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": [{}],
+        "facing": {
+        	"north": {},
+        	"east": {},
+        	"south": {},
+        	"west": {}
+        }
+    }
+}

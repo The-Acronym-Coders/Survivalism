@@ -32,15 +32,15 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
         setTranslationKey("drying_rack");
     }
 
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:drying_rack", "inventory"));
-        ClientRegistry.bindTileEntitySpecialRenderer(TileDryingRack.class, new DryingRackTESR());
-    }
-
     @Nullable
     public static TileDryingRack getTE(World world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         return te instanceof TileDryingRack ? (TileDryingRack) te : null;
+    }
+
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:drying_rack", "inventory"));
+        ClientRegistry.bindTileEntitySpecialRenderer(TileDryingRack.class, new DryingRackTESR());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
                     ItemStack stack = te.getStack();
                     te.setStack(ItemStack.EMPTY);
                     if (!playerIn.inventory.addItemStackToInventory(stack)) {
-                        EntityItem entityItem = new EntityItem(worldIn, pos.getX(), pos.getY()+1, pos.getZ(), stack);
+                        EntityItem entityItem = new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), stack);
                         worldIn.spawnEntity(entityItem);
                         worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     } else {

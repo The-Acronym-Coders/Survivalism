@@ -1,15 +1,20 @@
 package com.teamacronymcoders.survivalism.common.tiles.vats;
 
+import com.teamacronymcoders.base.guisystem.GuiOpener;
 import com.teamacronymcoders.base.guisystem.IHasGui;
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.container.ContainerMixing;
+import com.teamacronymcoders.survivalism.client.gui.GUIMixingVat;
 import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.MixingFluidWrapper;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.network.MessageUpdateMixingVat;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -25,18 +30,20 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 
 public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHasGui {
 
-    private int clicks = 0;
     protected MixingRecipe recipe;
+    protected FluidTank output = new FluidTank(SurvivalismConfigs.mixingOutputTankSize);
+    private int clicks = 0;
     private FluidStack failed;
     private FluidTank main = new FluidTank(SurvivalismConfigs.mixingInputTankSize);
     private FluidTank secondary = new FluidTank(SurvivalismConfigs.mixingSecondaryTankSize);
-    protected FluidTank output = new FluidTank(SurvivalismConfigs.mixingOutputTankSize);
     private IFluidHandler fluidHandler = new MixingFluidWrapper(main, secondary, output);
     private UpdatingItemStackHandler handler = new UpdatingItemStackHandler(1, this);
     private boolean working = false;
@@ -52,7 +59,12 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         this.markDirty();
     }
 
-    public void onMix() {
+    public boolean onMix() {
+        processMixing();
+        return working;
+    }
+
+    protected void processMixing() {
         boolean dirty = false;
 
         if (recipe != null && recipe.getCatalyst() != Ingredient.EMPTY && handler.getStackInSlot(0).isEmpty()) {
@@ -74,7 +86,7 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
             }
         }
 
-        if (clicks++ >= 4 && canResolveRecipe()) {
+        if (clicks++ >= recipe.getClicks() && canResolveRecipe()) {
             main.drainInternal(recipe.getMain(), true);
             if (recipe.getSecondary() != null) {
                 secondary.drainInternal(recipe.getSecondary(), true);
@@ -89,6 +101,24 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         if (dirty) {
             markDirty();
         }
+    }
+
+    protected boolean canResolveRecipe() {
+        if (main.getFluid() != null && main.getFluidAmount() - recipe.getMain().amount >= 0) {
+            if (output.getFluid() == null || output.getFluidAmount() + recipe.getOutput().amount <= SurvivalismConfigs.mixingOutputTankSize) {
+                if (recipe.getSecondary() != null && recipe.getCatalyst() != Ingredient.EMPTY) {
+                    return secondary.getFluid() != null && secondary.getFluidAmount() - recipe.getSecondary().amount >= 0 && !handler.getStackInSlot(0).isEmpty();
+                }
+                if (recipe.getSecondary() != null) {
+                    return secondary.getFluid() != null && secondary.getFluidAmount() - recipe.getSecondary().amount >= 0;
+                }
+                if (recipe.getCatalyst() != Ingredient.EMPTY) {
+                    return !handler.getStackInSlot(0).isEmpty();
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -114,36 +144,22 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         return super.hasCapability(capability, facing);
     }
 
-    @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setTag("items", handler.serializeNBT());
+        compound.setTag("mainTank", main.writeToNBT(new NBTTagCompound()));
+        compound.setTag("secondaryTank", secondary.writeToNBT(new NBTTagCompound()));
+        compound.setTag("outputTank", output.writeToNBT(new NBTTagCompound()));
+        return super.writeToNBT(compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        super.onDataPacket(net, pkt);
-        this.readFromNBT(pkt.getNbtCompound());
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        return this.writeToNBT(new NBTTagCompound());
-    }
-
-    protected boolean canResolveRecipe() {
-        if (main.getFluid() != null && main.getFluidAmount() - recipe.getMain().amount >= 0) {
-            if (output.getFluid() == null || output.getFluidAmount() + recipe.getOutput().amount <= SurvivalismConfigs.mixingOutputTankSize) {
-                if (recipe.getSecondary() != null) {
-                    return secondary.getFluid() != null && secondary.getFluidAmount() - recipe.getSecondary().amount >= 0;
-                }
-                if (recipe.getCatalyst() != Ingredient.EMPTY) {
-                    return !handler.getStackInSlot(0).isEmpty();
-                }
-                return true;
-            }
-        }
-        return false;
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        handler.deserializeNBT(compound.getCompoundTag("items"));
+        main.readFromNBT(compound.getCompoundTag("mainTank"));
+        secondary.readFromNBT(compound.getCompoundTag("secondaryTank"));
+        output.readFromNBT(compound.getCompoundTag("outputTank"));
     }
 
     public FluidTank getMain() {
@@ -163,12 +179,18 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return new GUIMixingVat(this, getContainer(entityPlayer, world, blockPos));
     }
 
     @Override
     public Container getContainer(EntityPlayer entityPlayer, World world, BlockPos blockPos) {
-        return null;
+        return new ContainerMixing(entityPlayer.inventory, this);
+    }
+
+    public boolean onBlockActivated(EntityPlayer player) {
+        GuiOpener.openTileEntityGui(Survivalism.INSTANCE, player, this.getWorld(), this.getPos());
+        return true;
     }
 }
