@@ -64,7 +64,9 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> {
         if (stack.getItem() instanceof ItemMixingSpoon) {
             if (vat.onMix()) {
                 stack.damageItem(1, playerIn);
+                vat.markDirty();
             }
+            vat.markDirty();
             return true;
         }
 
@@ -76,12 +78,14 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> {
                 stack.shrink(1);
                 playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
             }
+            vat.markDirty();
             return true;
         }
 
         // Allows the Vat to Be Filled
         if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
+            vat.markDirty();
             return true;
         }
 
@@ -89,6 +93,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> {
             vat.getMain().setFluid(FluidRegistry.getFluidStack("water", 1000));
             vat.getSecondary().setFluid(FluidRegistry.getFluidStack("lava", 1000));
             vat.getOutput().setFluid(FluidRegistry.getFluidStack("water", 2000));
+            vat.markDirty();
             return true;
         }
 

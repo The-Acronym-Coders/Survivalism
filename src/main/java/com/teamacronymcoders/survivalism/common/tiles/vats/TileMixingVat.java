@@ -99,7 +99,7 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         }
 
         if (dirty) {
-            markDirty();
+            this.markDirty();
         }
     }
 
@@ -160,6 +160,23 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         main.readFromNBT(compound.getCompoundTag("mainTank"));
         secondary.readFromNBT(compound.getCompoundTag("secondaryTank"));
         output.readFromNBT(compound.getCompoundTag("outputTank"));
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        this.readFromNBT(pkt.getNbtCompound());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     public FluidTank getMain() {

@@ -71,7 +71,7 @@ public class ContainerMixing extends Container {
         if (stack == null && tank == null) {
             return null;
         }
-        if (stack == null && tank != null) {
+        if (stack == null) {
             sendUpdate = true;
         }
         if (stack != null && tank == null) {
@@ -97,24 +97,24 @@ public class ContainerMixing extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack stackC = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            ItemStack stackO = slot.getStack();
+            stackC = stackO.copy();
             if (index == 0) {
-                if (!this.mergeItemStack(itemstack1, 0, this.inventorySlots.size(), true)) {
+                if (!this.mergeItemStack(stackO, 0, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, 0, false)) {
+            } else if (!this.mergeItemStack(stackO, 0, this.inventorySlots.size(), false)) {
                 return ItemStack.EMPTY;
             }
-            if (itemstack1.isEmpty()) {
+            if (stackO.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
         }
-        return itemstack;
+        return stackC;
     }
 }
