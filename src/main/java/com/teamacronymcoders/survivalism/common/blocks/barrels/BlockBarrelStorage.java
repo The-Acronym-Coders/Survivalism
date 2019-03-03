@@ -3,7 +3,7 @@ package com.teamacronymcoders.survivalism.common.blocks.barrels;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -151,7 +151,7 @@ public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvid
             NBTTagCompound tag = stack.getSubCompound("BlockEntityTag");
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 if (compound != null && tag.hasKey("inputTank")) {
-                    FluidTank fluidTank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+                    FluidTank fluidTank = new FluidTank(SurvivalismConfigs.storageTankSize);
                     FluidStack fluidStack = fluidTank.readFromNBT(tag.getCompoundTag("inputTank")).getFluid();
                     if (fluidStack != null) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {

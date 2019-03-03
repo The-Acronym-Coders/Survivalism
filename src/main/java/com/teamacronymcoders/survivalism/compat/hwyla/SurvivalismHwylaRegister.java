@@ -1,8 +1,8 @@
 package com.teamacronymcoders.survivalism.compat.hwyla;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.blocks.vats.BlockCrushingVat;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
+import com.teamacronymcoders.survivalism.common.blocks.vats.BlockCrushingVat;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import mcp.mobius.waila.api.WailaPlugin;

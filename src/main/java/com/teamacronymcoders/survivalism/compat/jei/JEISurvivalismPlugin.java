@@ -42,12 +42,12 @@ public class JEISurvivalismPlugin implements IModPlugin {
         // Brewing
         registry.addRecipes(BarrelRecipeManager.getBrewingRecipes(), BrewingRecipeCategory.NAME);
         registry.handleRecipes(BrewingRecipe.class, BrewingRecipeWrapper::new, BrewingRecipeCategory.NAME);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.brewing), BrewingRecipeCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockBarrelBrewing), BrewingRecipeCategory.NAME);
 
         // Soaking
         registry.addRecipes(BarrelRecipeManager.getSoakingRecipes(), SoakingRecipeCategory.NAME);
         registry.handleRecipes(SoakingRecipe.class, SoakingRecipeWrapper::new, SoakingRecipeCategory.NAME);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.soaking), SoakingRecipeCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockBarrelSoaking), SoakingRecipeCategory.NAME);
 
         // Crushing
         registry.addRecipes(CrushingRecipeManager.getRecipes(), CrushingRecipeCategory.NAME);

@@ -4,7 +4,7 @@ import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -155,7 +155,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
 
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 if (compound != null && tag.hasKey("inputTank")) {
-                    FluidTank fluidTank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+                    FluidTank fluidTank = new FluidTank(SurvivalismConfigs.brewingInputSize);
                     FluidStack fluidStack = fluidTank.readFromNBT(tag.getCompoundTag("inputTank")).getFluid();
                     if (fluidStack != null) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -167,7 +167,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                 }
 
                 if (compound != null && tag.hasKey("outputTank")) {
-                    FluidTank fluidTank = new FluidTank(SurvivalismStorage.TANK_CAPACITY);
+                    FluidTank fluidTank = new FluidTank(SurvivalismConfigs.brewingOutputSize);
                     FluidStack fluidStack = fluidTank.readFromNBT(tag.getCompoundTag("outputTank")).getFluid();
                     if (fluidStack != null) {
                         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {

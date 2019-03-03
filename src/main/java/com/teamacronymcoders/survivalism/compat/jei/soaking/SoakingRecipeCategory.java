@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.soaking;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -51,7 +51,7 @@ public class SoakingRecipeCategory implements IRecipeCategory<SoakingRecipeWrapp
     public void setRecipe(IRecipeLayout recipeLayout, SoakingRecipeWrapper recipeWrapper, IIngredients ingredients) {
         // Init Slots
         recipeLayout.getItemStacks().init(0, true, 17, 27);
-        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismConfigs.soakingTankSize, true, null);
         recipeLayout.getItemStacks().init(1, false, 89, 27);
 
         // Set Slots

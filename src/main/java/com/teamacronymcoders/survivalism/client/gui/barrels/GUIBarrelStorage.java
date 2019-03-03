@@ -2,6 +2,7 @@ package com.teamacronymcoders.survivalism.client.gui.barrels;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
@@ -62,7 +63,7 @@ public class GUIBarrelStorage extends GUIBarrel {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getInput().getFluid() != null) {
             int amount = te.getInput().getFluidAmount();
-            float hr = 48f / 32000;
+            float hr = 48f / SurvivalismConfigs.storageTankSize;
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);

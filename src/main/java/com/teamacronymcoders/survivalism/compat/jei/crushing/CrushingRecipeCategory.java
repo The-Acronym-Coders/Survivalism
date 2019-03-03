@@ -2,7 +2,7 @@ package com.teamacronymcoders.survivalism.compat.jei.crushing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
-import com.teamacronymcoders.survivalism.utils.SurvivalismStorage;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -22,13 +22,11 @@ import java.util.List;
 
 public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWrapper> {
     public static final String NAME = "survivalism.crushing";
+    static int recipeWidth;
     @Nonnull
     private final String localized;
     private final String localizedOutputError;
     private final IDrawable background;
-
-    static int recipeWidth;
-
     private final Object2DoubleMap<Ingredient> doubleMap = CrushingRecipeManager.getBOOTS();
 
     public CrushingRecipeCategory(IGuiHelper helper) {
@@ -59,11 +57,9 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, CrushingRecipeWrapper recipeWrapper, IIngredients ingredients) {
-//        Minecraft minecraft = Minecraft.getMinecraft();
-
         // Init Slots
         recipeLayout.getItemStacks().init(0, true, 17, 27);
-        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismStorage.TANK_CAPACITY, true, null);
+        recipeLayout.getFluidStacks().init(0, true, 54, 12, 16, 47, SurvivalismConfigs.crushingTankSize, true, null);
         recipeLayout.getItemStacks().init(1, false, 89, 27);
 
         // Set Slots
@@ -77,18 +73,5 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
             stack.setStackDisplayName(localizedOutputError);
             recipeLayout.getItemStacks().set(1, stack);
         }
-
-//        // Adds Crushing Modifiers
-//        recipeLayout.getItemStacks().init(2, false, 53, 55);
-//        List<ItemStack> multiplierStacks = new ArrayList<>();
-//        for (Map.Entry<Ingredient, Double> values : doubleMap.entrySet()) {
-//            Ingredient ingredient = values.getKey();
-//            multiplierStacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
-//        }
-//        recipeLayout.getItemStacks().set(2, multiplierStacks);
-//
-//        String input = ;
-//        int xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;;
-//        minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);
     }
 }

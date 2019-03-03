@@ -2,6 +2,7 @@ package com.teamacronymcoders.survivalism.client.gui.barrels;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
@@ -63,7 +64,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
         if (te.getInput().getFluid() != null) {
             // Input
             int inputTank = te.getInput().getFluidAmount();
-            float hr = 48f / 16000f;
+            float hr = 48f / SurvivalismConfigs.brewingInputSize;
             float offset = inputTank * hr;
             int y = Math.round(65 - offset);
             int h = Math.round(offset - 1);
@@ -71,7 +72,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
         }
         if (te.getOutput().getFluid() != null) {
             // Output
-            float hr = 48f / 16000f;
+            float hr = 48f / SurvivalismConfigs.brewingOutputSize;
             int outputTank = te.getOutput().getFluidAmount();
             float offset = outputTank * hr;
             int y = Math.round(65 - offset);
