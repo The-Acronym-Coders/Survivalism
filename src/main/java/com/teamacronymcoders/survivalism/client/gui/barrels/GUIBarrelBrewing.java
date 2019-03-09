@@ -95,7 +95,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
         if (te.getInput().getFluid() != null && this.isPointInRegion(44, 18, 16, 47, x, y)) {
             List<String> strings = new ArrayList<>();
             if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
-                addPotionTooltip(strings, te.getInput(), x, y);
+                addPotionTooltip(strings, te.getInput().getFluid(), x, y, te.getInput().getCapacity());
             } else {
                 strings.add(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount() + " / " + te.getInput().getCapacity() + "mB");
                 drawHoveringText(strings, x, y);
@@ -104,7 +104,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
         if (te.getOutput().getFluid() != null && this.isPointInRegion(116, 18, 16, 47, x, y)) {
             List<String> strings = new ArrayList<>();
             if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
-                addPotionTooltip(strings, te.getOutput(), x, y);
+                addPotionTooltip(strings, te.getOutput().getFluid(), x, y, te.getOutput().getCapacity());
             } else {
                 strings.add(te.getOutput().getFluid().getLocalizedName() + ": " + te.getOutput().getFluidAmount() + " / " + te.getOutput().getCapacity() + "mB");
                 drawHoveringText(strings, x, y);
@@ -113,20 +113,20 @@ public class GUIBarrelBrewing extends GUIBarrel {
         super.renderHoveredToolTip(x, y);
     }
 
-    private void addPotionTooltip(List<String> strings, FluidTank tank, int x, int y) {
-        if (tank.getFluid() != null) {
-            if (TFPHelper.isPotion(tank.getFluid()) || TFPHelper.isSplashPotion(tank.getFluid()) || TFPHelper.isLingeringPotion(tank.getFluid())) {
-                strings.add(tank.getFluid().getLocalizedName() + ": " + tank.getFluidAmount() + " / " + tank.getCapacity() + "mB");
+    private void addPotionTooltip(List<String> strings, FluidStack fluid, int x, int y, int capacity) {
+        if (fluid != null) {
+            if (TFPHelper.isPotion(fluid) || TFPHelper.isSplashPotion(fluid) || TFPHelper.isLingeringPotion(fluid)) {
+                strings.add(fluid.getLocalizedName() + ": " + fluid.amount + " / " + capacity + "mB");
                 PotionType type = null;
-                if (tank.getFluid().tag.hasKey("Potion")) {
-                    type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(tank.getFluid().tag.getString("Potion")));
+                if (fluid.tag != null && !fluid.tag.isEmpty() && fluid.tag.hasKey("Potion")) {
+                    type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(fluid.tag.getString("Potion")));
                 }
                 if (type != null) {
-                    if (TFPHelper.isPotion(tank.getFluid())) {
+                    if (TFPHelper.isPotion(fluid)) {
                         strings.add("Potion Name: " + type.getNamePrefixed(""));
-                    } else if (TFPHelper.isSplashPotion(tank.getFluid())) {
+                    } else if (TFPHelper.isSplashPotion(fluid)) {
                         strings.add("Potion Name: " + type.getNamePrefixed("Splash"));
-                    } else if (TFPHelper.isLingeringPotion(tank.getFluid())) {
+                    } else if (TFPHelper.isLingeringPotion(fluid)) {
                         strings.add("Potion Name: " + type.getNamePrefixed("Lingering"));
                     }
                 } else {

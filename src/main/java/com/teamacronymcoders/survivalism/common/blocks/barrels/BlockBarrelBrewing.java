@@ -161,6 +161,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 brewing.getOutput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
                                 playerIn.inventory.addItemStackToInventory(potion);
                             }
+                            return true;
                         } else if (TFPHelper.isSplashPotion(brewing.getOutput().getFluid())) {
                             String id = brewing.getOutput().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
@@ -172,6 +173,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 brewing.getOutput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
                                 playerIn.inventory.addItemStackToInventory(potion);
                             }
+                            return true;
                         } else if (TFPHelper.isLingeringPotion(brewing.getOutput().getFluid())) {
                             String id = brewing.getOutput().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
@@ -183,6 +185,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 brewing.getOutput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
                                 playerIn.inventory.addItemStackToInventory(potion);
                             }
+                            return true;
                         }
                     }
                 }
