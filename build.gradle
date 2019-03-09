@@ -34,6 +34,10 @@ minecraft {
 }
 
 repositories{
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
 
     maven{
         name 'JEI'
@@ -84,9 +88,24 @@ dependencies {
     // Addon Support
     deobfCompile "vazkii.patchouli:Patchouli:${patchouli_version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
-    deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
-    deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
+    //deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+    //deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
+    //deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
+
+    // CoFH Mods
+    deobfCompile("cofh:ThermalFoundation:${thermal_foundation_version}:universal") {
+        exclude group: 'mezz.jei'
+    }
+    deobfCompile("cofh:RedstoneFlux:${redstone_flux_version}:universal") {
+        exclude group: 'mezz.jei'
+    }
+    deobfCompile("cofh:CoFHCore:${cofhcore_version}:universal") {
+        exclude group: 'mezz.jei'
+    }
+    deobfCompile("cofh:CoFHWorld:${cofhworld_version}:universal") {
+        exclude group: 'mezz.jei'
+    }
+
 }
 
 processResources {
