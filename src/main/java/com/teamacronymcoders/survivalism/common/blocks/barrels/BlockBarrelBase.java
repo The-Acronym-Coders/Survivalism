@@ -27,8 +27,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEBase<T> {
-    @GameRegistry.ObjectHolder("minecraft:sponge")
-    public static final Item SPONGE = null;
     public static final PropertyBool SEALED = PropertyBool.create("sealed");
 
     BlockBarrelBase(String name) {

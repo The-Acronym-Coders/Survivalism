@@ -1,10 +1,7 @@
 package com.teamacronymcoders.survivalism.client.container;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateMixingVat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;

@@ -6,6 +6,7 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.items.ItemMixingSpoon;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
+import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -71,7 +72,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> {
         }
 
         // Clears Input Tanks using a Sponge
-        if (stack.getItem() == BlockBarrelBase.SPONGE) {
+        if (stack.getItem() == SurvivalismReferenceObjects.SPONGE) {
             vat.getMain().setFluid(null);
             vat.getSecondary().setFluid(null);
             if (!playerIn.capabilities.isCreativeMode) {

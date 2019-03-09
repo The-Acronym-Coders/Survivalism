@@ -12,12 +12,15 @@ import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManage
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import crafttweaker.mc1120.item.VanillaIngredient;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -58,11 +61,13 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
             if (recipe != null) {
                 working = true;
             }
+            this.markDirty();
         } else {
             ticks = 0;
             working = false;
             if (input.getFluid() == null || moarWater.isFluidEqual(input.getFluid())) {
                 processRaining();
+                this.markDirty();
             }
         }
     }
@@ -188,6 +193,28 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     @Override
     public void updateSlot(int slot, ItemStack stack) {
         this.markDirty();
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        this.readFromNBT(pkt.getNbtCompound());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
     }
 
     @Override

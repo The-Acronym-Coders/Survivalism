@@ -1,6 +1,7 @@
 package com.teamacronymcoders.survivalism.client.gui.barrels;
 
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
@@ -10,8 +11,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIBarrelStorage extends GUIBarrel {
     private static final ResourceLocation storage_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_storage.png");
@@ -73,8 +77,15 @@ public class GUIBarrelStorage extends GUIBarrel {
 
     @Override
     protected void renderHoveredToolTip(int x, int y) {
-        if (te.getInput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
-            drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
+        if (te.getInput().getFluid() != null && this.isPointInRegion(134, 22, 16, 47, x, y)) {
+            List<String> strings = new ArrayList<>();
+            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
+                GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
+                drawHoveringText(strings, x, y);
+            } else {
+                strings.add(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount() + " / " + te.getInput().getCapacity() + "mB");
+                drawHoveringText(strings, x, y);
+            }
         }
         super.renderHoveredToolTip(x, y);
     }

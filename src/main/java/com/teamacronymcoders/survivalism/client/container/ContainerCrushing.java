@@ -1,10 +1,7 @@
 package com.teamacronymcoders.survivalism.client.container;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateCrushingVat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -82,7 +79,7 @@ public class ContainerCrushing extends Container {
     }
 
     private void sendMessage() {
-        Survivalism.INSTANCE.getPacketHandler().sendToPlayer(new MessageUpdateCrushingVat(tile), (EntityPlayerMP) player);
+        tile.markDirty();
     }
 
     @Override

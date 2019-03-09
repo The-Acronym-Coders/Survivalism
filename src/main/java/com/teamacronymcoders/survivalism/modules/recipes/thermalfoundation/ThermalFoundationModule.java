@@ -13,7 +13,7 @@ import java.util.List;
 public class ThermalFoundationModule extends ModuleBase {
     @Override
     public String getName() {
-        return "Thermal Foundation";
+        return "Potion Fluids";
     }
 
     @Override

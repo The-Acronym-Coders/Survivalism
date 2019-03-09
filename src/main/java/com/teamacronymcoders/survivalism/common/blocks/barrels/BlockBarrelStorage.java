@@ -1,9 +1,11 @@
 package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
+import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -36,6 +38,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -123,53 +126,110 @@ public class BlockBarrelStorage extends BlockBarrelBase implements TOPInfoProvid
 
         if (barrel instanceof TileBarrelStorage) {
             TileBarrelStorage storage = (TileBarrelStorage) barrel;
+            ItemStack held = playerIn.getHeldItem(hand);
             if (!state.getValue(SEALED)) {
-                if (playerIn.getHeldItem(hand).getItem() == BlockBarrelBase.SPONGE) {
+                // Tank > Holder : Holder > Tank
+                if (held.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+                    FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
+                    storage.markDirty();
+                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                    return true;
+                }
+
+                // Reset Tanks
+                if (held.getItem() == SurvivalismReferenceObjects.SPONGE) {
                     ItemStack stack = playerIn.getHeldItem(hand);
                     storage.getInput().setFluid(null);
                     if (!playerIn.capabilities.isCreativeMode) {
                         stack.shrink(1);
                         playerIn.inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), 1, 1));
                     }
-                    return true;
-                } else if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-                    FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, null);
+                    storage.markDirty();
+                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     return true;
                 }
-                if (playerIn.getHeldItem(hand).getItem() instanceof ItemGlassBottle) {
-                    if (storage.getInput().getFluid() != null) {
-                        if (TFPHelper.isPotion(storage.getInput().getFluid())) {
-                            String id = storage.getInput().getFluid().tag.getString("Potion");
-                            PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
-                            if (type != null) {
-                                ItemStack potion = new ItemStack(Items.POTIONITEM, 1);
-                                PotionUtils.addPotionToItemStack(potion, type);
-                                ItemStack stack = playerIn.getHeldItem(hand);
-                                stack.shrink(1);
-                                storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
-                                playerIn.inventory.addItemStackToInventory(potion);
+
+                // Potion Fluid Module
+                if (Survivalism.INSTANCE.getModuleHandler().isModuleEnabled("Potion Fluids")) {
+                    // Potion Tank > Bottle
+                    if (held.getItem() instanceof ItemGlassBottle) {
+                        if (storage.getInput().getFluid() != null) {
+                            if (FluidRegistry.isFluidRegistered("potion")) {
+                                if (TFPHelper.isPotion(storage.getInput().getFluid())) {
+                                    String id = storage.getInput().getFluid().tag.getString("Potion");
+                                    PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
+                                    if (type != null) {
+                                        ItemStack potion = new ItemStack(Items.POTIONITEM);
+                                        PotionUtils.addPotionToItemStack(potion, type);
+                                        held.shrink(1);
+                                        storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
+                                        playerIn.inventory.addItemStackToInventory(potion);
+                                    }
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                }
                             }
-                        } else if (TFPHelper.isSplashPotion(storage.getInput().getFluid())) {
-                            String id = storage.getInput().getFluid().tag.getString("Potion");
-                            PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
-                            if (type != null) {
-                                ItemStack potion = new ItemStack(Items.SPLASH_POTION, 1);
-                                PotionUtils.addPotionToItemStack(potion, type);
-                                ItemStack stack = playerIn.getHeldItem(hand);
-                                stack.shrink(1);
-                                storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
-                                playerIn.inventory.addItemStackToInventory(potion);
+                            if (FluidRegistry.isFluidRegistered("potion_splash")) {
+                                if (TFPHelper.isSplashPotion(storage.getInput().getFluid())) {
+                                    String id = storage.getInput().getFluid().tag.getString("Potion");
+                                    PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
+                                    if (type != null) {
+                                        ItemStack potion = new ItemStack(Items.SPLASH_POTION);
+                                        PotionUtils.addPotionToItemStack(potion, type);
+                                        held.shrink(1);
+                                        storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
+                                        playerIn.inventory.addItemStackToInventory(potion);
+                                    }
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                }
                             }
-                        } else if (TFPHelper.isLingeringPotion(storage.getInput().getFluid())) {
-                            String id = storage.getInput().getFluid().tag.getString("Potion");
-                            PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
-                            if (type != null) {
-                                ItemStack potion = new ItemStack(Items.LINGERING_POTION, 1);
-                                PotionUtils.addPotionToItemStack(potion, type);
-                                ItemStack stack = playerIn.getHeldItem(hand);
-                                stack.shrink(1);
-                                storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
-                                playerIn.inventory.addItemStackToInventory(potion);
+                            if (FluidRegistry.isFluidRegistered("potion_lingering")) {
+                                if (TFPHelper.isLingeringPotion(storage.getInput().getFluid())) {
+                                    String id = storage.getInput().getFluid().tag.getString("Potion");
+                                    PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
+                                    if (type != null) {
+                                        ItemStack potion = new ItemStack(Items.LINGERING_POTION);
+                                        PotionUtils.addPotionToItemStack(potion, type);
+                                        held.shrink(1);
+                                        storage.getInput().drainInternal(SurvivalismConfigs.potionToBottleDrainAmount, true);
+                                        playerIn.inventory.addItemStackToInventory(potion);
+                                    }
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+
+                    // Potion Bottle > Tank
+                    if (FluidRegistry.isFluidRegistered("potion") && FluidRegistry.isFluidRegistered("potion_splash") && FluidRegistry.isFluidRegistered("potion_lingering")) {
+                        if (held.getItem().equals(Items.POTIONITEM) || held.getItem().equals(Items.SPLASH_POTION) || held.getItem().equals(Items.LINGERING_POTION)) {
+                            if (held.getTagCompound() != null && !held.getTagCompound().isEmpty() && playerIn.getHeldItem(hand).getTagCompound().hasKey("Potion")) {
+                                String id = held.getTagCompound().getString("Potion");
+                                PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
+                                if (held.getItem().equals(Items.POTIONITEM)) {
+                                    FluidStack fluid = TFPHelper.getPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    storage.getInput().fillInternal(fluid, true);
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                } else if (held.getItem().equals(Items.SPLASH_POTION)) {
+                                    FluidStack fluid = TFPHelper.getSplashPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    storage.getInput().fillInternal(fluid, true);
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                } else if (held.getItem().equals(Items.LINGERING_POTION)) {
+                                    FluidStack fluid = TFPHelper.getLingeringPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    storage.getInput().fillInternal(fluid, true);
+                                    storage.markDirty();
+                                    worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
+                                    return true;
+                                }
                             }
                         }
                     }
