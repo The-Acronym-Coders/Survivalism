@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.patchouli;
+package com.teamacronymcoders.survivalism.compat.patchouli.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ProcessorBrewingRecipe implements IComponentProcessor {
-
     private ItemStack inputFluid;
     private ItemStack outputFluid;
     private BrewingRecipe recipe;
@@ -46,7 +45,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
             case "inputFluid":
                 return PatchouliAPI.instance.serializeItemStack(inputFluid);
             case "amountI":
-                return recipe.getInput().amount + "mb";
+                return I18n.format("survivalism.patchouli.amount", recipe.getInput().amount);
             case "ingredient0":
                 return PatchouliAPI.instance.serializeIngredient(ingredients.get(0));
             case "ingredient1":
@@ -56,7 +55,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
             case "outputFluid":
                 return PatchouliAPI.instance.serializeItemStack(outputFluid);
             case "amountO":
-                return recipe.getOutput().amount + "mb";
+                return I18n.format("survivalism.patchouli.amount", recipe.getOutput().amount);
             case "time_label":
                 return I18n.format("survivalism.patchouli.time");
             case "time":

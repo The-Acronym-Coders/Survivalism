@@ -29,6 +29,8 @@ survivalism.hwyla.jumps=Jumps:
 survivalism.patchouli.time=Time:
 survivalism.patchouli.amount.decrease=Decrease Amount:
 survivalism.patchouli.chance=Decrease Chance:
+survivalism.patchouli.amount=%d mB
+survivalism.patchouli.clicks=Clicks: %d
 
 survivalism.jei.no.output=No Output
 survivalism.jei.full.chance=Use Chance: 100

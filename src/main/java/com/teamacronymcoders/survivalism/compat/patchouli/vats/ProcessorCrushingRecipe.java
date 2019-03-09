@@ -1,7 +1,8 @@
-package com.teamacronymcoders.survivalism.compat.patchouli;
+package com.teamacronymcoders.survivalism.compat.patchouli.vats;
 
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -49,7 +50,7 @@ public class ProcessorCrushingRecipe implements IComponentProcessor {
             case "output":
                 return PatchouliAPI.instance.serializeItemStack(output);
             case "amount":
-                return recipe.getOutput().amount + "mb";
+                return I18n.format("survivalism.patchouli.amount", recipe.getOutput().amount);
             case "chance":
                 if (recipe.getOutputStack() != ItemStack.EMPTY) {
                     if (recipe.getItemChance() <= 0 || recipe.getItemChance() >= 1) {
