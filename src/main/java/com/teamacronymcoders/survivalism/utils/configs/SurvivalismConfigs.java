@@ -1,40 +1,18 @@
 package com.teamacronymcoders.survivalism.utils.configs;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teamacronymcoders.base.registrysystem.config.ConfigEntry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
-import com.teamacronymcoders.base.savesystem.SaveLoader;
-import com.teamacronymcoders.base.util.ClassLoading;
-import com.teamacronymcoders.base.util.Platform;
 import com.teamacronymcoders.base.util.files.BaseFileUtils;
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.json.BiomeToFluid;
-import com.teamacronymcoders.survivalism.common.recipe.barrel.json.IJsonObject;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class SurvivalismConfigs {
     private static final List<BiomeToFluid> DEFAULT_PAIRINGS = new ArrayList<>();
@@ -156,7 +134,6 @@ public class SurvivalismConfigs {
             //}
         }
     }
-
 
 
 }

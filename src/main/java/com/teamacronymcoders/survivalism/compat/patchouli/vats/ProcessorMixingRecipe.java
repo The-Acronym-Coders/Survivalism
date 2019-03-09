@@ -4,7 +4,6 @@ import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidUtil;
 import vazkii.patchouli.api.IComponentProcessor;

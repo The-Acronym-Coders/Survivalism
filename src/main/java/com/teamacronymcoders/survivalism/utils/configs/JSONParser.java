@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JSONParser<T> {
-    public File fileToParse;
-    public Class<T> type;
-
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser parser = new JsonParser();
-
+    public File fileToParse;
+    public Class<T> type;
     private JsonObject root;
 
     public JSONParser(File file, Class<T> objClass) {
@@ -31,7 +29,7 @@ public class JSONParser<T> {
         if (root.get(key) != null) {
             JsonArray elements = root.get(key).getAsJsonArray();
             for (JsonElement elem : elements) {
-                if (type != null && gson.fromJson(elem, type)!=null) {
+                if (type != null && gson.fromJson(elem, type) != null) {
                     returnList.add(gson.fromJson(elem, type));
                 }
             }

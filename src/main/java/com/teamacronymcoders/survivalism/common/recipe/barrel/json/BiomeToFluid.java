@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public class BiomeToFluid implements IJsonObject{
+public class BiomeToFluid implements IJsonObject {
     public String biomes;
     public String fluid;
     public Integer amount;
@@ -33,7 +33,7 @@ public class BiomeToFluid implements IJsonObject{
             Preconditions.checkNotNull(stackz);
 
             BarrelRecipeManager.register(biomez, stackz);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             Survivalism.INSTANCE.getLogger().error("Skipping Biome, Fluid pairing with Biome Name: " + biomes + " and Fluid Name: " + fluid);
         }
     }

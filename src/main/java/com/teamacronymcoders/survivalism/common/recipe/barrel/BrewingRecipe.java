@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
-import java.util.Map;
 
 public class BrewingRecipe {
 

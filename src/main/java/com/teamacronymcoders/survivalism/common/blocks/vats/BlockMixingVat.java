@@ -1,9 +1,6 @@
 package com.teamacronymcoders.survivalism.common.blocks.vats;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
-import com.teamacronymcoders.base.guisystem.GuiOpener;
-import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.items.ItemMixingSpoon;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;

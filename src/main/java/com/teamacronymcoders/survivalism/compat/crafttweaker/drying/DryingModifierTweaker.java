@@ -8,10 +8,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBiome;
-import crafttweaker.mc1120.item.VanillaIngredient;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -52,7 +49,7 @@ public class DryingModifierTweaker {
 
         @Override
         public String describe() {
-            return "Registered Modifier Value: " + stateID+ " -> " + modifier;
+            return "Registered Modifier Value: " + stateID + " -> " + modifier;
         }
     }
 
