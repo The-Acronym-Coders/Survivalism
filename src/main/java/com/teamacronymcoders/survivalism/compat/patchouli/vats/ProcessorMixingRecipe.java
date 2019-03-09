@@ -3,6 +3,8 @@ package com.teamacronymcoders.survivalism.compat.patchouli.vats;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidUtil;
@@ -45,7 +47,13 @@ public class ProcessorMixingRecipe implements IComponentProcessor {
             case "secondaryAmount":
                 return I18n.format("survivalism.patchouli.amount", recipe.getSecondary().amount);
             case "catalyst":
-                return PatchouliAPI.instance.serializeIngredient(recipe.getCatalyst());
+                if (recipe.getCatalyst() != null) {
+                    return PatchouliAPI.instance.serializeIngredient(recipe.getCatalyst());
+                } else {
+                    ItemStack stack = new ItemStack(Item.getItemFromBlock(Blocks.BARRIER));
+                    stack.setStackDisplayName(I18n.format("survivalism.itemstack.no.output"));
+                    return PatchouliAPI.instance.serializeItemStack(stack);
+                }
             case "output":
                 return PatchouliAPI.instance.serializeItemStack(outputFluid);
             case "outputAmount":

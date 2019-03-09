@@ -32,7 +32,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWra
     public CrushingRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 12, 124, 90);
         this.localized = I18n.format("container.jei." + NAME + ".name");
-        this.localizedOutputError = I18n.format("survivalism.jei.no.output");
+        this.localizedOutputError = I18n.format("survivalism.itemstack.no.output");
     }
 
     @Override
