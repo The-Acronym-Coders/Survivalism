@@ -9,8 +9,9 @@ import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
@@ -81,7 +82,11 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
             tank.fill(curRecipe.getOutput(), true);
             jumps = 0;
             dirty = true;
-            inputInv.getStackInSlot(0).shrink(1);
+            if (curRecipe.getInput() instanceof VanillaIngredient) {
+                inputInv.getStackInSlot(0).shrink(((VanillaIngredient) curRecipe.getInput()).getIngredient().getAmount());
+            } else {
+                inputInv.getStackInSlot(0).shrink(1);
+            }
         }
         if (dirty) {
             markDirty();

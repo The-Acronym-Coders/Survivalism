@@ -1,17 +1,26 @@
 package com.teamacronymcoders.survivalism.client.gui.barrels;
 
+import cofh.thermalfoundation.init.TFFluids;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIBarrelBrewing extends GUIBarrel {
     private static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
@@ -84,12 +93,48 @@ public class GUIBarrelBrewing extends GUIBarrel {
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getInput().getFluid() != null && this.isPointInRegion(44, 18, 16, 47, x, y)) {
-            drawHoveringText(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount(), x, y);
+            List<String> strings = new ArrayList<>();
+            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
+                addPotionTooltip(strings, te.getInput(), x, y);
+            } else {
+                strings.add(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount() + " / " + te.getInput().getCapacity() + "mB");
+                drawHoveringText(strings, x, y);
+            }
         }
         if (te.getOutput().getFluid() != null && this.isPointInRegion(116, 18, 16, 47, x, y)) {
-            drawHoveringText(te.getOutput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount(), x, y);
+            List<String> strings = new ArrayList<>();
+            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
+                addPotionTooltip(strings, te.getOutput(), x, y);
+            } else {
+                strings.add(te.getOutput().getFluid().getLocalizedName() + ": " + te.getOutput().getFluidAmount() + " / " + te.getOutput().getCapacity() + "mB");
+                drawHoveringText(strings, x, y);
+            }
         }
         super.renderHoveredToolTip(x, y);
+    }
+
+    private void addPotionTooltip(List<String> strings, FluidTank tank, int x, int y) {
+        if (tank.getFluid() != null) {
+            if (TFPHelper.isPotion(tank.getFluid()) || TFPHelper.isSplashPotion(tank.getFluid()) || TFPHelper.isLingeringPotion(tank.getFluid())) {
+                strings.add(tank.getFluid().getLocalizedName() + ": " + tank.getFluidAmount() + " / " + tank.getCapacity() + "mB");
+                PotionType type = null;
+                if (tank.getFluid().tag.hasKey("Potion")) {
+                    type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(tank.getFluid().tag.getString("Potion")));
+                }
+                if (type != null) {
+                    if (TFPHelper.isPotion(tank.getFluid())) {
+                        strings.add("Potion Name: " + type.getNamePrefixed(""));
+                    } else if (TFPHelper.isSplashPotion(tank.getFluid())) {
+                        strings.add("Potion Name: " + type.getNamePrefixed("Splash"));
+                    } else if (TFPHelper.isLingeringPotion(tank.getFluid())) {
+                        strings.add("Potion Name: " + type.getNamePrefixed("Lingering"));
+                    }
+                } else {
+                    strings.add("Potion Name: Null");
+                }
+                drawHoveringText(strings, x, y);
+            }
+        }
     }
 
     public void setInput(FluidStack stack) {

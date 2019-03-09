@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.brewing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -11,9 +11,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,21 +62,15 @@ public class BrewingRecipeCategory implements IRecipeCategory<BrewingRecipeWrapp
 
 
         // Triple Slot Madness~~
-        Set<Ingredient> ingredientSet = recipeWrapper.recipe.getInputItems().keySet();
+        Set<Ingredient> ingredientSet = new HashSet<>(recipeWrapper.recipe.getInputItems());
         Ingredient[] array = ingredientSet.toArray(new Ingredient[0]);
 
         int[] val = new int[]{8, 28, 48};
 
         for (int i = 0; i < array.length; i++) {
-            ItemStack[] stacks = array[i].getMatchingStacks();
-            List<ItemStack> fxStacks = new LinkedList<>();
-            for (ItemStack stack : stacks) {
-                int count = recipeWrapper.recipe.getInputItems().get(array[i]);
-                stack.setCount(count);
-                fxStacks.add(stack);
-            }
+            List<ItemStack> stacks = Arrays.asList(array[i].getMatchingStacks());
             recipeLayout.getItemStacks().init(i, true, 53, val[i]);
-            recipeLayout.getItemStacks().set(i, fxStacks);
+            recipeLayout.getItemStacks().set(i, stacks);
         }
     }
 }

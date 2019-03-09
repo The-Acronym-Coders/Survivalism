@@ -6,7 +6,8 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
 import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelStorage;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -58,8 +59,16 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
     protected void processRaining() {
         World world = getWorld();
         if (!isSealed()) {
-            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-                input.fillInternal(moarWater.copy(), true);
+            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos())) {
+                if (SurvivalismConfigs.shouldBarrelsRespectRainValueOfBiomes) {
+                    if (world.getBiome(getPos()).canRain()) {
+                        FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                        input.fillInternal(fluidStack.copy(), true);
+                    }
+                } else {
+                    FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                    input.fillInternal(fluidStack.copy(), true);
+                }
             }
         }
     }

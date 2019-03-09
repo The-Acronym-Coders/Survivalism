@@ -5,7 +5,7 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.drying.modifiers.DryingModifierManager;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -36,9 +36,6 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
         processDrying();
     }
 
-    // TODO: Config Check & Check Below Block for Air Block
-    // TODO: Implement Biome Modifier for Drying Speed
-    // TODO: Implement Drying Modifier for the Block Below
     protected void processDrying() {
         ItemStack stack = handler.getStackInSlot(0);
         if (stack != ItemStack.EMPTY) {
@@ -59,7 +56,7 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
     }
 
     protected void getTicksToApply() {
-        if (SurvivalismConfigs.doesDryingRackHaveModifiers) {
+        if (SurvivalismConfigs.shouldDryingRackUseModifiers) {
             BlockPos checkPos = getPos().down();
             double block_modifier = DryingModifierManager.getModifier(world.getBlockState(checkPos));
             double biome_modifier = DryingModifierManager.getModifier(world.getBiome(checkPos));

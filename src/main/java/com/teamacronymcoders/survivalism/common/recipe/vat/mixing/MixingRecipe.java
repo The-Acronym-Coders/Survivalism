@@ -13,7 +13,6 @@ public class MixingRecipe {
     protected final FluidStack output;
     protected final int clicks;
 
-    //TODO: Implement Click in Recipe instead of Set Number!
     public MixingRecipe(ResourceLocation id, FluidStack main, FluidStack secondary, Ingredient catalyst, FluidStack output, int clicks) {
         this.id = id;
         this.main = main;
@@ -56,8 +55,12 @@ public class MixingRecipe {
     }
 
     public boolean matches(TileMixingVat vat) {
+        if (secondary != null && catalyst == Ingredient.EMPTY) {
+            return vat.getMain().getFluid() != null && vat.getMain().getFluid().containsFluid(main) && vat.getSecondary().getFluid() != null && vat.getSecondary().getFluid().containsFluid(secondary);
 
-
-        return true;
+        } else if (secondary == null && catalyst != Ingredient.EMPTY) {
+            return vat.getMain().getFluid() != null && vat.getMain().getFluid().containsFluid(main) && catalyst.apply(vat.getHandler().getStackInSlot(0));
+        }
+        return vat.getMain().getFluid() != null && vat.getMain().getFluid().containsFluid(main) && vat.getSecondary().getFluid() != null && vat.getSecondary().getFluid().containsFluid(secondary) && catalyst.apply(vat.getHandler().getStackInSlot(0));
     }
 }

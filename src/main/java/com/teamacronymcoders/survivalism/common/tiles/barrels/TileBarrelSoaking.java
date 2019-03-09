@@ -9,8 +9,9 @@ import com.teamacronymcoders.survivalism.common.inventory.SoakingWrapper;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -126,7 +127,12 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
                 if (HelperMath.tryPercentage(recipe.getFluidUseChance())) {
                     input.getFluid().amount -= recipe.getInput().amount;
                 }
-                inv.getStackInSlot(0).shrink(1);
+                if (recipe.getInputItem() instanceof VanillaIngredient) {
+                    inv.getStackInSlot(0).shrink(((VanillaIngredient) recipe.getInputItem()).getIngredient().getAmount());
+                } else {
+                    inv.getStackInSlot(0).shrink(1);
+                }
+
                 inv.insertItem(1, recipe.getOutput().copy(), false);
             }
         }
@@ -135,8 +141,16 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
     protected void processRaining() {
         World world = getWorld();
         if (!isSealed()) {
-            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-                input.fillInternal(moarWater.copy(), true);
+            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos())) {
+                if (!SurvivalismConfigs.shouldBarrelsRespectRainValueOfBiomes) {
+                    if (world.getBiome(getPos()).canRain()) {
+                        FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                        input.fillInternal(fluidStack.copy(), true);
+                    }
+                } else {
+                    FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                    input.fillInternal(fluidStack.copy(), true);
+                }
             }
         }
     }

@@ -92,7 +92,7 @@ public class ContainerMixing extends Container {
     }
 
     private void sendMessage() {
-        Survivalism.INSTANCE.getPacketHandler().sendToPlayer(new MessageUpdateMixingVat(tile), (EntityPlayerMP) player);
+        tile.markDirty();
     }
 
     @Override

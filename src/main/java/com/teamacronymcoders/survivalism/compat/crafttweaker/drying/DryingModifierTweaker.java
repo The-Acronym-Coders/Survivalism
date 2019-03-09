@@ -8,21 +8,19 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockState;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.world.IBiome;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-// TODO: Finish Implementing
-// TODO: Wait for Kindlich to Add IBiome -> Biome stuff and IBlockState.toCommandString Method
-
-@ZenClass("mods.survivalism.dryingModifiers")
+@ZenClass("mods.survivalism.DryingModifiers")
 @ZenRegister
 public class DryingModifierTweaker {
 
     @ZenMethod
-    public static void addBlockModifier(IBlockState state, double modifier) {
+    public static void addStateModifier(IBlockState state, double modifier) {
         Survivalism.LATE_ADDITIONS.add(new AddStateModifier(state, modifier));
     }
 
@@ -33,10 +31,12 @@ public class DryingModifierTweaker {
 
     private static class AddStateModifier implements IAction {
         net.minecraft.block.state.IBlockState state;
+        String stateID;
         double modifier;
 
         AddStateModifier(IBlockState state, double modifier) {
             this.state = CraftTweakerMC.getBlockState(state);
+            this.stateID = state.toCommandString();
             this.modifier = modifier;
         }
 
@@ -47,11 +47,12 @@ public class DryingModifierTweaker {
             } else {
                 CraftTweakerAPI.logError("State Modifier is already registered!");
             }
+
         }
 
         @Override
         public String describe() {
-            return "Registered Modifier Value: " + state.getBlock().getLocalizedName() + " -> " + modifier;
+            return "Registered Modifier Value: " + stateID+ " -> " + modifier;
         }
     }
 
@@ -60,7 +61,7 @@ public class DryingModifierTweaker {
         Double modifier;
 
         AddBiomeModifier(IBiome biome, double modifier) {
-            this.biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(biome.getName()));
+            this.biome = CraftTweakerMC.getBiome(biome);
             this.modifier = modifier;
         }
 

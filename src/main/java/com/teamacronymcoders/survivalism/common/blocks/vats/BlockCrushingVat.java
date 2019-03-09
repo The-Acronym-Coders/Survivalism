@@ -75,7 +75,6 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> {
             if (!stack.isEmpty()) {
                 InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
             }
-
         }
     }
 

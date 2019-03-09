@@ -56,5 +56,4 @@ public class SoakingRecipe {
     public boolean matches(TileBarrelSoaking barrel) {
         return barrel.getInput().getFluid().containsFluid(input) && inputItem.apply(barrel.getInv().getStackInSlot(0));
     }
-
 }

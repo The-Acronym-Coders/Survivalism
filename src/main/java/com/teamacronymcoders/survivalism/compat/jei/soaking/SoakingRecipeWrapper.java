@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.soaking;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mezz.jei.api.ingredients.IIngredients;

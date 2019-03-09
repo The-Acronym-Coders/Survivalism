@@ -82,7 +82,6 @@ public class CrushingRecipeTweaker {
     }
 
     private static class AddBoots implements IAction {
-
         String desc;
         Ingredient boots;
         double multiplier;

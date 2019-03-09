@@ -10,7 +10,8 @@ import com.teamacronymcoders.survivalism.common.inventory.RangedFluidWrapper;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -32,7 +33,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHasGui, IUpdatingInventory {
 
@@ -123,11 +123,16 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
             }
             if (ticks++ >= recipe.getTicks() && output.fillInternal(recipe.getOutput(), false) == recipe.getOutput().amount) {
                 ticks = 0;
-                for (Map.Entry<Ingredient, Integer> ingredient : recipe.getInputItems().entrySet()) {
-                    for (int i = 0; i < inv.getSlots(); i++) {
-                        ItemStack stack = inv.getStackInSlot(i);
-                        if (ingredient.getKey().apply(stack)) {
-                            stack.shrink(ingredient.getValue());
+                for (Ingredient i : recipe.getInputItems()) {
+                    for (int j = 0; j < inv.getSlots(); j++) {
+                        ItemStack stack = inv.getStackInSlot(j);
+                        if (i.apply(stack)) {
+                            if (i instanceof VanillaIngredient) {
+                                VanillaIngredient vi = (VanillaIngredient) i;
+                                stack.shrink(vi.getIngredient().getAmount());
+                            } else {
+                                stack.shrink(1);
+                            }
                         }
                     }
                 }
@@ -140,8 +145,16 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
     protected void processRaining() {
         World world = getWorld();
         if (!isSealed()) {
-            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-                input.fillInternal(moarWater.copy(), true);
+            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos())) {
+                if (!SurvivalismConfigs.shouldBarrelsRespectRainValueOfBiomes) {
+                    if (world.getBiome(getPos()).canRain()) {
+                        FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                        input.fillInternal(fluidStack.copy(), true);
+                    }
+                } else {
+                    FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                    input.fillInternal(fluidStack.copy(), true);
+                }
             }
         }
     }

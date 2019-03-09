@@ -3,7 +3,7 @@ package com.teamacronymcoders.survivalism;
 import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.commands.CommandBrewing;
 import com.teamacronymcoders.survivalism.utils.commands.CommandCrushing;

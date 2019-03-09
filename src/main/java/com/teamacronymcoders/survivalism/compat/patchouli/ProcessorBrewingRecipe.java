@@ -13,6 +13,7 @@ import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
 
     private void initRecipeVars() {
         inputFluid = FluidUtil.getFilledBucket(recipe.getInput());
-        Set<Ingredient> keys = recipe.getInputItems().keySet();
+        Set<Ingredient> keys = new HashSet<>(recipe.getInputItems());
         ingredients.addAll(keys);
         outputFluid = FluidUtil.getFilledBucket(recipe.getOutput());
     }

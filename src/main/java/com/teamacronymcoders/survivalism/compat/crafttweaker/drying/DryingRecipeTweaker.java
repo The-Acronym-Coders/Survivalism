@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("mods.survivalism.drying")
+@ZenClass("mods.survivalism.Drying")
 @ZenRegister
 public class DryingRecipeTweaker {
 

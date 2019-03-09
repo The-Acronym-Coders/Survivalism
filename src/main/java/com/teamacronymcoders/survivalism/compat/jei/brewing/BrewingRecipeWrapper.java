@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.brewing;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -28,7 +28,7 @@ public class BrewingRecipeWrapper implements IRecipeWrapper {
         ingredients.setInput(VanillaTypes.FLUID, recipe.getInput());
 
         List<ItemStack> stacks = new ArrayList<>();
-        for (Ingredient ingredient : recipe.getInputItems().keySet()) {
+        for (Ingredient ingredient : recipe.getInputItems()) {
             stacks.addAll(Arrays.asList(ingredient.getMatchingStacks()));
         }
         ingredients.setInputs(VanillaTypes.ITEM, stacks);
@@ -61,6 +61,5 @@ public class BrewingRecipeWrapper implements IRecipeWrapper {
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
             minecraft.fontRenderer.drawString(input, xPos, 70, 4210752, false);
         }
-
     }
 }

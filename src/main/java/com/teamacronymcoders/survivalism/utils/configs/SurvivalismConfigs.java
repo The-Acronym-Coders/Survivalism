@@ -1,12 +1,44 @@
-package com.teamacronymcoders.survivalism.utils;
+package com.teamacronymcoders.survivalism.utils.configs;
 
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.teamacronymcoders.base.registrysystem.config.ConfigEntry;
 import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
+import com.teamacronymcoders.base.savesystem.SaveLoader;
+import com.teamacronymcoders.base.util.ClassLoading;
+import com.teamacronymcoders.base.util.Platform;
+import com.teamacronymcoders.base.util.files.BaseFileUtils;
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.json.BiomeToFluid;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.json.IJsonObject;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class SurvivalismConfigs {
+    private static final List<BiomeToFluid> DEFAULT_PAIRINGS = new ArrayList<>();
+
     //Crafttweaker
     public static boolean crtVerboseLogging;
 
@@ -16,6 +48,8 @@ public class SurvivalismConfigs {
     // General Barrels
     public static int rainFillRate;
     public static boolean canBarrelsFillInRain;
+    public static boolean shouldBarrelsRespectRainValueOfBiomes;
+    public static int potionToBottleDrainAmount;
 
     // Brewing
     public static int brewingInputSize;
@@ -37,15 +71,20 @@ public class SurvivalismConfigs {
     public static int mixingOutputTankSize;
 
     // Drying Rack
-    public static boolean doesDryingRackHaveModifiers;
+    public static boolean shouldDryingRackUseModifiers;
 
     private static ConfigRegistry configRegistry = Survivalism.INSTANCE.getRegistry(ConfigRegistry.class, "CONFIG");
+
+    static {
+        DEFAULT_PAIRINGS.add(new BiomeToFluid("minecraft:plains", "water", 5));
+        DEFAULT_PAIRINGS.add(new BiomeToFluid("minecraft:savanna", "lava", 5));
+    }
 
     public static void preInitLoad(FMLPreInitializationEvent event) {
         loadConfigs();
         getValues();
+        initBiomeFluidJSON(new File(configRegistry.getConfigFolder().getPath(), "jsons"));
     }
-
 
     private static void loadConfigs() {
         ConfigEntry crtVerboseLogging = new ConfigEntry("crafttweaker", "crtVerboseLogging", Property.Type.BOOLEAN, "false", "Enables Cleaner Verbose Logging for Crafttweaker Support", false);
@@ -57,11 +96,13 @@ public class SurvivalismConfigs {
         ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
         ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
         ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
-        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("drying_rack", "doesDryingRackHaveModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
+        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("drying_rack", "shouldDryingRackUseModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
         ConfigEntry mixingInputTankSize = new ConfigEntry("mixing_vat", "mixingInputTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Input Tank Size", false);
         ConfigEntry mixingSecondaryTankSize = new ConfigEntry("mixing_vat", "mixingSecondaryTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Secondary Tank Size", false);
         ConfigEntry mixingOutputTankSize = new ConfigEntry("mixing_vat", "mixingOutputTankSize", Property.Type.INTEGER, "32000", "Mixing Vat Output Tank Size", false);
         ConfigEntry crushingTankSize = new ConfigEntry("crushing_vat", "crushingTankSize", Property.Type.INTEGER, "16000", "Crushing Tank Capacity", false);
+        ConfigEntry shouldBarrelsRespectRainValueOfBiomes = new ConfigEntry("barrel_general", "shouldBarrelsRespectRainValueOfBiomes", Property.Type.BOOLEAN, "true", "Should barrels respect that some biomes don't support rain?", false);
+        ConfigEntry potionToBottleDrainAmount = new ConfigEntry("barrel_general", "potionToBottleDrainAmount", Property.Type.INTEGER, "250", "Amount of Potion Fluid to Drain per Bottle");
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -77,6 +118,8 @@ public class SurvivalismConfigs {
         configRegistry.addEntry(mixingSecondaryTankSize);
         configRegistry.addEntry(mixingOutputTankSize);
         configRegistry.addEntry(crushingTankSize);
+        configRegistry.addEntry(shouldBarrelsRespectRainValueOfBiomes);
+        configRegistry.addEntry(potionToBottleDrainAmount);
     }
 
     private static void getValues() {
@@ -89,10 +132,31 @@ public class SurvivalismConfigs {
         brewingOutputSize = configRegistry.getInt("brewingOutputSize", 16000);
         soakingTankSize = configRegistry.getInt("soakingTankSize", 16000);
         storageTankSize = configRegistry.getInt("storageTankSize", 32000);
-        doesDryingRackHaveModifiers = configRegistry.getBoolean("doesDryingRackHaveModifiers", true);
+        shouldDryingRackUseModifiers = configRegistry.getBoolean("shouldDryingRackUseModifiers", true);
         mixingInputTankSize = configRegistry.getInt("mixingInputTankSize", 16000);
         mixingSecondaryTankSize = configRegistry.getInt("mixingSecondaryTankSize", 16000);
         mixingOutputTankSize = configRegistry.getInt("mixingOutputTankSize", 32000);
         crushingTankSize = configRegistry.getInt("crushingTankSize", 16000);
+        shouldBarrelsRespectRainValueOfBiomes = configRegistry.getBoolean("shouldBarrelsRespectRainValueOfBiomes", true);
+        potionToBottleDrainAmount = configRegistry.getInt("potionToBottleDrainAmount", 250);
     }
+
+    private static void initBiomeFluidJSON(File file) {
+        if (!file.exists()) {
+            BaseFileUtils.createFolder(file);
+        }
+        File json = new File(file.getPath(), "biomesfluids.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (!json.exists()) {
+            BaseFileUtils.writeStringToFile(gson.toJson(DEFAULT_PAIRINGS), json);
+        } else {
+            //List<BiomeToFluid> values = gson.fromJson(BaseFileUtils.readFileToString(json), );
+            //for (BiomeToFluid btf : values) {
+            //    btf.register();
+            //}
+        }
+    }
+
+
+
 }

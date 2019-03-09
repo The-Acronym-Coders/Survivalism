@@ -10,11 +10,10 @@ import com.teamacronymcoders.survivalism.common.inventory.MixingFluidWrapper;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateMixingVat;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -92,7 +91,11 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
                 secondary.drainInternal(recipe.getSecondary(), true);
             }
             if (recipe.getCatalyst() != Ingredient.EMPTY) {
-                handler.getStackInSlot(0).shrink(1);
+                if (recipe.getCatalyst() instanceof VanillaIngredient) {
+                    handler.getStackInSlot(0).shrink(((VanillaIngredient) recipe.getCatalyst()).getIngredient().getAmount());
+                } else {
+                    handler.getStackInSlot(0).shrink(1);
+                }
             }
             output.fillInternal(recipe.getOutput(), true);
             dirty = true;
@@ -113,7 +116,7 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
                     return secondary.getFluid() != null && secondary.getFluidAmount() - recipe.getSecondary().amount >= 0;
                 }
                 if (recipe.getCatalyst() != Ingredient.EMPTY) {
-                    return !handler.getStackInSlot(0).isEmpty();
+                    return !handler.getStackInSlot(0).isEmpty() && recipe.getCatalyst().apply(handler.getStackInSlot(0));
                 }
                 return true;
             }

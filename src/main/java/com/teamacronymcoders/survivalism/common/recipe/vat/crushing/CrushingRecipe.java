@@ -60,5 +60,4 @@ public class CrushingRecipe {
     public boolean matches(EntityLivingBase jumper, ItemStack stack) {
         return input.apply(stack);
     }
-
 }
