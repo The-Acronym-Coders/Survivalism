@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.crushing;
+package com.teamacronymcoders.survivalism.compat.jei.vats.crushing;
 
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
@@ -34,8 +34,6 @@ public class CrushingRecipeWrapper implements IRecipeWrapper {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         String input;
         int xPos;
-
-        CrushingRecipeCategory.recipeWidth = recipeWidth;
 
         // Render Output Marker
         input = "->";

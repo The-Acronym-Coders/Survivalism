@@ -44,6 +44,7 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
                 working = true;
             }
             if (recipe == null) {
+                ticks = 0;
                 working = false;
                 return;
             }
@@ -51,6 +52,7 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
             doRainCheck();
             doProcessHandling();
         } else {
+            ticks = 0;
             working = false;
         }
     }
@@ -144,4 +146,19 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
         this.handler.setStackInSlot(0, stack);
     }
 
+    public boolean isWorking() {
+        return working;
+    }
+
+    public int getTicks() {
+        return ticks;
+    }
+
+    public DryingRecipe getRecipe() {
+        return recipe;
+    }
+
+    public UpdatingItemStackHandler getHandler() {
+        return handler;
+    }
 }

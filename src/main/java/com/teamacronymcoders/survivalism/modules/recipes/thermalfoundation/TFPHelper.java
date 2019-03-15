@@ -12,8 +12,11 @@ import javax.annotation.Nonnull;
 
 public class TFPHelper {
 
-    public static boolean isPotion(@Nonnull FluidStack stack) {
+    public static boolean isPotionFluid(@Nonnull FluidStack stack) {
+        return isPotion(stack) || isSplashPotion(stack) || isLingeringPotion(stack);
+    }
 
+    public static boolean isPotion(@Nonnull FluidStack stack) {
         return stack.getFluid().getName().equals("potion");
     }
 
@@ -39,6 +42,7 @@ public class TFPHelper {
         if (type == null || type == PotionTypes.EMPTY) {
             return null;
         }
+
         return addPotionToFluidStack(FluidRegistry.getFluidStack("potion_splash", amount), type);
     }
 

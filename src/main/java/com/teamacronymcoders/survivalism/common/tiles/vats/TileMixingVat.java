@@ -38,11 +38,11 @@ import javax.annotation.Nullable;
 public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHasGui {
 
     protected MixingRecipe recipe;
-    protected FluidTank output = new FluidTank(SurvivalismConfigs.mixingOutputTankSize);
     private int clicks = 0;
     private FluidStack failed;
     private FluidTank main = new FluidTank(SurvivalismConfigs.mixingInputTankSize);
     private FluidTank secondary = new FluidTank(SurvivalismConfigs.mixingSecondaryTankSize);
+    private FluidTank output = new FluidTank(SurvivalismConfigs.mixingOutputTankSize);
     private IFluidHandler fluidHandler = new MixingFluidWrapper(main, secondary, output);
     private UpdatingItemStackHandler handler = new UpdatingItemStackHandler(1, this);
     private boolean working = false;
@@ -98,6 +98,7 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
                 }
             }
             output.fillInternal(recipe.getOutput(), true);
+            clicks = 0;
             dirty = true;
         }
 
@@ -196,6 +197,18 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
 
     public UpdatingItemStackHandler getHandler() {
         return handler;
+    }
+
+    public MixingRecipe getRecipe() {
+        return recipe;
+    }
+
+    public boolean isWorking() {
+        return working;
+    }
+
+    public int getClicks() {
+        return clicks;
     }
 
     @Override

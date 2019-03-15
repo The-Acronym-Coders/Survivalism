@@ -1,12 +1,16 @@
 package com.teamacronymcoders.survivalism.client.gui;
 
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUICrushingVat extends GuiContainer {
 
@@ -46,7 +50,9 @@ public class GUICrushingVat extends GuiContainer {
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getTank().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
-            drawHoveringText(te.getTank().getFluid().getLocalizedName(), x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getTank().getFluid(), te.getTank().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
     }

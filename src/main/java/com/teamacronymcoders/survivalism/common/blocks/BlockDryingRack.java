@@ -1,8 +1,17 @@
 package com.teamacronymcoders.survivalism.common.blocks;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
+import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.client.render.DryingRackTESR;
+import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.TileDryingRack;
+import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
+import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
+import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import mcjty.theoneprobe.api.ElementAlignment;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
+public class BlockDryingRack extends BlockTEBase<TileDryingRack> implements TOPInfoProvider {
 
     public BlockDryingRack() {
         super(Material.WOOD, "drying_rack");
@@ -38,6 +48,7 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
         return te instanceof TileDryingRack ? (TileDryingRack) te : null;
     }
 
+    @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:drying_rack", "inventory"));
         ClientRegistry.bindTileEntitySpecialRenderer(TileDryingRack.class, new DryingRackTESR());
@@ -73,8 +84,9 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
                             currentStack.setCount(currentStack.getCount() - 1);
                             playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, currentStack);
                         }
-                        currentStack.setCount(1);
-                        te.setStack(currentStack);
+                        ItemStack stack = currentStack.copy();
+                        stack.setCount(1);
+                        te.setStack(stack);
                         playerIn.openContainer.detectAndSendChanges();
                         worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                     }
@@ -109,5 +121,23 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> {
     @Override
     public Class<? extends TileEntity> getTileEntityClass() {
         return TileDryingRack.class;
+    }
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity te = world.getTileEntity(data.getPos());
+        if (te instanceof TileDryingRack) {
+            TileDryingRack dryingRack = (TileDryingRack) te;
+            ItemStack input = dryingRack.getStack();
+            probeInfo.text("Working: " + dryingRack.isWorking());
+            if (input != null && dryingRack.isWorking() && dryingRack.getRecipe() != null) {
+                int ticksLeft = (dryingRack.getRecipe().getTicks() - dryingRack.getTicks()) / 20;
+                probeInfo.horizontal(probeInfo.defaultLayoutStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).alignment(ElementAlignment.ALIGN_CENTER)).item(input).text(" -> ").item(dryingRack.getRecipe().getOutput());
+                probeInfo.horizontal().text("Time Left: " + HelperString.getDurationString(ticksLeft));
+                probeInfo.progress(dryingRack.getTicks(), dryingRack.getRecipe().getTicks(), probeInfo.defaultProgressStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).showText(false).alternateFilledColor(Coloring.fromHex("6b92c1").getIntColor()));
+            } else if (input != null) {
+                probeInfo.item(input);
+            }
+        }
     }
 }

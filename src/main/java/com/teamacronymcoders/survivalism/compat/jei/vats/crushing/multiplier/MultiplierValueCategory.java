@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.multiplier;
+package com.teamacronymcoders.survivalism.compat.jei.vats.crushing.multiplier;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import mezz.jei.api.IGuiHelper;

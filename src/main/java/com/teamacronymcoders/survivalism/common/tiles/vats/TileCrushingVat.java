@@ -204,6 +204,10 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         return tank;
     }
 
+    public CrushingRecipe getRecipe() {
+        return curRecipe;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public Gui getGui(EntityPlayer entityPlayer, World world, BlockPos blockPos) {

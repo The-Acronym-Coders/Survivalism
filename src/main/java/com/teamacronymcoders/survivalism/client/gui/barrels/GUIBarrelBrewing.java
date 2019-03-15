@@ -88,23 +88,13 @@ public class GUIBarrelBrewing extends GUIBarrel {
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getInput().getFluid() != null && this.isPointInRegion(44, 18, 16, 47, x, y)) {
             List<String> strings = new ArrayList<>();
-            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
-                GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
-                drawHoveringText(strings, x, y);
-            } else {
-                strings.add(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount() + " / " + te.getInput().getCapacity() + "mB");
-                drawHoveringText(strings, x, y);
-            }
+            GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         if (te.getOutput().getFluid() != null && this.isPointInRegion(116, 18, 16, 47, x, y)) {
             List<String> strings = new ArrayList<>();
-            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
-                GUIHelper.addPotionTooltip(strings, te.getOutput().getFluid(), te.getOutput().getCapacity());
-                drawHoveringText(strings, x, y);
-            } else {
-                strings.add(te.getOutput().getFluid().getLocalizedName() + ": " + te.getOutput().getFluidAmount() + " / " + te.getOutput().getCapacity() + "mB");
-                drawHoveringText(strings, x, y);
-            }
+            GUIHelper.addPotionTooltip(strings, te.getOutput().getFluid(), te.getOutput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
     }

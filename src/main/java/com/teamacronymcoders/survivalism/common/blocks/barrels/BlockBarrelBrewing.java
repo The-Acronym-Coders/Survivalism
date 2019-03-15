@@ -46,6 +46,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
@@ -58,6 +60,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
         setTranslationKey("barrel_brewing");
     }
 
+    @SideOnly(Side.CLIENT)
     public void initModels() {
         NonNullList<ItemStack> items = NonNullList.create();
         this.getSubBlocks(CreativeTabs.SEARCH, items);

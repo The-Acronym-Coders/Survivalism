@@ -13,12 +13,16 @@ info.survivalism.shift=Press Shift for More Information!
 
 state.sealed=Sealed:
 
-survivalism.hwyla.items.input=Input Items:
-survivalism.hwyla.items.output=Output Items:
-
+survivalism.hwyla.fluids.main=Main:
+survivalism.hwyla.fluids.secondary=Secondary:
+survivalism.hwyla.fluids.input=Input:
+survivalism.hwyla.fluids.output=Output:
+survivalism.hwyla.items.items=Item:
+survivalism.hwyla.items.input=Input Item:
+survivalism.hwyla.items.output=Output Item:
 survivalism.hwyla.barrel.sealed=Sealed:
-
 survivalism.hwyla.jumps=Jumps:
+survivalism.hwyla.stirs=Stirs Left:
 
 survivalism.patchouli.time=Time:
 survivalism.patchouli.amount.decrease=Decrease Amount:
@@ -26,14 +30,18 @@ survivalism.patchouli.chance=Decrease Chance:
 survivalism.patchouli.amount=%d mB
 survivalism.patchouli.clicks=Clicks: %d
 
+survivalism.itemstack.no.input=No Input
 survivalism.itemstack.no.output=No Output
 
 survivalism.jei.full.chance=Use Chance: 100
 survivalism.jei.use.chance=Use Chance:
 survivalism.jei.ticks=Ticks:
 survivalism.jei.jumps=Jumps:
+survivalism.jei.clicks=Stirs:
 
 container.jei.survivalism.brewing.name=Brewing
 container.jei.survivalism.soaking.name=Soaking
 container.jei.survivalism.crushing.name=Crushing
 container.jei.survivalism.multiplier.name=Boot Multiplier
+container.jei.survivalism.mixing.name=Mixing
+container.jei.survivalism.drying.name=Drying Rack

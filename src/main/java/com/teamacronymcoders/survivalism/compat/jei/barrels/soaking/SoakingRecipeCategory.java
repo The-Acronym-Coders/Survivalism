@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.soaking;
+package com.teamacronymcoders.survivalism.compat.jei.barrels.soaking;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;

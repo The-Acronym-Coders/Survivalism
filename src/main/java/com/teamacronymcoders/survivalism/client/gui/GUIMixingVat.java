@@ -1,12 +1,16 @@
 package com.teamacronymcoders.survivalism.client.gui;
 
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIMixingVat extends GuiContainer {
 
@@ -62,26 +66,20 @@ public class GUIMixingVat extends GuiContainer {
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getMain().getFluid() != null && this.isPointInRegion(26, 24, 15, 47, x, y)) {
-            drawHoveringText(te.getMain().getFluid().getLocalizedName() + ": " + te.getMain().getFluidAmount() + "/" + te.getMain().getCapacity() + "mB", x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getMain().getFluid(), te.getMain().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         if (te.getSecondary().getFluid() != null && this.isPointInRegion(44, 24, 15, 47, x, y)) {
-            drawHoveringText(te.getSecondary().getFluid().getLocalizedName() + ": " + te.getSecondary().getFluidAmount() + "/" + te.getSecondary().getCapacity() + "mB", x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getSecondary().getFluid(), te.getSecondary().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         if (te.getOutput().getFluid() != null && this.isPointInRegion(134, 24, 15, 47, x, y)) {
-            drawHoveringText(te.getOutput().getFluid().getLocalizedName() + ": " + te.getOutput().getFluidAmount() + "/" + te.getOutput().getCapacity() + "mB", x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getOutput().getFluid(), te.getOutput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
-    }
-
-    public void setMain(FluidStack stack) {
-        te.getMain().setFluid(stack);
-    }
-
-    public void setSecondary(FluidStack stack) {
-        te.getSecondary().setFluid(stack);
-    }
-
-    public void setOutput(FluidStack stack) {
-        te.getOutput().setFluid(stack);
     }
 }

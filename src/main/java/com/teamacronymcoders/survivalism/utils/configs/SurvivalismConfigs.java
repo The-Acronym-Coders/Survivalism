@@ -7,8 +7,13 @@ import com.teamacronymcoders.base.registrysystem.config.ConfigRegistry;
 import com.teamacronymcoders.base.util.files.BaseFileUtils;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.json.BiomeToFluid;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,26 +66,26 @@ public class SurvivalismConfigs {
     public static void preInitLoad(FMLPreInitializationEvent event) {
         loadConfigs();
         getValues();
-        initBiomeFluidJSON(new File(configRegistry.getConfigFolder().getPath(), "jsons"));
+        //initBiomeFluidJSON(new File(configRegistry.getConfigFolder().getPath(), "jsons"));
     }
 
     private static void loadConfigs() {
         ConfigEntry crtVerboseLogging = new ConfigEntry("crafttweaker", "crtVerboseLogging", Property.Type.BOOLEAN, "false", "Enables Cleaner Verbose Logging for Crafttweaker Support", false);
-        ConfigEntry baseJumpValue = new ConfigEntry("crushing_vat", "baseJumpValue", Property.Type.DOUBLE, "1.0", "Base Value per Jump for the Crushing Vat", false);
-        ConfigEntry timeOrTicks = new ConfigEntry("jei", "TimeOrTicks", Property.Type.BOOLEAN, "false", "Set to true if it should display time in HH:MM:SS instead of Ticks?");
+        ConfigEntry baseJumpValue = new ConfigEntry("crushing_vat", "baseJumpValue", Property.Type.DOUBLE, "1.0", "Base Value per Jump for the Crushing Vat", true);
+        ConfigEntry timeOrTicks = new ConfigEntry("jei", "TimeOrTicks", Property.Type.BOOLEAN, "false", "Set to true if it should display time in HH:MM:SS instead of Ticks?", false);
         ConfigEntry rainFillRate = new ConfigEntry("barrel_general", "rainFillRate", Property.Type.INTEGER, "5", "The rate per tick which the barrel fills with water if it's raining and the barrel is left un-sealed to an open sky", false);
-        ConfigEntry canBarrelsFillInRain = new ConfigEntry("barrel_general", "canBarrelsFillInRain", Property.Type.BOOLEAN, "true", "Decides if the barrel should fill if it's raining and left open to the sky", false);
-        ConfigEntry brewingInputSize = new ConfigEntry("brewing_barrel", "brewingInputSize", Property.Type.INTEGER, "16000", "Brewing Input Tank Size", false);
-        ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", false);
-        ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", false);
-        ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", false);
-        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("drying_rack", "shouldDryingRackUseModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", false);
-        ConfigEntry mixingInputTankSize = new ConfigEntry("mixing_vat", "mixingInputTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Input Tank Size", false);
-        ConfigEntry mixingSecondaryTankSize = new ConfigEntry("mixing_vat", "mixingSecondaryTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Secondary Tank Size", false);
-        ConfigEntry mixingOutputTankSize = new ConfigEntry("mixing_vat", "mixingOutputTankSize", Property.Type.INTEGER, "32000", "Mixing Vat Output Tank Size", false);
-        ConfigEntry crushingTankSize = new ConfigEntry("crushing_vat", "crushingTankSize", Property.Type.INTEGER, "16000", "Crushing Tank Capacity", false);
-        ConfigEntry shouldBarrelsRespectRainValueOfBiomes = new ConfigEntry("barrel_general", "shouldBarrelsRespectRainValueOfBiomes", Property.Type.BOOLEAN, "true", "Should barrels respect that some biomes don't support rain?", false);
-        ConfigEntry potionToBottleDrainAmount = new ConfigEntry("barrel_general", "potionToBottleDrainAmount", Property.Type.INTEGER, "250", "Amount of Potion Fluid to Drain per Bottle");
+        ConfigEntry canBarrelsFillInRain = new ConfigEntry("barrel_general", "canBarrelsFillInRain", Property.Type.BOOLEAN, "true", "Decides if the barrel should fill if it's raining and left open to the sky", true);
+        ConfigEntry brewingInputSize = new ConfigEntry("brewing_barrel", "brewingInputSize", Property.Type.INTEGER, "16000", "Brewing Input Tank Size", true);
+        ConfigEntry brewingOutputSize = new ConfigEntry("brewing_barrel", "brewingOutputSize", Property.Type.INTEGER, "16000", "Brewing Output Tank Size", true);
+        ConfigEntry soakingTankSize = new ConfigEntry("soaking_barrel", "soakingTankSize", Property.Type.INTEGER, "16000", "Soaking Tank Size", true);
+        ConfigEntry storageTankSize = new ConfigEntry("storage_barrel", "storageTankSize", Property.Type.INTEGER, "32000", "Storage Tank Size", true);
+        ConfigEntry doesDryingRackHaveModifiers = new ConfigEntry("drying_rack", "shouldDryingRackUseModifiers", Property.Type.BOOLEAN, "true", "Enable if you want the Drying Rack to check below it for a Modifying Block", true);
+        ConfigEntry mixingInputTankSize = new ConfigEntry("mixing_vat", "mixingInputTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Input Tank Size", true);
+        ConfigEntry mixingSecondaryTankSize = new ConfigEntry("mixing_vat", "mixingSecondaryTankSize", Property.Type.INTEGER, "16000", "Mixing Vat Secondary Tank Size", true);
+        ConfigEntry mixingOutputTankSize = new ConfigEntry("mixing_vat", "mixingOutputTankSize", Property.Type.INTEGER, "32000", "Mixing Vat Output Tank Size", true);
+        ConfigEntry crushingTankSize = new ConfigEntry("crushing_vat", "crushingTankSize", Property.Type.INTEGER, "16000", "Crushing Tank Capacity", true);
+        ConfigEntry shouldBarrelsRespectRainValueOfBiomes = new ConfigEntry("barrel_general", "shouldBarrelsRespectRainValueOfBiomes", Property.Type.BOOLEAN, "true", "Should barrels respect that some biomes don't support rain?", true);
+        ConfigEntry potionToBottleDrainAmount = new ConfigEntry("barrel_general", "potionToBottleDrainAmount", Property.Type.INTEGER, "250", "Amount of Potion Fluid to Drain per Bottle", true);
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -132,6 +137,16 @@ public class SurvivalismConfigs {
             //for (BiomeToFluid btf : values) {
             //    btf.register();
             //}
+        }
+    }
+
+    @Mod.EventBusSubscriber(modid = Survivalism.MODID)
+    private static class EventHandler {
+        @SubscribeEvent
+        public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
+            if (event.getModID().equals(Survivalism.MODID)) {
+                ConfigManager.sync(Survivalism.MODID, Config.Type.INSTANCE);
+            }
         }
     }
 

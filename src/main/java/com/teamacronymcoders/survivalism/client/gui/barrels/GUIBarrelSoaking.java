@@ -79,13 +79,8 @@ public class GUIBarrelSoaking extends GUIBarrel {
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getInput().getFluid() != null && this.isPointInRegion(80, 24, 16, 47, x, y)) {
             List<String> strings = new ArrayList<>();
-            if (Loader.isModLoaded("thermalfoundation") || Loader.isModLoaded("immersiveengineering")) {
-                GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
-                drawHoveringText(strings, x, y);
-            } else {
-                strings.add(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount() + " / " + te.getInput().getCapacity() + "mB");
-                drawHoveringText(strings, x, y);
-            }
+            GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
     }

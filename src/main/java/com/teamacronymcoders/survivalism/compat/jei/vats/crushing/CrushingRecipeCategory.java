@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.crushing;
+package com.teamacronymcoders.survivalism.compat.jei.vats.crushing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
@@ -22,12 +22,10 @@ import java.util.List;
 
 public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeWrapper> {
     public static final String NAME = "survivalism.crushing";
-    static int recipeWidth;
     @Nonnull
     private final String localized;
     private final String localizedOutputError;
     private final IDrawable background;
-    private final Object2DoubleMap<Ingredient> doubleMap = CrushingRecipeManager.getBOOTS();
 
     public CrushingRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking_no_inv.png"), 26, 12, 124, 90);

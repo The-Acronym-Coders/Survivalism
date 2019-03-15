@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.brewing;
+package com.teamacronymcoders.survivalism.compat.jei.barrels.brewing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;

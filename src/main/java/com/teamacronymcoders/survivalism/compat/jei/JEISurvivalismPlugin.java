@@ -4,16 +4,22 @@ import com.teamacronymcoders.survivalism.common.ModBlocks;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
+import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
-import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeCategory;
-import com.teamacronymcoders.survivalism.compat.jei.brewing.BrewingRecipeWrapper;
-import com.teamacronymcoders.survivalism.compat.jei.crushing.CrushingRecipeCategory;
-import com.teamacronymcoders.survivalism.compat.jei.crushing.CrushingRecipeWrapper;
-import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueCategory;
-import com.teamacronymcoders.survivalism.compat.jei.multiplier.MultiplierValueWrapper;
-import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeCategory;
-import com.teamacronymcoders.survivalism.compat.jei.soaking.SoakingRecipeWrapper;
+import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
+import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
+import com.teamacronymcoders.survivalism.compat.jei.barrels.brewing.BrewingRecipeCategory;
+import com.teamacronymcoders.survivalism.compat.jei.barrels.brewing.BrewingRecipeWrapper;
+import com.teamacronymcoders.survivalism.compat.jei.vats.crushing.CrushingRecipeCategory;
+import com.teamacronymcoders.survivalism.compat.jei.vats.crushing.CrushingRecipeWrapper;
+import com.teamacronymcoders.survivalism.compat.jei.vats.crushing.multiplier.MultiplierValueCategory;
+import com.teamacronymcoders.survivalism.compat.jei.vats.crushing.multiplier.MultiplierValueWrapper;
+import com.teamacronymcoders.survivalism.compat.jei.barrels.soaking.SoakingRecipeCategory;
+import com.teamacronymcoders.survivalism.compat.jei.barrels.soaking.SoakingRecipeWrapper;
+import com.teamacronymcoders.survivalism.compat.jei.vats.mixing.MixingRecipeCategory;
+import com.teamacronymcoders.survivalism.compat.jei.vats.mixing.MixingRecipeWrapper;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
@@ -33,7 +39,9 @@ public class JEISurvivalismPlugin implements IModPlugin {
                 new BrewingRecipeCategory(helpers.getGuiHelper()),
                 new SoakingRecipeCategory(helpers.getGuiHelper()),
                 new CrushingRecipeCategory(helpers.getGuiHelper()),
-                new MultiplierValueCategory(helpers.getGuiHelper())
+                new MultiplierValueCategory(helpers.getGuiHelper()),
+                new MixingRecipeCategory(helpers.getGuiHelper()),
+                new DryingRackRecipeCategory(helpers.getGuiHelper())
         );
     }
 
@@ -58,5 +66,15 @@ public class JEISurvivalismPlugin implements IModPlugin {
         registry.addRecipes(CrushingRecipeManager.getBOOTS().object2DoubleEntrySet(), MultiplierValueCategory.NAME);
         registry.handleRecipes(Object2DoubleMap.Entry.class, MultiplierValueWrapper::new, MultiplierValueCategory.NAME);
         registry.addRecipeCatalyst(new ItemStack(Items.LEATHER_BOOTS), MultiplierValueCategory.NAME);
+
+        // Mixing
+        registry.addRecipes(MixingRecipeManager.getRecipes(), MixingRecipeCategory.NAME);
+        registry.handleRecipes(MixingRecipe.class, MixingRecipeWrapper::new, MixingRecipeCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockMixingVat), MixingRecipeCategory.NAME);
+
+        // Drying Rack
+        registry.addRecipes(DryingRackRecipeManager.getDryingRecipes(), DryingRackRecipeCategory.NAME);
+        registry.handleRecipes(DryingRecipe.class, DryingRackRecipeWrapper::new, DryingRackRecipeCategory.NAME);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.blockDryingRack), DryingRackRecipeCategory.NAME);
     }
 }

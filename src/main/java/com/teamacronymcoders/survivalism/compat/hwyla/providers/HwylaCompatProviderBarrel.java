@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.hwyla;
+package com.teamacronymcoders.survivalism.compat.hwyla.providers;
 
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
@@ -31,23 +31,22 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
         if (config.getConfig("survivalism.barrel")) {
             if (accessor.getBlock() instanceof BlockBarrelBase && te instanceof TileBarrelBase) {
                 NBTTagCompound compound = accessor.getNBTData();
-
                 currenttip.add(I18n.format("survivalism.hwyla.barrel.sealed") + " " + state.getValue(BlockBarrelBase.SEALED));
-
                 if (compound.hasKey("input")) {
                     FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("input"));
                     if (stack != null) {
-                        currenttip.add(stack.getLocalizedName() + ": " + stack.amount + " / " + compound.getInteger("capacityI") + " mb");
+                        currenttip.remove(stack.getLocalizedName() + ": " + stack.amount + " / " + compound.getInteger("capacityI") + " mB");
+                        currenttip.add(I18n.format("survivalism.hwyla.fluids.input"));
+                        currenttip.add(stack.getLocalizedName() + ": " + stack.amount + " / " + compound.getInteger("capacityI") + " mB");
                     }
                 }
-
                 if (compound.hasKey("output")) {
                     FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompoundTag("output"));
                     if (stack != null) {
-                        currenttip.add(stack.getLocalizedName() + ": " + stack.amount + " / " + compound.getInteger("capacityO") + " mb");
+                        currenttip.add(I18n.format("survivalism.hwyla.fluids.output"));
+                        currenttip.add(stack.getLocalizedName() + ": " + stack.amount + " / " + compound.getInteger("capacityO") + " mB");
                     }
                 }
-
                 if (compound.hasKey("working")) {
                     currenttip.add("Working: " + compound.getBoolean("working"));
                 }

@@ -59,6 +59,9 @@ public class MixingRecipeTweaker {
 
         @Override
         public String describe() {
+            if (secondary == null) {
+                return "Registered Mixing Recipe: " + main.getLocalizedName() + " + " + "null" + ":" + catalystId + " = " + output.getLocalizedName();
+            }
             return "Registered Mixing Recipe: " + main.getLocalizedName() + " + " + secondary.getLocalizedName() + ":" + catalystId + " = " + output.getLocalizedName();
         }
     }

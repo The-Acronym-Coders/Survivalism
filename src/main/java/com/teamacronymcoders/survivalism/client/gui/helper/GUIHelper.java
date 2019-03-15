@@ -11,24 +11,23 @@ import java.util.List;
 public class GUIHelper {
     public static void addPotionTooltip(List<String> strings, FluidStack fluid, int capacity) {
         if (fluid != null) {
-            if (TFPHelper.isPotion(fluid) || TFPHelper.isSplashPotion(fluid) || TFPHelper.isLingeringPotion(fluid)) {
-                strings.add(fluid.getLocalizedName() + ": " + fluid.amount + " / " + capacity + "mB");
+            if (TFPHelper.isPotionFluid(fluid)) {
                 PotionType type = null;
                 if (fluid.tag != null && !fluid.tag.isEmpty() && fluid.tag.hasKey("Potion")) {
                     type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(fluid.tag.getString("Potion")));
                 }
+                String prefix = "";
                 if (type != null) {
-                    if (TFPHelper.isPotion(fluid)) {
-                        strings.add("Potion Name: " + type.getNamePrefixed(""));
-                    } else if (TFPHelper.isSplashPotion(fluid)) {
-                        strings.add("Potion Name: " + type.getNamePrefixed("Splash "));
-                    } else if (TFPHelper.isLingeringPotion(fluid)) {
-                        strings.add("Potion Name: " + type.getNamePrefixed("Lingering "));
-                    }
-                } else {
-                    strings.add("Potion Name: Null");
+                    if (fluid.tag.getString("Potion").contains("strong"))
+                        prefix = "Empowered";
+                    else if (fluid.tag.getString("Potion").contains("long"))
+                        prefix = "Lasting";
                 }
+                strings.add("Fluid: " + prefix + " " + fluid.getLocalizedName() + ":");
+            } else {
+                strings.add("Fluid: " + fluid.getLocalizedName());
             }
+            strings.add("Amount: " + fluid.amount + "/" + capacity + "mB");
         }
     }
 }

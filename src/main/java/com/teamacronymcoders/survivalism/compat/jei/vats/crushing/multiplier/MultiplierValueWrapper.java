@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.jei.multiplier;
+package com.teamacronymcoders.survivalism.compat.jei.vats.crushing.multiplier;
 
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.ingredients.IIngredients;
