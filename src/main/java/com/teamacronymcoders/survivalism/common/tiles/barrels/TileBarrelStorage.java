@@ -35,11 +35,10 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     protected FluidTank input = new FluidTank(SurvivalismConfigs.storageTankSize);
     protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
-    private FluidStack moarWater = FluidRegistry.getFluidStack("water", SurvivalismConfigs.rainFillRate);
 
     @Override
     public void update() {
-        if (!this.isSealed() && input.getFluid() == null || moarWater.isFluidEqual(input.getFluid())) {
+        if (!this.isSealed()) {
             processRaining();
             this.markDirty();
         }
@@ -67,11 +66,11 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
                 if (SurvivalismConfigs.shouldBarrelsRespectRainValueOfBiomes) {
                     if (world.getBiome(getPos()).canRain()) {
                         FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
-                        input.fillInternal(fluidStack.copy(), true);
+                        input.fill(fluidStack, true);
                     }
                 } else {
                     FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
-                    input.fillInternal(fluidStack.copy(), true);
+                    input.fill(fluidStack, true);
                 }
             }
         }

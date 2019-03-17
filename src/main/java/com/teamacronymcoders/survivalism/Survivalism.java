@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism;
 import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
 import com.teamacronymcoders.survivalism.utils.commands.CommandBrewing;
 import com.teamacronymcoders.survivalism.utils.commands.CommandCrushing;
@@ -11,6 +12,7 @@ import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -81,6 +83,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         proxy.init(event);
+        MinecraftForge.EVENT_BUS.register(new TileCrushingVat());
         if (Loader.isModLoaded("crafttweaker")) {
             LATE_REMOVALS.forEach(CraftTweakerAPI::apply);
             LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);

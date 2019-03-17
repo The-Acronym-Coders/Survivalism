@@ -10,6 +10,8 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
+import com.teamacronymcoders.survivalism.utils.event.JumpForceEvent;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
 import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.block.state.IBlockState;
@@ -26,11 +28,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -47,9 +53,11 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     protected FluidTank tank = new FluidTank(SurvivalismConfigs.crushingTankSize);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
+    protected double modifiedBase;
+    protected double jumpModifier;
     protected int fluidLastJump;
 
-    public void onJump(EntityLivingBase jumper) {
+    public void onJump(EntityLivingBase jumper, TileCrushingVat vat) {
         boolean dirty = false;
 
         if (jumper == null || inputInv.getStackInSlot(0).isEmpty()) {
@@ -74,23 +82,42 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         } else if (curRecipe == null) {
             return;
         }
-        jumps += SurvivalismConfigs.baseJumpValue * CrushingRecipeManager.getBootsMultiplier(jumper);
-        if (jumps >= curRecipe.getJumps() && canInsertResults()) {
-            if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
-                outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
-            }
-            tank.fill(curRecipe.getOutput(), true);
-            jumps = 0;
-            dirty = true;
-            if (curRecipe.getInput() instanceof VanillaIngredient) {
-                inputInv.getStackInSlot(0).shrink(((VanillaIngredient) curRecipe.getInput()).getIngredient().getAmount());
-            } else {
-                inputInv.getStackInSlot(0).shrink(1);
+
+        if (MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(SurvivalismConfigs.baseJumpValue));
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.FinalModification(modifiedBase + CrushingRecipeManager.getBootsMultiplier(jumper)));
+            jumps += SurvivalismConfigs.baseJumpValue * jumpModifier;
+
+            if (jumps >= curRecipe.getJumps() && canInsertResults()) {
+                if (MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
+                    if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
+                        outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
+                    }
+                    tank.fill(curRecipe.getOutput(), true);
+                    jumps = 0;
+                    dirty = true;
+                    if (curRecipe.getInput() instanceof VanillaIngredient) {
+                        inputInv.getStackInSlot(0).shrink(((VanillaIngredient) curRecipe.getInput()).getIngredient().getAmount());
+                    } else {
+                        inputInv.getStackInSlot(0).shrink(1);
+                    }
+                }
             }
         }
+
         if (dirty) {
             markDirty();
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onBaseJumpModifier(JumpForceEvent.BaseModification event) {
+        this.modifiedBase = event.getModifiedValue();
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onFinalJumpModifier(JumpForceEvent.FinalModification event) {
+        this.jumpModifier = event.getModifiedValue();
     }
 
     protected boolean canInsertResults() {
