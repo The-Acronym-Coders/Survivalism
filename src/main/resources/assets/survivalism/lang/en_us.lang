@@ -45,3 +45,5 @@ container.jei.survivalism.crushing.name=Crushing
 container.jei.survivalism.multiplier.name=Boot Multiplier
 container.jei.survivalism.mixing.name=Mixing
 container.jei.survivalism.drying.name=Drying Rack
+
+error.crushing=You couldn't muster enough strength to crush this item...

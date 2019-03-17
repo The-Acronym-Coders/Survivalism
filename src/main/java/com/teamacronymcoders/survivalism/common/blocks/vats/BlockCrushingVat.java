@@ -109,7 +109,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> implements TO
     public void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance) {
         TileCrushingVat vat = getTE(world, pos);
         if (vat != null && entity instanceof EntityLivingBase) {
-            if (MinecraftForge.EVENT_BUS.post(new CrushingEvent.Pre((EntityLivingBase) entity, vat))) {
+            if (!MinecraftForge.EVENT_BUS.post(new CrushingEvent.Pre((EntityLivingBase) entity, vat))) {
                 vat.onJump((EntityLivingBase) entity, vat);
             }
         }

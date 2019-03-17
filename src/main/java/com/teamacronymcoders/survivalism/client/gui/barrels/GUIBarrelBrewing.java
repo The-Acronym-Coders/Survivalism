@@ -7,6 +7,7 @@ import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -19,7 +20,7 @@ import java.util.List;
 public class GUIBarrelBrewing extends GUIBarrel {
     private static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
     private static final int WIDTH = 180;
-    private static final int HEIGHT = 163;
+    private static final int HEIGHT = 165;
 
     private TileBarrelBrewing te;
 
@@ -55,10 +56,28 @@ public class GUIBarrelBrewing extends GUIBarrel {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(brewing_background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        StringBuilder string = new StringBuilder();
+        String input;
+        int xPos;
         if (te.isSealed()) {
-            mc.fontRenderer.drawString("Sealed", guiLeft + 72, guiTop + 5, 4210752);
+            if (te.getRecipe() != null) {
+                string.append("(").append(te.getRecipe().getInput().getLocalizedName()).append(") - ");
+                string.append("Sealed");
+                string.append(" - (").append(te.getRecipe().getOutput().getLocalizedName()).append(")");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            } else {
+                string.append("Sealed");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            }
         } else {
-            mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
+            string.append("Un-Sealed");
+            input = string.toString();
+            xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+            mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
         }
     }
 

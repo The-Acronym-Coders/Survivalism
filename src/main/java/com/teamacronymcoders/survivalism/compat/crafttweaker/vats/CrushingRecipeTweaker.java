@@ -3,6 +3,7 @@ package com.teamacronymcoders.survivalism.compat.crafttweaker.vats;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
+import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;
@@ -31,6 +32,16 @@ public class CrushingRecipeTweaker {
     @ZenMethod
     public static void addCrushingMultiplierBoots(IIngredient boots, double multiplier) {
         Survivalism.LATE_ADDITIONS.add(new AddBoots(boots, multiplier));
+    }
+
+    @ZenMethod
+    public static void addGeneralRequirements(String... requirements) {
+        CrushingHandler.addGeneralRequirements(requirements);
+    }
+
+    @ZenMethod
+    public static void addIngredientRequirements(IIngredient input, String... requirements) {
+        Survivalism.LATE_ADDITIONS.add(new AddRequirementToItem(input, requirements));
     }
 
     private static class AddRecipe implements IAction {
@@ -103,6 +114,28 @@ public class CrushingRecipeTweaker {
         @Override
         public String describe() {
             return "Added Multiplier: " + multiplier + " To Boots: " + desc;
+        }
+    }
+
+    private static class AddRequirementToItem implements IAction {
+        Ingredient input;
+        String[] requirements;
+
+        AddRequirementToItem(IIngredient input, String[] requirements) {
+            this.input = CraftTweakerMC.getIngredient(input);
+            this.requirements = requirements;
+        }
+
+        @Override
+        public void apply() {
+            for (ItemStack stack : input.getMatchingStacks()) {
+                CrushingHandler.addRequirementToItemStack(stack, requirements);
+            }
+        }
+
+        @Override
+        public String describe() {
+            return null;
         }
     }
 }

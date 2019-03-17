@@ -73,7 +73,10 @@ repositories{
         name = 'CoFH Maven'
         url = "http://maven.covers1624.net" 
     }
-
+    maven {
+        name 'Darkhax'
+        url 'https://maven.mcmoddev.com/'
+    }
 }
 
 dependencies {
@@ -88,6 +91,8 @@ dependencies {
     // Addon Support
     deobfCompile "vazkii.patchouli:Patchouli:${patchouli_version}"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
+    deobfCompile "net.darkhax.bookshelf:Bookshelf-1.12.2:${bookshelf_version}"
+    deobfCompile "net.darkhax.gamestages:GameStages-1.12.2:${gamestages_version}"
     //deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     //deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
     //deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"

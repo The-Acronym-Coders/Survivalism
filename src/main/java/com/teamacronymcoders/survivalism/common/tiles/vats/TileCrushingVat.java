@@ -45,6 +45,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
+@Mod.EventBusSubscriber
 public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInventory {
 
     public CrushingRecipe curRecipe;
@@ -83,24 +84,22 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
             return;
         }
 
-        if (MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
+        if (!MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
             MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(SurvivalismConfigs.baseJumpValue));
-            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.FinalModification(modifiedBase + CrushingRecipeManager.getBootsMultiplier(jumper)));
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.FinalModification(this.modifiedBase + CrushingRecipeManager.getBootsMultiplier(jumper)));
             jumps += SurvivalismConfigs.baseJumpValue * jumpModifier;
 
             if (jumps >= curRecipe.getJumps() && canInsertResults()) {
-                if (MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
-                    if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
-                        outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
-                    }
-                    tank.fill(curRecipe.getOutput(), true);
-                    jumps = 0;
-                    dirty = true;
-                    if (curRecipe.getInput() instanceof VanillaIngredient) {
-                        inputInv.getStackInSlot(0).shrink(((VanillaIngredient) curRecipe.getInput()).getIngredient().getAmount());
-                    } else {
-                        inputInv.getStackInSlot(0).shrink(1);
-                    }
+                if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
+                    outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
+                }
+                tank.fill(curRecipe.getOutput(), true);
+                jumps = 0;
+                dirty = true;
+                if (curRecipe.getInput() instanceof VanillaIngredient) {
+                    inputInv.getStackInSlot(0).shrink(((VanillaIngredient) curRecipe.getInput()).getIngredient().getAmount());
+                } else {
+                    inputInv.getStackInSlot(0).shrink(1);
                 }
             }
         }
