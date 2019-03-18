@@ -123,8 +123,6 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             buffer.pos( 4F/16F, posY, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
             buffer.pos( 4F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
             tess.draw();
-
-            buffer.setTranslation(0, 0, 0);
             }
             GlStateManager.popMatrix();
     }
