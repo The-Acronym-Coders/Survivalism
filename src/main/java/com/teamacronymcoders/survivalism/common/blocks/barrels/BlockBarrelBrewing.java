@@ -2,6 +2,7 @@ package com.teamacronymcoders.survivalism.common.blocks.barrels;
 
 import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.render.BarrelTESR;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
@@ -45,6 +46,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -68,6 +70,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
             ItemStack item = items.get(i);
             ModelLoader.setCustomModelResourceLocation(item.getItem(), i, new ModelResourceLocation("survivalism:barrel_brewing", "inventory"));
         }
+        ClientRegistry.bindTileEntitySpecialRenderer(TileBarrelBrewing.class, new BarrelTESR());
     }
 
     @Nullable

@@ -29,6 +29,14 @@ public class HelperFluid {
         renderTiledTextureAtlas(x, y, width, height, depth, fluidSprite, fluidStack.getFluid().isGaseous(fluidStack));
     }
 
+    public static float[] getColorRGBA(int color) {
+        float a = alpha(color) / 255.0F;
+        float r = red(color) / 255.0F;
+        float g = green(color) / 255.0F;
+        float b = blue(color) / 255.0F;
+        return new float[]{r, g, b, a};
+    }
+
     private static void setColorRGBA(int color) {
         float a = alpha(color) / 255.0F;
         float r = red(color) / 255.0F;

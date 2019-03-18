@@ -4,6 +4,7 @@ import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -47,7 +48,13 @@ public class CrushingHandler {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             List<String> refs = new ArrayList<>();
             for (ItemStack stack : itemLocks.keySet()) {
-                if (stack.isItemEqual(event.getInputItem())) {
+                if (stack.hasTagCompound()) {
+                    NBTTagCompound compound = stack.getTagCompound();
+                    NBTTagCompound compound1 = event.getInputItem().getTagCompound();
+                    if (compound != null && compound.equals(compound1)) {
+                        refs.addAll(itemLocks.get(stack));
+                    }
+                } else if (stack.isItemEqual(event.getInputItem())) {
                     refs.addAll(itemLocks.get(stack));
                 }
             }
