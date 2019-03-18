@@ -54,7 +54,7 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             stacks.add(((TileBarrelSoaking) te).getInv().getStackInSlot(0));
         } else if (te instanceof TileBarrelStorage) {
             TileBarrelStorage storage = (TileBarrelStorage) te;
-            for (int i = 0; i > storage.getInv().getSlots(); i++) {
+            for (int i = 0; i < storage.getInv().getSlots(); i++) {
                 stacks.add(storage.getInv().getStackInSlot(i));
             }
         }
@@ -76,9 +76,9 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
     }
 
     private void renderFluid(TileBarrelBase te, double x, double y, double z) {
-            GlStateManager.pushMatrix();
-            int capacity = 0;
-            FluidStack fluid = null;
+        GlStateManager.pushMatrix();
+        int capacity = 0;
+        FluidStack fluid = null;
 
         if (te instanceof TileBarrelBrewing) {
             TileBarrelBrewing brewing = (TileBarrelBrewing) te;
@@ -99,34 +99,32 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             fluid = storage.getInput().getFluid();
         }
 
-            if (fluid != null) {
-                Tessellator tess = Tessellator.getInstance();
-                BufferBuilder buffer = tess.getBuffer();
+        if (fluid != null) {
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buffer = tess.getBuffer();
 
-                buffer.setTranslation(x, y, z);
+            bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
+            TextureAtlasSprite flow =  Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getFlowing().toString());
 
-                bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
-                TextureAtlasSprite flow =  Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getFlowing().toString());
+            double posY = .1 + (.8 * ((float) fluid.amount / (float) capacity));
+            float[] color = HelperFluid.getColorRGBA(fluid.getFluid().getColor(fluid));
 
-                double posY = .1 + (.8 * ((float) fluid.amount / (float) capacity));
-                float[] color = HelperFluid.getColorRGBA(fluid.getFluid().getColor(fluid));
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+            buffer.pos( 4F/16F, posY,  4F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY,  4F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY, 12F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, posY, 12F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            tess.draw();
 
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-                buffer.pos( 4F/16F, posY,  4F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos(12F/16F, posY,  4F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos(12F/16F, posY, 12F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos( 4F/16F, posY, 12F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                tess.draw();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+            buffer.pos(12F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, posY, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            tess.draw();
 
-                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-                buffer.pos(12F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos(12F/16F, posY, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos( 4F/16F, posY, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                buffer.pos( 4F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
-                tess.draw();
-
-                buffer.setTranslation(0, 0, 0);
+            buffer.setTranslation(0, 0, 0);
             }
             GlStateManager.popMatrix();
     }
