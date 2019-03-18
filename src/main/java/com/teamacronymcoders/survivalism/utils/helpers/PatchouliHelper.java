@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.utils.helpers;
 
-public class HelperPatchouli {
+public class PatchouliHelper {
     public static String getDurationString(int seconds) {
 
         int hours = seconds / 3600;

@@ -2,8 +2,8 @@ package com.teamacronymcoders.survivalism.compat.jei.barrels.soaking;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import com.teamacronymcoders.survivalism.utils.helpers.MathHelper;
+import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -47,7 +47,7 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
 
         // Render Time
         if (SurvivalismConfigs.timeOrTicks) {
-            input = HelperString.getDurationString(recipe.getTicks() / 20);
+            input = StringHelper.getDurationString(recipe.getTicks() / 20);
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
             minecraft.fontRenderer.drawString(input, xPos, 63, 4210752, false);
         } else {
@@ -61,7 +61,7 @@ public class SoakingRecipeWrapper implements IRecipeWrapper {
             input = I18n.format("survivalism.jei.full.chance") + "%";
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
         } else {
-            input = I18n.format("survivalism.jei.use.chance") + " " + HelperMath.round((recipe.getFluidUseChance() * 100), 2) + "%";
+            input = I18n.format("survivalism.jei.use.chance") + " " + MathHelper.round((recipe.getFluidUseChance() * 100), 2) + "%";
             xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
         }
         minecraft.fontRenderer.drawString(input, xPos, 0, 4210752, false);

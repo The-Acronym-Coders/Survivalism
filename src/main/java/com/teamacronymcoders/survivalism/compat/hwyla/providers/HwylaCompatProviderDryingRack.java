@@ -1,9 +1,8 @@
 package com.teamacronymcoders.survivalism.compat.hwyla.providers;
 
 import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
-import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.TileDryingRack;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -31,7 +30,7 @@ public class HwylaCompatProviderDryingRack implements IWailaDataProvider {
             if (compound.hasKey("ticksR") && compound.hasKey("ticksC")) {
                 int ticksLeft;
                 ticksLeft = (compound.getInteger("ticksR") - compound.getInteger("ticksC")) / 20;
-                tooltip.add("Time Left: " + HelperString.getDurationString(ticksLeft));
+                tooltip.add("Time Left: " + StringHelper.getDurationString(ticksLeft));
             }
         }
         return tooltip;

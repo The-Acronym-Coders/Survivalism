@@ -69,6 +69,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         proxy.preInit(event);
+        MinecraftForge.EVENT_BUS.register(new TileCrushingVat());
         logger = event.getModLog();
         SurvivalismPacketHandler.registerMessages();
     }
@@ -83,7 +84,6 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         proxy.init(event);
-        MinecraftForge.EVENT_BUS.register(new TileCrushingVat());
         if (Loader.isModLoaded("crafttweaker")) {
             LATE_REMOVALS.forEach(CraftTweakerAPI::apply);
             LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);

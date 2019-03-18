@@ -4,14 +4,13 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class GUIBarrelStorage extends GUIBarrel {
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(134, y - 2, 16, h, 1, te.getInput().getFluid());
+            FluidHelper.renderTiledFluid(134, y - 2, 16, h, 1, te.getInput().getFluid());
         }
     }
 

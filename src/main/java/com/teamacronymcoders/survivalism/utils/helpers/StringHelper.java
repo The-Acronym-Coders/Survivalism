@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.utils.helpers;
 
-public class HelperString {
+public class StringHelper {
 
     public static String getDurationString(int seconds) {
 

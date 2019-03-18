@@ -9,7 +9,7 @@ import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -267,7 +267,7 @@ public class BlockBarrelSoaking extends BlockBarrelBase implements TOPInfoProvid
             if (soaking.getRecipe() != null) {
                 int ticksLeft = (soaking.getRecipe().getTicks() - soaking.getTicks()) / 20;
                 if (soaking.getWorking()) {
-                    probeInfo.horizontal().text("Time Left: " + HelperString.getDurationString(ticksLeft));
+                    probeInfo.horizontal().text("Time Left: " + StringHelper.getDurationString(ticksLeft));
                     probeInfo.horizontal(probeInfo.defaultLayoutStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor())).progress(soaking.getTicks(), soaking.getRecipe().getTicks(), probeInfo.defaultProgressStyle().borderColor(Coloring.fromHex("c19a6b").getIntColor()).showText(false).alternateFilledColor(Coloring.fromHex("6b92c1").getIntColor()));
                 }
             }

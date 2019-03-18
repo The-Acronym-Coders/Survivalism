@@ -1,18 +1,16 @@
 package com.teamacronymcoders.survivalism.common.blocks.vats;
 
 import com.teamacronymcoders.base.blocks.BlockTEBase;
-import com.teamacronymcoders.base.util.Coloring;
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.render.CrushingTESR;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -45,6 +43,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,6 +71,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> implements TO
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:crushing_vat", "inventory"));
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCrushingVat.class, new CrushingTESR());
     }
 
     @Override

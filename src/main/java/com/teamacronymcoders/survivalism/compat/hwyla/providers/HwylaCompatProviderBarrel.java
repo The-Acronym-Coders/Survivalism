@@ -5,7 +5,7 @@ import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperString;
+import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -54,10 +54,10 @@ public class HwylaCompatProviderBarrel implements IWailaDataProvider {
                     int ticksLeft;
                     if (state.getValue(BlockBarrelBase.SEALED)) {
                         ticksLeft = (compound.getInteger("ticksR") - compound.getInteger("ticksC")) / 20;
-                        currenttip.add("Time Left: " + HelperString.getDurationString(ticksLeft));
+                        currenttip.add("Time Left: " + StringHelper.getDurationString(ticksLeft));
                     } else {
                         ticksLeft = (compound.getInteger("ticksR") - compound.getInteger("ticksC")) / 20;
-                        currenttip.remove("Time Left: " + HelperString.getDurationString(ticksLeft));
+                        currenttip.remove("Time Left: " + StringHelper.getDurationString(ticksLeft));
                     }
                 }
             }

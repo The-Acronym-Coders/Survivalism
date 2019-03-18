@@ -3,11 +3,10 @@ package com.teamacronymcoders.survivalism.client.gui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class GUIMixingVat extends GuiContainer {
             float offset = amount * hr;
             int y = Math.round(71 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(26, y, 16, h, 1, te.getMain().getFluid());
+            FluidHelper.renderTiledFluid(26, y, 16, h, 1, te.getMain().getFluid());
         }
         if (te.getSecondary().getFluid() != null) {
             int amount = te.getSecondary().getFluidAmount();
@@ -51,7 +50,7 @@ public class GUIMixingVat extends GuiContainer {
             float offset = amount * hr;
             int y = Math.round(71 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getSecondary().getFluid());
+            FluidHelper.renderTiledFluid(44, y, 16, h, 1, te.getSecondary().getFluid());
         }
         if (te.getOutput().getFluid() != null) {
             int amount = te.getOutput().getFluidAmount();
@@ -59,7 +58,7 @@ public class GUIMixingVat extends GuiContainer {
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(134, y, 16, h, 1, te.getOutput().getFluid());
+            FluidHelper.renderTiledFluid(134, y, 16, h, 1, te.getOutput().getFluid());
         }
     }
 

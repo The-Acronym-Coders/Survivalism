@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
-public class HelperFluid {
+public class FluidHelper {
 
     protected static Minecraft mc = Minecraft.getMinecraft();
 

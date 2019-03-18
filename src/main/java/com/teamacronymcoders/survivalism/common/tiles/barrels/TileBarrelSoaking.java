@@ -10,7 +10,7 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.SoakingRecipe;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import com.teamacronymcoders.survivalism.utils.helpers.MathHelper;
 import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
@@ -25,7 +25,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -126,7 +125,7 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
                     return;
                 }
                 ticks = 0;
-                if (HelperMath.tryPercentage(recipe.getFluidUseChance())) {
+                if (MathHelper.tryPercentage(recipe.getFluidUseChance())) {
                     input.getFluid().amount -= recipe.getInput().amount;
                 }
                 if (recipe.getInputItem() instanceof VanillaIngredient) {

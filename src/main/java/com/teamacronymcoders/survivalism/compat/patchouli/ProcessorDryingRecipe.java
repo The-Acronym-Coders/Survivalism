@@ -2,7 +2,7 @@ package com.teamacronymcoders.survivalism.compat.patchouli;
 
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperPatchouli;
+import com.teamacronymcoders.survivalism.utils.helpers.PatchouliHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -28,7 +28,7 @@ public class ProcessorDryingRecipe implements IComponentProcessor {
             case "time_label":
                 return I18n.format("survivalism.patchouli.time");
             case "time":
-                return HelperPatchouli.getDurationString(recipe.getTicks() / 20);
+                return PatchouliHelper.getDurationString(recipe.getTicks() / 20);
         }
         return null;
     }

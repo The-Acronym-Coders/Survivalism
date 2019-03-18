@@ -2,7 +2,7 @@ package com.teamacronymcoders.survivalism.compat.patchouli.barrel;
 
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperPatchouli;
+import com.teamacronymcoders.survivalism.utils.helpers.PatchouliHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -59,7 +59,7 @@ public class ProcessorBrewingRecipe implements IComponentProcessor {
             case "time_label":
                 return I18n.format("survivalism.patchouli.time");
             case "time":
-                return HelperPatchouli.getDurationString(recipe.getTicks() / 20);
+                return PatchouliHelper.getDurationString(recipe.getTicks() / 20);
         }
         return null;
     }

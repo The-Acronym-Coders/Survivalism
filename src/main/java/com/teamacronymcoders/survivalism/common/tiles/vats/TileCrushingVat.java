@@ -12,7 +12,7 @@ import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingReci
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
 import com.teamacronymcoders.survivalism.utils.event.JumpForceEvent;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import com.teamacronymcoders.survivalism.utils.helpers.MathHelper;
 import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
@@ -34,7 +34,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,7 +44,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber
 public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInventory {
 
     public CrushingRecipe curRecipe;
@@ -90,7 +88,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
             jumps += jumpModifier;
 
             if (jumps >= curRecipe.getJumps() && canInsertResults()) {
-                if (HelperMath.tryPercentage(curRecipe.getItemChance())) {
+                if (MathHelper.tryPercentage(curRecipe.getItemChance())) {
                     outputInv.insertItem(0, curRecipe.getOutputStack().copy(), false);
                 }
                 tank.fill(curRecipe.getOutput(), true);

@@ -1,7 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.vats.crushing;
 
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperMath;
+import com.teamacronymcoders.survivalism.utils.helpers.MathHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -51,7 +51,7 @@ public class CrushingRecipeWrapper implements IRecipeWrapper {
                 xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
                 minecraft.fontRenderer.drawString(input, xPos + 40, 17, 4210752, false);
             } else {
-                input = HelperMath.round((recipe.getItemChance() * 100), 2) + "%";
+                input = MathHelper.round((recipe.getItemChance() * 100), 2) + "%";
                 xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
                 minecraft.fontRenderer.drawString(input, xPos + 40, 18, 4210752, false);
             }

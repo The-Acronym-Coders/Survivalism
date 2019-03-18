@@ -1,18 +1,22 @@
 package com.teamacronymcoders.survivalism.client.render;
 
 import com.teamacronymcoders.survivalism.common.tiles.barrels.*;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
+
+import static com.teamacronymcoders.survivalism.utils.helpers.RenderHelper.colEnd;
+import static com.teamacronymcoders.survivalism.utils.helpers.RenderHelper.posTex;
 
 public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
     
@@ -25,7 +29,7 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
         GlStateManager.disableRescaleNormal();
         if(!te.isSealed()) {
             renderItem(te);
-            renderFluid(te, x, y, z);
+            renderFluid(te);
         }
         
         GlStateManager.popMatrix();
@@ -55,17 +59,25 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             GlStateManager.pushMatrix();
             
             GlStateManager.translate(.5, .75, .5);
-            GlStateManager.scale(.5f, .5f, .5f);
             for(ItemStack stack : stacks) {
+                if (stack.getItem() instanceof ItemBlock) {
+                    GlStateManager.scale(.25f, .25f, .25f);
+                } else {
+                    GlStateManager.scale(.5f, .5f, .5f);
+                }
                 GlStateManager.rotate(360F / stacks.size(), 0f, 1f, 0f);
                 Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
+                if (stack.getItem() instanceof ItemBlock) {
+                    GlStateManager.scale(4f, 4f, 4f);
+                } else {
+                    GlStateManager.scale(2f, 2f, 2f);
+                }
             }
-            
             GlStateManager.popMatrix();
         }
     }
     
-    private void renderFluid(TileBarrelBase te, double x, double y, double z) {
+    private void renderFluid(TileBarrelBase te) {
         GlStateManager.pushMatrix();
         int capacity = 0;
         FluidStack fluid = null;
@@ -95,10 +107,9 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             
             bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
-            TextureAtlasSprite flow = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getFlowing().toString());
             
             float posY = 3+ (((float) fluid.amount / (float) capacity) * 11f);
-            float[] color = HelperFluid.getColorRGBA(fluid.getFluid().getColor(fluid));
+            float[] color = FluidHelper.getColorRGBA(fluid.getFluid().getColor(fluid));
             GlStateManager.disableCull();
             GlStateManager.enableBlend();
             GlStateManager.disableLighting();
@@ -161,17 +172,5 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             
         }
         GlStateManager.popMatrix();
-    }
-    
-    public float s(float num) {
-        return num / 16f;
-    }
-    
-    public BufferBuilder posTex(BufferBuilder buff, TextureAtlasSprite sprite, float x, float y, float z) {
-        return buff.pos(s(x), s(y), s(z)).tex(sprite.getInterpolatedU(x), sprite.getInterpolatedV(z));
-    }
-    
-    public void colEnd(BufferBuilder buff, float[] color) {
-        buff.color(color[0], color[1], color[2], color[3]).endVertex();
     }
 }

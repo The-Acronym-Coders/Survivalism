@@ -4,14 +4,12 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
             float offset = inputTank * hr;
             int y = Math.round(65 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
+            FluidHelper.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
         }
         if (te.getOutput().getFluid() != null) {
             // Output
@@ -99,7 +97,7 @@ public class GUIBarrelBrewing extends GUIBarrel {
             float offset = outputTank * hr;
             int y = Math.round(65 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(116, y, 16, h, 1, te.getOutput().getFluid());
+            FluidHelper.renderTiledFluid(116, y, 16, h, 1, te.getOutput().getFluid());
         }
     }
 

@@ -3,7 +3,7 @@ package com.teamacronymcoders.survivalism.client.gui;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ public class GUICrushingVat extends GuiContainer {
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(80, y, 16, h, 1, te.getTank().getFluid());
+            FluidHelper.renderTiledFluid(80, y, 16, h, 1, te.getTank().getFluid());
         }
     }
 
