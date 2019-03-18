@@ -111,19 +111,19 @@ public class BarrelTESR extends TileEntitySpecialRenderer<TileBarrelBase> {
             float[] color = HelperFluid.getColorRGBA(fluid.getFluid().getColor(fluid));
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-            buffer.pos( 4F/16F, posY,  4F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos(12F/16F, posY,  4F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV( 4F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos(12F/16F, posY, 12F/16F).tex(still.getInterpolatedU(12F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos( 4F/16F, posY, 12F/16F).tex(still.getInterpolatedU( 4F), still.getInterpolatedV(12F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, posY,  4F/16F).tex(still.getInterpolatedU( 4), still.getInterpolatedV( 4)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY,  4F/16F).tex(still.getInterpolatedU(12), still.getInterpolatedV( 4)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY, 12F/16F).tex(still.getInterpolatedU(12), still.getInterpolatedV(12)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, posY, 12F/16F).tex(still.getInterpolatedU( 4), still.getInterpolatedV(12)).color(color[0], color[1], color[2], color[3]).endVertex();
             tess.draw();
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-            buffer.pos(12F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos(12F/16F, posY, 12F/16F).tex(flow.getInterpolatedU(12F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos( 4F/16F, posY, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV( 1F)).color(color[0], color[1], color[2], color[3]).endVertex();
-            buffer.pos( 4F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU( 4F), flow.getInterpolatedV(15F)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU(12), flow.getInterpolatedV(15)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos(12F/16F, posY, 12F/16F).tex(flow.getInterpolatedU(12), flow.getInterpolatedV( 1)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, posY, 12F/16F).tex(flow.getInterpolatedU( 4), flow.getInterpolatedV( 1)).color(color[0], color[1], color[2], color[3]).endVertex();
+            buffer.pos( 4F/16F, 1F/16F, 12F/16F).tex(flow.getInterpolatedU( 4), flow.getInterpolatedV(15)).color(color[0], color[1], color[2], color[3]).endVertex();
             tess.draw();
             }
-            GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 }
