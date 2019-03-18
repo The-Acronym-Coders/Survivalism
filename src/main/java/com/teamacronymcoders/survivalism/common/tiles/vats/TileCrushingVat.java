@@ -83,8 +83,8 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
 
         if (!MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
             multiplierBase += CrushingRecipeManager.getBootsMultiplier(jumper);
-            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(this));
-            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.MultiplierModification(this));
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(jumper, this, jumpBase));
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.MultiplierModification(jumper, this, multiplierBase));
             jumps += (jumpBase * multiplierBase);
 
             if (jumps >= curRecipe.getJumps() && canInsertResults()) {
