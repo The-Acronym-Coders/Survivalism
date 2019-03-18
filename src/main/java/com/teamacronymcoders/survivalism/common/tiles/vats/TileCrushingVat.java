@@ -100,6 +100,9 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
                     inputInv.getStackInSlot(0).shrink(1);
                 }
             }
+
+            jumpBase = SurvivalismConfigs.baseJumpValue;
+            multiplierBase = 0d;
         }
 
         if (dirty) {
