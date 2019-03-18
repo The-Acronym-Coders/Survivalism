@@ -9,6 +9,7 @@ import com.teamacronymcoders.survivalism.common.inventory.IUpdatingInventory;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
+import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
 import com.teamacronymcoders.survivalism.utils.event.JumpForceEvent;
@@ -34,8 +35,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -52,8 +51,8 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     protected FluidTank tank = new FluidTank(SurvivalismConfigs.crushingTankSize);
     protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
     protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
-    protected double modifiedBase;
-    protected double jumpModifier;
+    protected double jumpBase = SurvivalismConfigs.baseJumpValue;
+    protected double multiplierBase;
     protected int fluidLastJump;
 
     public void onJump(EntityLivingBase jumper, TileCrushingVat vat) {
@@ -83,9 +82,10 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         }
 
         if (!MinecraftForge.EVENT_BUS.post(new CrushingEvent.Post(jumper, vat))) {
-            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(SurvivalismConfigs.baseJumpValue));
-            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.FinalModification(this.modifiedBase + CrushingRecipeManager.getBootsMultiplier(jumper)));
-            jumps += jumpModifier;
+            multiplierBase += CrushingRecipeManager.getBootsMultiplier(jumper);
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.BaseModification(this));
+            MinecraftForge.EVENT_BUS.post(new JumpForceEvent.MultiplierModification(this));
+            jumps += (jumpBase * multiplierBase);
 
             if (jumps >= curRecipe.getJumps() && canInsertResults()) {
                 if (MathHelper.tryPercentage(curRecipe.getItemChance())) {
@@ -107,15 +107,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onBaseJumpModifier(JumpForceEvent.BaseModification event) {
-        this.modifiedBase = event.getModifiedValue();
-    }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onFinalJumpModifier(JumpForceEvent.FinalModification event) {
-        this.jumpModifier = event.getModifiedValue();
-    }
 
     protected boolean canInsertResults() {
         if (tank.getFluid() == null && (curRecipe.getOutputStack().isEmpty() || outputInv.getStackInSlot(0).isEmpty())) {
@@ -230,6 +222,36 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
 
     public CrushingRecipe getRecipe() {
         return curRecipe;
+    }
+
+    public void addJumpBaseMod(double modifier) {
+        jumpBase += modifier;
+    }
+
+    public void removeJumpBaseMod(double modifier) {
+        jumpBase -= modifier;
+        if (jumpBase < 0d) {
+            jumpBase = 0d;
+        }
+    }
+
+    public double getJumpBase() {
+        return jumpBase;
+    }
+
+    public void addMultiplierBaseMod(double modifier) {
+        multiplierBase += modifier;
+    }
+
+    public void removeMultiplierBaseMod(double modifier) {
+        multiplierBase -= modifier;
+        if (multiplierBase < 0d) {
+            multiplierBase = 0d;
+        }
+    }
+
+    public double getMultiplierBase() {
+        return multiplierBase;
     }
 
     @Override

@@ -1,75 +1,49 @@
 package com.teamacronymcoders.survivalism.utils.event;
 
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class JumpForceEvent extends Event {
     public JumpForceEvent() {}
 
     public static class BaseModification extends JumpForceEvent {
-        private double originalValue;
-        private double modifiedValue;
+        TileCrushingVat vat;
 
-        public BaseModification(double value) {
-            this.originalValue = value;
-            this.modifiedValue = value;
+        public BaseModification(TileCrushingVat vat) {
+            this.vat = vat;
         }
 
-        public double getModifiedValue() {
-            return modifiedValue;
+        public void addBaseValue(double modification) {
+            vat.addJumpBaseMod(modification);
         }
 
-        public void addToModifier(double modifier) {
-            modifiedValue += modifier;
+        public void removeBaseValue(double modification) {
+            vat.removeJumpBaseMod(modification);
         }
 
-        public void removeFromModifier(double modifier) {
-            if ((modifiedValue -= modifier) >= 0) {
-                modifiedValue -= modifier;
-            } else {
-                modifiedValue = 0d;
-            }
+        public double getBaseValue() {
+            return vat.getJumpBase();
         }
 
-        public void setModifiedValue(double value) {
-            this.modifiedValue = value;
-        }
-
-        public double getOriginalValue() {
-            return originalValue;
-        }
     }
 
-    public static class FinalModification extends JumpForceEvent {
-        private double originalValue;
-        private double modifiedValue;
+    public static class MultiplierModification extends JumpForceEvent {
+        TileCrushingVat vat;
 
-        public FinalModification(double value) {
-            this.originalValue = value;
-            this.modifiedValue = value;
+        public MultiplierModification(TileCrushingVat vat) {
+            this.vat = vat;
         }
 
-        public double getModifiedValue() {
-            return modifiedValue;
+        public void addMultiplierValue(double modification) {
+            vat.addMultiplierBaseMod(modification);
         }
 
-        public void addToModifier(double modifier) {
-            modifiedValue += modifier;
+        public void removeMultiplierValue(double modification) {
+            vat.removeMultiplierBaseMod(modification);
         }
 
-        public void removeFromModifier(double modifier) {
-            if ((modifiedValue -= modifier) >= 0) {
-                modifiedValue -= modifier;
-            } else {
-                modifiedValue = 0d;
-            }
-        }
-
-        public void setModifiedValue(double value) {
-            this.modifiedValue = value;
-        }
-
-        public double getOriginalValue() {
-            return originalValue;
+        public double getMultiplierValue() {
+            return vat.getMultiplierBase();
         }
     }
 
