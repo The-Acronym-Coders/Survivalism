@@ -76,16 +76,19 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
     }
 
     @Override
+    @Deprecated
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isNormalCube(IBlockState state) {
         return false;
     }
@@ -108,6 +111,7 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
     }
 
     @Override
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         if (meta == 0) {
             return getDefaultState().withProperty(SEALED, false);

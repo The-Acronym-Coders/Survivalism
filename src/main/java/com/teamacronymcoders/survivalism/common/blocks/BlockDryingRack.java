@@ -52,17 +52,20 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> implements TOPI
     }
 
     @Override
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isBlockNormalCube(IBlockState blockState) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState blockState) {
         return false;
     }
@@ -105,6 +108,7 @@ public class BlockDryingRack extends BlockTEBase<TileDryingRack> implements TOPI
     }
 
     @Override
+    @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return new AxisAlignedBB(0, 0, 0, 1, 0.5, 1);
     }
