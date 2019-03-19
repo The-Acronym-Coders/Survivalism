@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.utils.event;
+package com.teamacronymcoders.survivalism.utils.event.crushing;
 
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraft.entity.EntityLivingBase;

@@ -8,7 +8,7 @@ import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import com.teamacronymcoders.survivalism.utils.event.CrushingEvent;
+import com.teamacronymcoders.survivalism.utils.event.crushing.CrushingEvent;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;

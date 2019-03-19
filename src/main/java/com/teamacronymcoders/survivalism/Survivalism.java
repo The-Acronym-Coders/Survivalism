@@ -4,10 +4,10 @@ import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
+import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
+import com.teamacronymcoders.survivalism.compat.gamestages.MixingHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
-import com.teamacronymcoders.survivalism.utils.commands.CommandBrewing;
-import com.teamacronymcoders.survivalism.utils.commands.CommandCrushing;
-import com.teamacronymcoders.survivalism.utils.commands.CommandSoaking;
+import com.teamacronymcoders.survivalism.utils.commands.*;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
@@ -62,6 +62,8 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         dumps.addSubcommand(new CommandBrewing());
         dumps.addSubcommand(new CommandCrushing());
         dumps.addSubcommand(new CommandSoaking());
+        dumps.addSubcommand(new CommandDrying());
+        dumps.addSubcommand(new CommandMixing());
     }
 
     @Override
@@ -69,7 +71,8 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         proxy.preInit(event);
-        MinecraftForge.EVENT_BUS.register(new TileCrushingVat());
+        MinecraftForge.EVENT_BUS.register(new CrushingHandler());
+        MinecraftForge.EVENT_BUS.register(new MixingHandler());
         logger = event.getModLog();
         SurvivalismPacketHandler.registerMessages();
     }

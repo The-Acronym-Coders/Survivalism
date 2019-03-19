@@ -11,6 +11,7 @@ import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandl
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.event.mixing.MixingEvent;
 import crafttweaker.mc1120.item.VanillaIngredient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -58,12 +60,12 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
         this.markDirty();
     }
 
-    public boolean onMix() {
-        processMixing();
+    public boolean onMix(EntityPlayer player) {
+        processMixing(player);
         return working;
     }
 
-    protected void processMixing() {
+    protected void processMixing(EntityPlayer player) {
         boolean dirty = false;
 
         if (recipe != null && recipe.getCatalyst() != Ingredient.EMPTY && handler.getStackInSlot(0).isEmpty()) {
@@ -85,7 +87,7 @@ public class TileMixingVat extends TileEntity implements IUpdatingInventory, IHa
             }
         }
 
-        if (clicks++ >= recipe.getClicks() && canResolveRecipe()) {
+        if (!MinecraftForge.EVENT_BUS.post(new MixingEvent.Post(player, this)) && clicks++ >= recipe.getClicks() && canResolveRecipe()) {
             main.drainInternal(recipe.getMain(), true);
             if (recipe.getSecondary() != null) {
                 secondary.drainInternal(recipe.getSecondary(), true);

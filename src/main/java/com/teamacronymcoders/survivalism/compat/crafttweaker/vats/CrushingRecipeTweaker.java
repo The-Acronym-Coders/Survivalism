@@ -40,8 +40,8 @@ public class CrushingRecipeTweaker {
     }
 
     @ZenMethod
-    public static void addIngredientRequirements(IIngredient input, String... requirements) {
-        Survivalism.LATE_ADDITIONS.add(new AddRequirementToItem(input, requirements));
+    public static void addRecipeRequirements(String id, String[] requirements) {
+        Survivalism.LATE_ADDITIONS.add(new AddRequirementToItem(new ResourceLocation(id), requirements));
     }
 
     private static class AddRecipe implements IAction {
@@ -118,24 +118,22 @@ public class CrushingRecipeTweaker {
     }
 
     private static class AddRequirementToItem implements IAction {
-        Ingredient input;
+        ResourceLocation id;
         String[] requirements;
 
-        AddRequirementToItem(IIngredient input, String[] requirements) {
-            this.input = CraftTweakerMC.getIngredient(input);
+        AddRequirementToItem(ResourceLocation id, String[] requirements) {
+            this.id = id;
             this.requirements = requirements;
         }
 
         @Override
         public void apply() {
-            for (ItemStack stack : input.getMatchingStacks()) {
-                CrushingHandler.addRequirementToItemStack(stack, requirements);
-            }
+            CrushingHandler.addRecipeRequirements(id, requirements);
         }
 
         @Override
         public String describe() {
-            return null;
+            return "Added Requirements to Recipe ID: " + id.toString();
         }
     }
 }

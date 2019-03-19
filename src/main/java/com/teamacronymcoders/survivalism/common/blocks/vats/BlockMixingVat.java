@@ -10,6 +10,7 @@ import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
 import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.event.mixing.MixingEvent;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -36,6 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -83,7 +85,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
 
         // Mix the Mixing Vat
         if (held.getItem() instanceof ItemMixingSpoon) {
-            if (vat.onMix()) {
+            if (!MinecraftForge.EVENT_BUS.post(new MixingEvent.Pre(playerIn, vat)) && vat.onMix(playerIn)) {
                 held.damageItem(1, playerIn);
                 vat.markDirty();
             }

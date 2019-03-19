@@ -1,8 +1,9 @@
-package com.teamacronymcoders.survivalism.utils.event;
+package com.teamacronymcoders.survivalism.utils.event.crushing;
 
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -29,27 +30,15 @@ public class CrushingEvent extends LivingEvent {
 
     @Cancelable
     public static class Post extends CrushingEvent {
-        private ItemStack inputItem;
-        private ItemStack outputItem;
-        private FluidStack outputFluid;
+        private ResourceLocation id;
 
         public Post(EntityLivingBase entity, TileCrushingVat vat) {
             super(entity, vat);
-            this.inputItem = vat.getInputInv().getStackInSlot(0);
-            this.outputItem = vat.getOutputInv().getStackInSlot(0);
-            this.outputFluid = vat.getTank().getFluid();
+            this.id = vat.getRecipe().getID();
         }
 
-        public ItemStack getInputItem() {
-            return inputItem;
-        }
-
-        public ItemStack getOutputItem() {
-            return outputItem;
-        }
-
-        public FluidStack getOutputFluid() {
-            return outputFluid;
+        public ResourceLocation getId() {
+            return id;
         }
     }
 
