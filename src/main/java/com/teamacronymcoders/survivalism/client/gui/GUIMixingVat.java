@@ -38,6 +38,9 @@ public class GUIMixingVat extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getMain().getFluid() != null) {
             int amount = te.getMain().getFluidAmount();
+            if (amount < 1000) {
+                amount = 1000;
+            }
             float hr = 48f / 16000f;
             float offset = amount * hr;
             int y = Math.round(71 - offset);
@@ -46,6 +49,9 @@ public class GUIMixingVat extends GuiContainer {
         }
         if (te.getSecondary().getFluid() != null) {
             int amount = te.getSecondary().getFluidAmount();
+            if (amount < 1000) {
+                amount = 1000;
+            }
             float hr = 48f / 16000f;
             float offset = amount * hr;
             int y = Math.round(71 - offset);
@@ -54,6 +60,9 @@ public class GUIMixingVat extends GuiContainer {
         }
         if (te.getOutput().getFluid() != null) {
             int amount = te.getOutput().getFluidAmount();
+            if (amount < 1000) {
+                amount = 1000;
+            }
             float hr = 48f / 16000f;
             float offset = amount * hr;
             int y = Math.round(72 - offset);

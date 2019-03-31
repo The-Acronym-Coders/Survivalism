@@ -84,6 +84,9 @@ public class GUIBarrelBrewing extends GUIBarrel {
         if (te.getInput().getFluid() != null) {
             // Input
             int inputTank = te.getInput().getFluidAmount();
+            if (inputTank < 1000) {
+                inputTank = 1000;
+            }
             float hr = 48f / SurvivalismConfigs.brewingInputSize;
             float offset = inputTank * hr;
             int y = Math.round(65 - offset);

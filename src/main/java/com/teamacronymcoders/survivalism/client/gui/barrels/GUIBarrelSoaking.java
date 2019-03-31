@@ -84,6 +84,9 @@ public class GUIBarrelSoaking extends GUIBarrel {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getInput().getFluid() != null) {
             int amount = te.getInput().getFluidAmount();
+            if (amount < 1000) {
+                amount = 1000;
+            }
             float hr = 48f / SurvivalismConfigs.soakingTankSize;
             float offset = amount * hr;
             int y = Math.round(72 - offset);

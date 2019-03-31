@@ -39,6 +39,9 @@ public class GUICrushingVat extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getTank().getFluid() != null) {
             int amount = te.getTank().getFluidAmount();
+            if (amount < 1000) {
+                amount = 1000;
+            }
             float hr = 48f / 16000f;
             float offset = amount * hr;
             int y = Math.round(72 - offset);
