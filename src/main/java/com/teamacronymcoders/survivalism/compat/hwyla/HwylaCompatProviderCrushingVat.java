@@ -1,10 +1,7 @@
-package com.teamacronymcoders.survivalism.compat.hwyla.providers;
+package com.teamacronymcoders.survivalism.compat.hwyla;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.blocks.vats.BlockCrushingVat;
-import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
-import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -16,15 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class HwylaCompatProviderCrushingVat implements IWailaDataProvider {
+
+    static final HwylaCompatProviderCrushingVat INSTANCE = new HwylaCompatProviderCrushingVat();
 
     @Nonnull
     @Override

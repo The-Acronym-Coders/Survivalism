@@ -23,6 +23,7 @@ survivalism.hwyla.items.output=Output Item:
 survivalism.hwyla.barrel.sealed=Sealed:
 survivalism.hwyla.jumps=Jumps:
 survivalism.hwyla.stirs=Stirs Left:
+survivalism.hwyla.time.left=Time Left:
 
 survivalism.patchouli.time=Time:
 survivalism.patchouli.amount.decrease=Decrease Amount:

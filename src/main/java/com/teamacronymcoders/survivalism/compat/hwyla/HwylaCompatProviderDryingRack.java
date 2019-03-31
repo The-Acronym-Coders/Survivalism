@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.hwyla.providers;
+package com.teamacronymcoders.survivalism.compat.hwyla;
 
 import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
 import com.teamacronymcoders.survivalism.common.tiles.TileDryingRack;
@@ -19,6 +19,8 @@ import java.util.List;
 
 public class HwylaCompatProviderDryingRack implements IWailaDataProvider {
 
+    static final HwylaCompatProviderDryingRack INSTANCE = new HwylaCompatProviderDryingRack();
+
     @Nonnull
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
@@ -30,7 +32,7 @@ public class HwylaCompatProviderDryingRack implements IWailaDataProvider {
             if (compound.hasKey("ticksR") && compound.hasKey("ticksC")) {
                 int ticksLeft;
                 ticksLeft = (compound.getInteger("ticksR") - compound.getInteger("ticksC")) / 20;
-                tooltip.add("Time Left: " + StringHelper.getDurationString(ticksLeft));
+                tooltip.add(I18n.format("survivalism.hwyla.time.left") + " " + StringHelper.getDurationString(ticksLeft));
             }
         }
         return tooltip;

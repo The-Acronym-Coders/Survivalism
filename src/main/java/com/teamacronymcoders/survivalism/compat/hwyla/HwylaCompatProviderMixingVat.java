@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.compat.hwyla.providers;
+package com.teamacronymcoders.survivalism.compat.hwyla;
 
 import com.teamacronymcoders.survivalism.common.blocks.vats.BlockMixingVat;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
@@ -18,6 +18,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class HwylaCompatProviderMixingVat implements IWailaDataProvider {
+
+    static final HwylaCompatProviderMixingVat INSTANCE = new HwylaCompatProviderMixingVat();
 
     @Nonnull
     @Override
