@@ -71,10 +71,12 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         proxy.preInit(event);
-        MinecraftForge.EVENT_BUS.register(new CrushingHandler());
-        MinecraftForge.EVENT_BUS.register(new MixingHandler());
         logger = event.getModLog();
         SurvivalismPacketHandler.registerMessages();
+        if (Loader.isModLoaded("gamestages")) {
+            MinecraftForge.EVENT_BUS.register(new CrushingHandler());
+            MinecraftForge.EVENT_BUS.register(new MixingHandler());
+        }
     }
 
     @Override

@@ -34,16 +34,6 @@ public class CrushingRecipeTweaker {
         Survivalism.LATE_ADDITIONS.add(new AddBoots(boots, multiplier));
     }
 
-    @ZenMethod
-    public static void addGeneralRequirements(String... requirements) {
-        CrushingHandler.addGeneralRequirements(requirements);
-    }
-
-    @ZenMethod
-    public static void addRecipeRequirements(String id, String[] requirements) {
-        Survivalism.LATE_ADDITIONS.add(new AddRequirementToItem(new ResourceLocation(id), requirements));
-    }
-
     private static class AddRecipe implements IAction {
         String name;
         Ingredient input;
@@ -114,26 +104,6 @@ public class CrushingRecipeTweaker {
         @Override
         public String describe() {
             return "Added Multiplier: " + multiplier + " To Boots: " + desc;
-        }
-    }
-
-    private static class AddRequirementToItem implements IAction {
-        ResourceLocation id;
-        String[] requirements;
-
-        AddRequirementToItem(ResourceLocation id, String[] requirements) {
-            this.id = id;
-            this.requirements = requirements;
-        }
-
-        @Override
-        public void apply() {
-            CrushingHandler.addRecipeRequirements(id, requirements);
-        }
-
-        @Override
-        public String describe() {
-            return "Added Requirements to Recipe ID: " + id.toString();
         }
     }
 }

@@ -26,16 +26,6 @@ public class MixingRecipeTweaker {
         Survivalism.LATE_ADDITIONS.add(new AddMixingRecipe(id, main, output, clicks, secondary, catalyst));
     }
 
-    @ZenMethod
-    public static void addGeneralRequirements(String... requirements) {
-        MixingHandler.addGeneralRequirements(requirements);
-    }
-
-    @ZenMethod
-    public static void addRecipeRequirements(String id, String[] requirements) {
-        Survivalism.LATE_ADDITIONS.add(new AddRequirementToRecipe(new ResourceLocation(id), requirements));
-    }
-
     private static class AddMixingRecipe implements IAction {
         ResourceLocation id;
         FluidStack main;
@@ -76,26 +66,6 @@ public class MixingRecipeTweaker {
                 return "Registered Mixing Recipe: " + main.getLocalizedName() + " + " + "null" + ":" + catalystId + " = " + output.getLocalizedName();
             }
             return "Registered Mixing Recipe: " + main.getLocalizedName() + " + " + secondary.getLocalizedName() + ":" + catalystId + " = " + output.getLocalizedName();
-        }
-    }
-
-    private static class AddRequirementToRecipe implements IAction {
-        ResourceLocation id;
-        String[] requirements;
-
-        AddRequirementToRecipe(ResourceLocation id, String[] requirements) {
-            this.id = id;
-            this.requirements = requirements;
-        }
-
-        @Override
-        public void apply() {
-            MixingHandler.addRecipeRequirements(id, requirements);
-        }
-
-        @Override
-        public String describe() {
-            return "Added Requirements to Recipe ID: " + id.toString();
         }
     }
 }
