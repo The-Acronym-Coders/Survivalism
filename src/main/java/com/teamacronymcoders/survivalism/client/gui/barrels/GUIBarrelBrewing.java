@@ -1,21 +1,24 @@
 package com.teamacronymcoders.survivalism.client.gui.barrels;
 
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIBarrelBrewing extends GUIBarrel {
     private static final ResourceLocation brewing_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_brewing.png");
     private static final int WIDTH = 180;
-    private static final int HEIGHT = 163;
+    private static final int HEIGHT = 165;
 
     private TileBarrelBrewing te;
 
@@ -51,10 +54,28 @@ public class GUIBarrelBrewing extends GUIBarrel {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(brewing_background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        StringBuilder string = new StringBuilder();
+        String input;
+        int xPos;
         if (te.isSealed()) {
-            mc.fontRenderer.drawString("Sealed", guiLeft + 72, guiTop + 5, 4210752);
+            if (te.getRecipe() != null) {
+                string.append("(").append(te.getRecipe().getInput().getLocalizedName()).append(") - ");
+                string.append("Sealed");
+                string.append(" - (").append(te.getRecipe().getOutput().getLocalizedName()).append(")");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            } else {
+                string.append("Sealed");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            }
         } else {
-            mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
+            string.append("Un-Sealed");
+            input = string.toString();
+            xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+            mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
         }
     }
 
@@ -63,39 +84,38 @@ public class GUIBarrelBrewing extends GUIBarrel {
         if (te.getInput().getFluid() != null) {
             // Input
             int inputTank = te.getInput().getFluidAmount();
-            float hr = 48f / 16000f;
+            if (inputTank < 1000) {
+                inputTank = 1000;
+            }
+            float hr = 48f / SurvivalismConfigs.brewingInputSize;
             float offset = inputTank * hr;
             int y = Math.round(65 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
+            FluidHelper.renderTiledFluid(44, y, 16, h, 1, te.getInput().getFluid());
         }
         if (te.getOutput().getFluid() != null) {
             // Output
-            float hr = 48f / 16000f;
+            float hr = 48f / SurvivalismConfigs.brewingOutputSize;
             int outputTank = te.getOutput().getFluidAmount();
             float offset = outputTank * hr;
             int y = Math.round(65 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(116, y, 16, h, 1, te.getOutput().getFluid());
+            FluidHelper.renderTiledFluid(116, y, 16, h, 1, te.getOutput().getFluid());
         }
     }
 
     @Override
     protected void renderHoveredToolTip(int x, int y) {
         if (te.getInput().getFluid() != null && this.isPointInRegion(44, 18, 16, 47, x, y)) {
-            drawHoveringText(te.getInput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount(), x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         if (te.getOutput().getFluid() != null && this.isPointInRegion(116, 18, 16, 47, x, y)) {
-            drawHoveringText(te.getOutput().getFluid().getLocalizedName() + ": " + te.getInput().getFluidAmount(), x, y);
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getOutput().getFluid(), te.getOutput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
-    }
-
-    public void setInput(FluidStack stack) {
-        te.getInput().setFluid(stack);
-    }
-
-    public void setOutput(FluidStack stack) {
-        te.getOutput().setFluid(stack);
     }
 }

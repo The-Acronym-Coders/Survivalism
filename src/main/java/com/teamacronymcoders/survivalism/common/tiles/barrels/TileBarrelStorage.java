@@ -6,11 +6,15 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.container.barrel.ContainerBarrelStorage;
 import com.teamacronymcoders.survivalism.client.gui.barrels.GUIBarrelStorage;
 import com.teamacronymcoders.survivalism.common.inventory.UpdatingItemStackHandler;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -29,14 +33,14 @@ import javax.annotation.Nullable;
 
 public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHasGui {
 
-    protected FluidTank input = new FluidTank(32000);
+    protected FluidTank input = new FluidTank(SurvivalismConfigs.storageTankSize);
     protected ItemStackHandler inv = new UpdatingItemStackHandler(9, this);
-    private FluidStack moarWater = FluidRegistry.getFluidStack("water", SurvivalismConfigs.rainFillRate);
 
     @Override
     public void update() {
-        if (!this.isSealed() && input.getFluid() == null || moarWater.isFluidEqual(input.getFluid())) {
+        if (!this.isSealed()) {
             processRaining();
+            this.markDirty();
         }
     }
 
@@ -58,8 +62,16 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
     protected void processRaining() {
         World world = getWorld();
         if (!isSealed()) {
-            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-                input.fillInternal(moarWater.copy(), true);
+            if (SurvivalismConfigs.canBarrelsFillInRain && world.isRaining() && world.canBlockSeeSky(getPos())) {
+                if (SurvivalismConfigs.shouldBarrelsRespectRainValueOfBiomes) {
+                    if (world.getBiome(getPos()).canRain()) {
+                        FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                        input.fill(fluidStack, true);
+                    }
+                } else {
+                    FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
+                    input.fill(fluidStack, true);
+                }
             }
         }
     }
@@ -96,6 +108,28 @@ public class TileBarrelStorage extends TileBarrelBase implements ITickable, IHas
 
     public ItemStackHandler getInv() {
         return inv;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        this.readFromNBT(pkt.getNbtCompound());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
     }
 
     @Override

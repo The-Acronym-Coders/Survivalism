@@ -1,13 +1,10 @@
 package com.teamacronymcoders.survivalism.client.container.barrel;
 
-import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
-import com.teamacronymcoders.survivalism.utils.network.MessageUpdateBarrel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -87,7 +84,15 @@ public class ContainerBarrel extends Container {
     }
 
     private void sendMessage() {
-        Survivalism.INSTANCE.getPacketHandler().sendToPlayer(new MessageUpdateBarrel(tile), (EntityPlayerMP) player);
+        if (tile instanceof TileBarrelBrewing) {
+            TileBarrelBrewing brewing = (TileBarrelBrewing) tile;
+            brewing.markDirty();
+        } else if (tile instanceof TileBarrelSoaking) {
+            TileBarrelSoaking soaking = (TileBarrelSoaking) tile;
+            soaking.markDirty();
+        } else if (tile instanceof TileBarrelStorage) {
+            TileBarrelStorage storage = (TileBarrelStorage) tile;
+            storage.markDirty();
+        }
     }
-
 }

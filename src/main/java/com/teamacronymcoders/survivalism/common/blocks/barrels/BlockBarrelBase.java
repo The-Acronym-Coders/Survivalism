@@ -12,7 +12,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -21,14 +20,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEBase<T> {
-    @GameRegistry.ObjectHolder("minecraft:sponge")
-    public static final Item SPONGE = null;
     public static final PropertyBool SEALED = PropertyBool.create("sealed");
 
     BlockBarrelBase(String name) {
@@ -80,16 +76,19 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
     }
 
     @Override
+    @Deprecated
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isNormalCube(IBlockState state) {
         return false;
     }
@@ -112,6 +111,7 @@ public abstract class BlockBarrelBase<T extends TileBarrelBase> extends BlockTEB
     }
 
     @Override
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         if (meta == 0) {
             return getDefaultState().withProperty(SEALED, false);

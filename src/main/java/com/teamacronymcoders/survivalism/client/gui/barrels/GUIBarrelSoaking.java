@@ -1,8 +1,10 @@
 package com.teamacronymcoders.survivalism.client.gui.barrels;
 
 import com.teamacronymcoders.survivalism.Survivalism;
+import com.teamacronymcoders.survivalism.client.gui.helper.GUIHelper;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
-import com.teamacronymcoders.survivalism.utils.helpers.HelperFluid;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import com.teamacronymcoders.survivalism.utils.network.MessageBarrelButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
@@ -11,6 +13,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIBarrelSoaking extends GUIBarrel {
     private static final ResourceLocation soaking_background = new ResourceLocation(Survivalism.MODID, "textures/gui/barrel_soaking.png");
@@ -51,10 +55,28 @@ public class GUIBarrelSoaking extends GUIBarrel {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(soaking_background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        StringBuilder string = new StringBuilder();
+        String input;
+        int xPos;
         if (te.isSealed()) {
-            mc.fontRenderer.drawString("Sealed", guiLeft + 72, guiTop + 5, 4210752);
+            if (te.getRecipe() != null) {
+                string.append("(").append(te.getRecipe().getOutput().getDisplayName()).append(") - ");
+                string.append("Sealed");
+                string.append(" - (").append(te.getRecipe().getOutput().getDisplayName()).append(")");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            } else {
+                string.append("Sealed");
+                input = string.toString();
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
+            }
         } else {
-            mc.fontRenderer.drawString("Un-Sealed", guiLeft + 63, guiTop + 5, 4210752);
+            string.append("Un-Sealed");
+            input = string.toString();
+            xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+            mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
         }
     }
 
@@ -62,18 +84,23 @@ public class GUIBarrelSoaking extends GUIBarrel {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (te.getInput().getFluid() != null) {
             int amount = te.getInput().getFluidAmount();
-            float hr = 48f / 16000f;
+            if (amount < 1000) {
+                amount = 1000;
+            }
+            float hr = 48f / SurvivalismConfigs.soakingTankSize;
             float offset = amount * hr;
             int y = Math.round(72 - offset);
             int h = Math.round(offset - 1);
-            HelperFluid.renderTiledFluid(80, y, 16, h, 1, te.getInput().getFluid());
+            FluidHelper.renderTiledFluid(80, y, 16, h, 1, te.getInput().getFluid());
         }
     }
 
     @Override
     protected void renderHoveredToolTip(int x, int y) {
-        if (te.getInput().getFluid() != null && this.isPointInRegion(79, 24, 16, 47, x, y)) {
-            drawHoveringText(te.getInput().getFluid().getLocalizedName(), x, y);
+        if (te.getInput().getFluid() != null && this.isPointInRegion(80, 24, 16, 47, x, y)) {
+            List<String> strings = new ArrayList<>();
+            GUIHelper.addPotionTooltip(strings, te.getInput().getFluid(), te.getInput().getCapacity());
+            drawHoveringText(strings, x, y);
         }
         super.renderHoveredToolTip(x, y);
     }

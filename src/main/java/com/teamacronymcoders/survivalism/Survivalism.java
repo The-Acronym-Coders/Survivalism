@@ -1,23 +1,18 @@
 package com.teamacronymcoders.survivalism;
 
-import com.teamacronymcoders.base.Base;
 import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
-import com.teamacronymcoders.base.registrysystem.BlockRegistry;
-import com.teamacronymcoders.base.registrysystem.ItemRegistry;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
-import com.teamacronymcoders.survivalism.common.blocks.BlockCrushingVat;
-import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
-import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelStorage;
-import com.teamacronymcoders.survivalism.utils.SurvivalismConfigs;
+import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
+import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
+import com.teamacronymcoders.survivalism.compat.gamestages.MixingHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;
-import com.teamacronymcoders.survivalism.utils.commands.CommandBrewing;
-import com.teamacronymcoders.survivalism.utils.commands.CommandCrushing;
-import com.teamacronymcoders.survivalism.utils.commands.CommandSoaking;
+import com.teamacronymcoders.survivalism.utils.commands.*;
+import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.network.SurvivalismPacketHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +32,7 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
 
     public static final String MODID = "survivalism";
     public static final SurvivalismTab TAB = new SurvivalismTab();
+    public static final List<IAction> LATE_REMOVALS = new LinkedList<>();
     public static final List<IAction> LATE_ADDITIONS = new LinkedList<>();
     public static final String NAME = "Survivalism";
     public static final String VERSION = "1.12.2-1.0.0";
@@ -44,21 +40,30 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     public static final String DEPS = "required-after:base;" + "after:patchouli;";
     private static final String COMMON = "com.teamacronymcoders.survivalism.common.CommonProxy";
     private static final String CLIENT = "com.teamacronymcoders.survivalism.client.ClientProxy";
+    private final static CommandSubBase dumps = new CommandSubBase("dumps");
     @Mod.Instance(Survivalism.MODID)
     public static Survivalism INSTANCE;
     @SidedProxy(serverSide = COMMON, clientSide = CLIENT)
     public static CommonProxy proxy;
     public static Logger logger;
 
-    private CommandTreeBase baseCommand = new CommandSubBase(MODID);
-    private final static CommandSubBase dumps = new CommandSubBase("dumps");
-
     static {
         FluidRegistry.enableUniversalBucket();
     }
 
+    private CommandTreeBase baseCommand = new CommandSubBase(MODID);
+
     public Survivalism() {
         super(MODID, NAME, VERSION, TAB);
+    }
+
+    private static void setup() {
+        Survivalism.INSTANCE.getBaseCommand().addSubcommand(dumps);
+        dumps.addSubcommand(new CommandBrewing());
+        dumps.addSubcommand(new CommandCrushing());
+        dumps.addSubcommand(new CommandSoaking());
+        dumps.addSubcommand(new CommandDrying());
+        dumps.addSubcommand(new CommandMixing());
     }
 
     @Override
@@ -68,6 +73,10 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
         proxy.preInit(event);
         logger = event.getModLog();
         SurvivalismPacketHandler.registerMessages();
+        if (Loader.isModLoaded("gamestages")) {
+            MinecraftForge.EVENT_BUS.register(new CrushingHandler());
+            MinecraftForge.EVENT_BUS.register(new MixingHandler());
+        }
     }
 
     @Override
@@ -76,31 +85,20 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
     }
 
     @Override
-    public void registerBlocks(BlockRegistry registry) {
-        registry.register(new BlockBarrelBrewing());
-        registry.register(new BlockBarrelSoaking());
-        registry.register(new BlockBarrelStorage());
-        registry.register(new BlockCrushingVat());
-    }
-
-    @Override
-    public void registerItems(ItemRegistry registry) {
-    }
-
-    @Override
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         super.init(event);
         proxy.init(event);
+        if (Loader.isModLoaded("crafttweaker")) {
+            LATE_REMOVALS.forEach(CraftTweakerAPI::apply);
+            LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);
+        }
     }
 
     @Override
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        if (Loader.isModLoaded("crafttweaker")) {
-            LATE_ADDITIONS.forEach(CraftTweakerAPI::apply);
-        }
     }
 
     @Mod.EventHandler
@@ -116,12 +114,5 @@ public class Survivalism extends BaseModFoundation<Survivalism> {
 
     private CommandTreeBase getBaseCommand() {
         return baseCommand;
-    }
-
-    private static void setup() {
-        Survivalism.INSTANCE.getBaseCommand().addSubcommand(dumps);
-        dumps.addSubcommand(new CommandBrewing());
-        dumps.addSubcommand(new CommandCrushing());
-        dumps.addSubcommand(new CommandSoaking());
     }
 }

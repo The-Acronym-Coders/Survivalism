@@ -11,9 +11,9 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotSealable extends SlotItemHandler {
     private TileBarrelBase te;
-    private Item brewing = Item.getItemFromBlock(ModBlocks.brewing);
-    private Item soaking = Item.getItemFromBlock(ModBlocks.soaking);
-    private Item storage = Item.getItemFromBlock(ModBlocks.storage);
+    private Item brewing = Item.getItemFromBlock(ModBlocks.blockBarrelBrewing);
+    private Item soaking = Item.getItemFromBlock(ModBlocks.blockBarrelSoaking);
+    private Item storage = Item.getItemFromBlock(ModBlocks.blockBarrelStorage);
 
     public SlotSealable(IItemHandler itemHandler, int index, int xPosition, int yPosition, TileBarrelBase te) {
         super(itemHandler, index, xPosition, yPosition);
