@@ -55,6 +55,7 @@ public class SurvivalismConfigs {
 
     // Drying Rack
     public static boolean shouldDryingRackUseModifiers;
+    public static boolean doesDryingRackRequireSky;
 
     private static ConfigRegistry configRegistry = Survivalism.INSTANCE.getRegistry(ConfigRegistry.class, "CONFIG");
 
@@ -86,6 +87,7 @@ public class SurvivalismConfigs {
         ConfigEntry crushingTankSize = new ConfigEntry("crushing_vat", "crushingTankSize", Property.Type.INTEGER, "16000", "Crushing Tank Capacity", true);
         ConfigEntry shouldBarrelsRespectRainValueOfBiomes = new ConfigEntry("barrel_general", "shouldBarrelsRespectRainValueOfBiomes", Property.Type.BOOLEAN, "true", "Should barrels respect that some biomes don't support rain?", true);
         ConfigEntry potionToBottleDrainAmount = new ConfigEntry("barrel_general", "potionToBottleDrainAmount", Property.Type.INTEGER, "250", "Amount of Potion Fluid to Drain per Bottle", true);
+        ConfigEntry doesDryingRackRequireSky = new ConfigEntry("drying_rack", "doesDryingRackRequireSky", Property.Type.BOOLEAN, "true", "Should the Drying Rack require Non-Raining and Open Sky");
 
         configRegistry.addEntry(crtVerboseLogging);
         configRegistry.addEntry(baseJumpValue);
@@ -103,6 +105,7 @@ public class SurvivalismConfigs {
         configRegistry.addEntry(crushingTankSize);
         configRegistry.addEntry(shouldBarrelsRespectRainValueOfBiomes);
         configRegistry.addEntry(potionToBottleDrainAmount);
+        configRegistry.addEntry(doesDryingRackRequireSky);
     }
 
     private static void getValues() {
@@ -122,6 +125,7 @@ public class SurvivalismConfigs {
         crushingTankSize = configRegistry.getInt("crushingTankSize", 16000);
         shouldBarrelsRespectRainValueOfBiomes = configRegistry.getBoolean("shouldBarrelsRespectRainValueOfBiomes", true);
         potionToBottleDrainAmount = configRegistry.getInt("potionToBottleDrainAmount", 250);
+        doesDryingRackRequireSky = configRegistry.getBoolean("doesDryingRackRequireSky", true);
     }
 
     private static void initBiomeFluidJSON(File file) {
