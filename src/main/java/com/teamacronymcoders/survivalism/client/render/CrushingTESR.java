@@ -1,9 +1,5 @@
 package com.teamacronymcoders.survivalism.client.render;
 
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.client.Minecraft;

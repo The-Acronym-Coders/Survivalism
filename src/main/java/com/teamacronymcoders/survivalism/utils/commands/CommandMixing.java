@@ -1,8 +1,6 @@
 package com.teamacronymcoders.survivalism.utils.commands;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRackRecipeManager;
-import com.teamacronymcoders.survivalism.common.recipe.drying.DryingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.mixing.MixingRecipeManager;
 import net.minecraft.command.CommandBase;

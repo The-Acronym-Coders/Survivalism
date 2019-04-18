@@ -1,10 +1,8 @@
 package com.teamacronymcoders.survivalism.utils.event.mixing;
 
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 

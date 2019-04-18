@@ -1,4 +1,4 @@
-package com.teamacronymcoders.survivalism.modules.recipes;
+package com.teamacronymcoders.survivalism.modules;
 
 import com.teamacronymcoders.base.modulesystem.Module;
 import com.teamacronymcoders.base.modulesystem.ModuleBase;

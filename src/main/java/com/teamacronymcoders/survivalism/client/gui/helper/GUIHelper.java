@@ -18,10 +18,11 @@ public class GUIHelper {
                 }
                 String prefix = "";
                 if (type != null) {
-                    if (fluid.tag.getString("Potion").contains("strong"))
+                    if (fluid.tag.getString("Potion").contains("strong")) {
                         prefix = "Empowered";
-                    else if (fluid.tag.getString("Potion").contains("long"))
+                    } else if (fluid.tag.getString("Potion").contains("long")) {
                         prefix = "Lasting";
+                    }
                 }
                 strings.add("Fluid: " + prefix + " " + fluid.getLocalizedName() + ":");
             } else {

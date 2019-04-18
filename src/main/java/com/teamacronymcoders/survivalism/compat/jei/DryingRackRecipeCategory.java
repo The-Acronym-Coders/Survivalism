@@ -56,7 +56,7 @@ public class DryingRackRecipeCategory implements IRecipeCategory<DryingRackRecip
         recipeLayout.getItemStacks().init(1, false, 62, 24);
 
         // Set Slots
-        List<ItemStack> stacks =  new ArrayList<>(Arrays.asList(recipeWrapper.recipe.getInput().getMatchingStacks()));
+        List<ItemStack> stacks = new ArrayList<>(Arrays.asList(recipeWrapper.recipe.getInput().getMatchingStacks()));
         recipeLayout.getItemStacks().set(0, stacks);
         recipeLayout.getItemStacks().set(1, recipeWrapper.recipe.getOutput());
     }
