@@ -148,7 +148,6 @@ public class BarrelRecipeTweaker {
     }
 
     private static class AddBiomeFluid implements IAction {
-
         Biome biome;
         FluidStack stack;
 
@@ -164,7 +163,7 @@ public class BarrelRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Added Biome:/:Fluid Pairing of: " + biome.getBiomeName() + " -> " + stack.getLocalizedName() + ":" + stack.amount;
+            return "Added Biome/Fluid Pairing of: " + biome.getRegistryName() + " -> " + stack.getLocalizedName() + ":" + stack.amount;
         }
     }
 }
