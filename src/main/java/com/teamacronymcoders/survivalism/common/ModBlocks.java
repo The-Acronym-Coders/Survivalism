@@ -1,5 +1,6 @@
 package com.teamacronymcoders.survivalism.common;
 
+import com.teamacronymcoders.survivalism.common.blocks.BlockCompostBin;
 import com.teamacronymcoders.survivalism.common.blocks.BlockDryingRack;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelBrewing;
 import com.teamacronymcoders.survivalism.common.blocks.barrels.BlockBarrelSoaking;
@@ -33,6 +34,9 @@ public class ModBlocks {
 
     @GameRegistry.ObjectHolder("survivalism:drying_rack")
     public static BlockDryingRack blockDryingRack;
+
+    @GameRegistry.ObjectHolder("survivalism:compost_bin")
+    public static BlockCompostBin blockCompostBin;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
