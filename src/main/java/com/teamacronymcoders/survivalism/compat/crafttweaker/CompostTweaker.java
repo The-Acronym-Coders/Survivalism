@@ -10,7 +10,7 @@ import net.minecraft.item.crafting.Ingredient;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenClass("mods.epicurious.Compost")
+@ZenClass("mods.survivalism.Compost")
 @ZenRegister
 public class CompostTweaker {
     @ZenMethod
@@ -39,7 +39,7 @@ public class CompostTweaker {
 
         @Override
         public String describe() {
-            return "Added Matching ItemStacks From: " + commandString + " As A Valid Compost Materials!";
+            return "Added Matching ItemStacks From: " + commandString + " As Valid Compost Materials!";
         }
     }
 
@@ -59,7 +59,7 @@ public class CompostTweaker {
 
         @Override
         public String describe() {
-            return "Removed Matching ItemStacks From: " + commandString + " As A Valid Compost Materials!";
+            return "Removed Matching ItemStacks From: " + commandString + " As Valid Compost Materials!";
         }
     }
 }
