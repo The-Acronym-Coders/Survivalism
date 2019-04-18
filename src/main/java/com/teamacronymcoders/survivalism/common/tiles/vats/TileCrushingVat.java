@@ -44,15 +44,15 @@ import javax.annotation.Nullable;
 
 public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInventory {
 
-    public CrushingRecipe curRecipe;
+    private CrushingRecipe curRecipe;
     public double jumps = 0.0D;
-    protected ItemStack failedMatch;
-    protected FluidTank tank = new FluidTank(SurvivalismConfigs.crushingTankSize);
-    protected ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
-    protected ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
-    protected double jumpBase = SurvivalismConfigs.baseJumpValue;
-    protected double multiplierBase;
-    protected int fluidLastJump;
+    private ItemStack failedMatch;
+    private FluidTank tank = new FluidTank(SurvivalismConfigs.crushingTankSize);
+    private ItemStackHandler inputInv = new UpdatingItemStackHandler(1, this);
+    private ItemStackHandler outputInv = new UpdatingItemStackHandler(1, this);
+    private double jumpBase = SurvivalismConfigs.baseJumpValue;
+    private double multiplierBase;
+    private int fluidLastJump;
 
     public void onJump(EntityLivingBase jumper, TileCrushingVat vat) {
         boolean dirty = false;
@@ -110,8 +110,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     }
 
 
-
-    protected boolean canInsertResults() {
+    private boolean canInsertResults() {
         if (tank.getFluid() == null && (curRecipe.getOutputStack().isEmpty() || outputInv.getStackInSlot(0).isEmpty())) {
             return true;
         }
@@ -128,10 +127,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
         if (!out.isEmpty() && !ItemHandlerHelper.canItemStacksStack(cur, out)) {
             return false;
         }
-        if (!out.isEmpty() && cur.getCount() + out.getCount() > cur.getMaxStackSize()) {
-            return false;
-        }
-        return true;
+        return out.isEmpty() || cur.getCount() + out.getCount() <= cur.getMaxStackSize();
     }
 
     @Override
@@ -153,7 +149,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing.getAxis() != Axis.Y) {
+            if (facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inputInv);
             } else if (facing == EnumFacing.DOWN) {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputInv);
@@ -171,9 +167,7 @@ public class TileCrushingVat extends TileEntity implements IHasGui, IUpdatingInv
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing != EnumFacing.UP) {
-                return true;
-            }
+            return true;
         }
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (facing == EnumFacing.DOWN) {

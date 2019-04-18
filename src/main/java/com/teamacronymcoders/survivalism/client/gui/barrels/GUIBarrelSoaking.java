@@ -64,18 +64,18 @@ public class GUIBarrelSoaking extends GUIBarrel {
                 string.append("Sealed");
                 string.append(" - (").append(te.getRecipe().getOutput().getDisplayName()).append(")");
                 input = string.toString();
-                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input) / 2);
                 mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
             } else {
                 string.append("Sealed");
                 input = string.toString();
-                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+                xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input) / 2);
                 mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
             }
         } else {
             string.append("Un-Sealed");
             input = string.toString();
-            xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input)/2);
+            xPos = (guiLeft + (WIDTH / 2) - mc.fontRenderer.getStringWidth(input) / 2);
             mc.fontRenderer.drawString(string.toString(), xPos, guiTop + 5, 4210752);
         }
     }

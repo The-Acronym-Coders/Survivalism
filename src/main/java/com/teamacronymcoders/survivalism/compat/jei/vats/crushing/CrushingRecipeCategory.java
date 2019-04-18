@@ -1,9 +1,7 @@
 package com.teamacronymcoders.survivalism.compat.jei.vats.crushing;
 
 import com.teamacronymcoders.survivalism.Survivalism;
-import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -12,7 +10,6 @@ import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;

@@ -70,9 +70,13 @@ public class TileDryingRack extends TileEntity implements ITickable, IUpdatingIn
     }
 
     protected void doRainCheck() {
-        if (getWorld().isRaining() && getWorld().canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
-            ticks = 0;
-            working = false;
+        if (SurvivalismConfigs.doesDryingRackRequireSky) {
+            if (getWorld().isRaining() && !getWorld().canBlockSeeSky(getPos()) && world.getBiome(getPos()).canRain()) {
+                ticks = 0;
+                working = false;
+            } else {
+                working = true;
+            }
         } else {
             working = true;
         }

@@ -2,10 +2,8 @@ package com.teamacronymcoders.survivalism.utils.event.crushing;
 
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 @Cancelable

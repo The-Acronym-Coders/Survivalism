@@ -36,7 +36,7 @@ public class DryingRackRecipeWrapper implements IRecipeWrapper {
         // Render Output Marker
         input = "->";
         xPos = (recipeWidth - minecraft.fontRenderer.getStringWidth(input)) / 2;
-        minecraft.fontRenderer.drawString(input, xPos+1, 30, 4210752, false);
+        minecraft.fontRenderer.drawString(input, xPos + 1, 30, 4210752, false);
 
         // Render Time
         if (SurvivalismConfigs.timeOrTicks) {

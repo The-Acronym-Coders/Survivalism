@@ -5,7 +5,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class JumpForceEvent extends Event {
-    public JumpForceEvent() {}
+    public JumpForceEvent() {
+    }
 
     public static class BaseModification extends JumpForceEvent {
         EntityLivingBase living;

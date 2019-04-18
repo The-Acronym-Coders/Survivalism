@@ -66,7 +66,7 @@ public class MixingRecipeCategory implements IRecipeCategory<MixingRecipeWrapper
             recipeLayout.getFluidStacks().set(1, recipeWrapper.recipe.getSecondary());
         }
         if (recipeWrapper.recipe.getCatalyst() != Ingredient.EMPTY) {
-            List<ItemStack> stacks =  new ArrayList<>(Arrays.asList(recipeWrapper.recipe.getCatalyst().getMatchingStacks()));
+            List<ItemStack> stacks = new ArrayList<>(Arrays.asList(recipeWrapper.recipe.getCatalyst().getMatchingStacks()));
             recipeLayout.getItemStacks().set(0, stacks);
         } else {
             ItemStack stack = new ItemStack(Blocks.BARRIER);

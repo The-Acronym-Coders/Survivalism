@@ -1,10 +1,5 @@
 package com.teamacronymcoders.survivalism.client.render;
 
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelSoaking;
-import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelStorage;
-import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
 import com.teamacronymcoders.survivalism.utils.helpers.FluidHelper;
 import net.minecraft.client.Minecraft;
@@ -21,9 +16,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.teamacronymcoders.survivalism.utils.helpers.RenderHelper.colEnd;
 import static com.teamacronymcoders.survivalism.utils.helpers.RenderHelper.posTex;
@@ -92,7 +84,7 @@ public class MixingTESR extends TileEntitySpecialRenderer<TileMixingVat> {
             fluid3 = te.getOutput().getFluid();
         }
 
-        if(fluid3 == null) {
+        if (fluid3 == null) {
             if (fluid1 != null) {
                 renderFluid1(fluid1, capacity1);
             }
@@ -113,7 +105,7 @@ public class MixingTESR extends TileEntitySpecialRenderer<TileMixingVat> {
         bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
 
-        float posY = 3+ (((float) fluid.amount / (float) capacity) * 11f);
+        float posY = 3 + (((float) fluid.amount / (float) capacity) * 11f);
         float[] color = FluidHelper.getColorRGBA(fluid.getFluid().getColor(fluid));
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
@@ -139,7 +131,7 @@ public class MixingTESR extends TileEntitySpecialRenderer<TileMixingVat> {
         bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
 
-        float posY = 3+ (((float) fluid.amount / (float) capacity) * 11f);
+        float posY = 3 + (((float) fluid.amount / (float) capacity) * 11f);
         float[] color = FluidHelper.getColorRGBA(fluid.getFluid().getColor(fluid));
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
@@ -154,6 +146,7 @@ public class MixingTESR extends TileEntitySpecialRenderer<TileMixingVat> {
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
     }
+
     private void renderFluid3(FluidStack fluid, int capacity) {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buff = tess.getBuffer();
@@ -161,7 +154,7 @@ public class MixingTESR extends TileEntitySpecialRenderer<TileMixingVat> {
         bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
 
-        float posY = 3+ (((float) fluid.amount / (float) capacity) * 11f);
+        float posY = 3 + (((float) fluid.amount / (float) capacity) * 11f);
         float[] color = FluidHelper.getColorRGBA(fluid.getFluid().getColor(fluid));
         GlStateManager.disableCull();
         GlStateManager.enableBlend();

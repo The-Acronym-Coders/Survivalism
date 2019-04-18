@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism;
 import com.teamacronymcoders.base.BaseModFoundation;
 import com.teamacronymcoders.base.command.CommandSubBase;
 import com.teamacronymcoders.survivalism.common.CommonProxy;
-import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
 import com.teamacronymcoders.survivalism.compat.gamestages.MixingHandler;
 import com.teamacronymcoders.survivalism.utils.SurvivalismTab;

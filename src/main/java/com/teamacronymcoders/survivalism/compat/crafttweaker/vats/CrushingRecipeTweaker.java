@@ -3,7 +3,6 @@ package com.teamacronymcoders.survivalism.compat.crafttweaker.vats;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipe;
 import com.teamacronymcoders.survivalism.common.recipe.vat.crushing.CrushingRecipeManager;
-import com.teamacronymcoders.survivalism.compat.gamestages.CrushingHandler;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ZenRegister;

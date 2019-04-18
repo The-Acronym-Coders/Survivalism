@@ -64,6 +64,18 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
         return te instanceof TileMixingVat ? (TileMixingVat) te : null;
     }
 
+    private static void fillTanksWithFluid(TileMixingVat vat, FluidStack fluid) {
+        if (vat.getMain().getFluid() == null) {
+            vat.getMain().fillInternal(fluid, true);
+        } else if (vat.getSecondary().getFluid() == null) {
+            vat.getSecondary().fillInternal(fluid, true);
+        } else if (vat.getMain().getFluid().containsFluid(fluid)) {
+            vat.getMain().fillInternal(fluid, true);
+        } else if (vat.getSecondary().getFluid().containsFluid(fluid)) {
+            vat.getSecondary().fillInternal(fluid, true);
+        }
+    }
+
     @SideOnly(Side.CLIENT)
     public void initModel() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation("survivalism:mixing_vat", "inventory"));
@@ -207,18 +219,6 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
         }
         vat.onBlockActivated(playerIn);
         return true;
-    }
-
-    private static void fillTanksWithFluid(TileMixingVat vat, FluidStack fluid) {
-        if (vat.getMain().getFluid() == null) {
-            vat.getMain().fillInternal(fluid, true);
-        } else if (vat.getSecondary().getFluid() == null) {
-            vat.getSecondary().fillInternal(fluid, true);
-        } else if (vat.getMain().getFluid().containsFluid(fluid)) {
-            vat.getMain().fillInternal(fluid, true);
-        } else if (vat.getSecondary().getFluid().containsFluid(fluid)) {
-            vat.getSecondary().fillInternal(fluid, true);
-        }
     }
 
     @Override

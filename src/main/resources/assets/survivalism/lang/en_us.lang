@@ -4,10 +4,12 @@ tile.survivalism.barrel_brewing.name=Brewing Barrel
 tile.survivalism.barrel_soaking.name=Soaking Barrel
 tile.survivalism.barrel_storage.name=Storage Barrel
 tile.survivalism.crushing_vat.name=Crushing Vat
+tile.survivalism.compost_bin.name=Composting Bin
 tile.survivalism.drying_rack.name=Drying Rack
 tile.survivalism.mixing_vat.name=Mixing Vat
 
 item.survivalism.mixing_spoon.name=Mixing Spoon
+item.survivalism.compost.name=Compost
 
 info.survivalism.shift=Press Shift for More Information!
 

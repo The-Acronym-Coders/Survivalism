@@ -3,8 +3,6 @@ package com.teamacronymcoders.survivalism.compat.gamestages;
 import com.teamacronymcoders.survivalism.utils.event.crushing.CrushingEvent;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
