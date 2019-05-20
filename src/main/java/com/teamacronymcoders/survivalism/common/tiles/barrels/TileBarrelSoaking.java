@@ -126,14 +126,13 @@ public class TileBarrelSoaking extends TileBarrelBase implements ITickable, IHas
                 }
                 ticks = 0;
                 if (MathHelper.tryPercentage(recipe.getFluidUseChance())) {
-                    input.getFluid().amount -= recipe.getInput().amount;
+                    input.drainInternal(recipe.getInput(), true);
                 }
                 if (recipe.getInputItem() instanceof VanillaIngredient) {
                     inv.getStackInSlot(0).shrink(((VanillaIngredient) recipe.getInputItem()).getIngredient().getAmount());
                 } else {
                     inv.getStackInSlot(0).shrink(1);
                 }
-
                 inv.insertItem(1, recipe.getOutput().copy(), false);
             }
         }

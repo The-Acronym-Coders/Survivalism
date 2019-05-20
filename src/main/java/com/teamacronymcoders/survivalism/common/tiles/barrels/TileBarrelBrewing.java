@@ -154,7 +154,7 @@ public class TileBarrelBrewing extends TileBarrelBase implements ITickable, IHas
                     }
                 } else {
                     FluidStack fluidStack = BarrelRecipeManager.getBiomeFluidStack(world.getBiome(getPos())).copy();
-                    input.fill(fluidStack, true);
+                    input.fill(fluidStack.copy(), true);
                 }
             }
         }
