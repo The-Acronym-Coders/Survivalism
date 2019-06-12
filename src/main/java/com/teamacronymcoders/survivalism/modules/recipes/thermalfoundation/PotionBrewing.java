@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TFPotionBrewing {
+public class PotionBrewing {
     private static final int baseAmount = 1000;
     private static final ResourceLocation awkward = new ResourceLocation(Survivalism.MODID, "awkward_potion");
     private static final FluidStack awkward_fluidstack = new FluidStack(FluidRegistry.getFluid("potion"), 1000);
@@ -102,8 +102,8 @@ public class TFPotionBrewing {
             ingredientList.add(values.with);
             PotionType typeIn = values.from;
             PotionType typeOut = values.to;
-            FluidStack stackIn = TFPHelper.getPotion(baseAmount, typeIn);
-            FluidStack stackOut = TFPHelper.getPotion(baseAmount, typeOut);
+            FluidStack stackIn = PotionHelper.getPotion(baseAmount, typeIn);
+            FluidStack stackOut = PotionHelper.getPotion(baseAmount, typeOut);
             ResourceLocation rl = new ResourceLocation(Survivalism.MODID, typeIn.getRegistryName().getPath() + "_" + typeOut.getRegistryName().getPath());
             BarrelRecipeManager.register(new BrewingRecipe(rl, stackIn, ingredientList, stackOut, 1800));
         }
@@ -136,18 +136,18 @@ public class TFPotionBrewing {
 
 
             if (!types.contains(typeIn)) {
-                base = TFPHelper.getPotion(baseAmount, typeIn);
-                splash = TFPHelper.getSplashPotion(baseAmount, typeIn);
-                lingering = TFPHelper.getLingeringPotion(baseAmount, typeIn);
+                base = PotionHelper.getPotion(baseAmount, typeIn);
+                splash = PotionHelper.getSplashPotion(baseAmount, typeIn);
+                lingering = PotionHelper.getLingeringPotion(baseAmount, typeIn);
                 BarrelRecipeManager.register(new BrewingRecipe(rlS, base, splashList, splash, 1800));
                 BarrelRecipeManager.register(new BrewingRecipe(rlL, splash, lingeringList, lingering, 1800));
                 types.add(typeIn);
             }
 
             if (!types.contains(typeOut)) {
-                base = TFPHelper.getPotion(baseAmount, typeOut);
-                splash = TFPHelper.getSplashPotion(baseAmount, typeOut);
-                lingering = TFPHelper.getLingeringPotion(baseAmount, typeOut);
+                base = PotionHelper.getPotion(baseAmount, typeOut);
+                splash = PotionHelper.getSplashPotion(baseAmount, typeOut);
+                lingering = PotionHelper.getLingeringPotion(baseAmount, typeOut);
                 BarrelRecipeManager.register(new BrewingRecipe(rlSR, base, splashList, splash, 1800));
                 BarrelRecipeManager.register(new BrewingRecipe(rlLR, splash, lingeringList, lingering, 1800));
                 types.add(typeOut);

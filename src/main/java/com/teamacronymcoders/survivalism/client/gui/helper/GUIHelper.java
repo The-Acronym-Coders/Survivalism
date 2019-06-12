@@ -1,6 +1,6 @@
 package com.teamacronymcoders.survivalism.client.gui.helper;
 
-import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.PotionHelper;
 import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -11,7 +11,7 @@ import java.util.List;
 public class GUIHelper {
     public static void addPotionTooltip(List<String> strings, FluidStack fluid, int capacity) {
         if (fluid != null) {
-            if (TFPHelper.isPotionFluid(fluid)) {
+            if (PotionHelper.isPotionFluid(fluid)) {
                 PotionType type = null;
                 if (fluid.tag != null && !fluid.tag.isEmpty() && fluid.tag.hasKey("Potion")) {
                     type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(fluid.tag.getString("Potion")));

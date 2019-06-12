@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 
-public class TFPHelper {
+public class PotionHelper {
 
     public static boolean isPotionFluid(@Nonnull FluidStack stack) {
         return isPotion(stack) || isSplashPotion(stack) || isLingeringPotion(stack);

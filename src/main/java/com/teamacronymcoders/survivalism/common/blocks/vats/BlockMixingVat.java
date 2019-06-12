@@ -7,7 +7,7 @@ import com.teamacronymcoders.survivalism.client.render.MixingTESR;
 import com.teamacronymcoders.survivalism.common.items.ItemMixingSpoon;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileMixingVat;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
-import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.PotionHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.event.mixing.MixingEvent;
@@ -134,7 +134,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
             if (held.getItem() instanceof ItemGlassBottle) {
                 if (vat.getOutput().getFluid() != null) {
                     if (FluidRegistry.isFluidRegistered("potion")) {
-                        if (TFPHelper.isPotion(vat.getOutput().getFluid())) {
+                        if (PotionHelper.isPotion(vat.getOutput().getFluid())) {
                             String id = vat.getOutput().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
@@ -150,7 +150,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
                         }
                     }
                     if (FluidRegistry.isFluidRegistered("potion_splash")) {
-                        if (TFPHelper.isSplashPotion(vat.getOutput().getFluid())) {
+                        if (PotionHelper.isSplashPotion(vat.getOutput().getFluid())) {
                             String id = vat.getOutput().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
@@ -166,7 +166,7 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
                         }
                     }
                     if (FluidRegistry.isFluidRegistered("potion_lingering")) {
-                        if (TFPHelper.isLingeringPotion(vat.getOutput().getFluid())) {
+                        if (PotionHelper.isLingeringPotion(vat.getOutput().getFluid())) {
                             String id = vat.getOutput().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
@@ -191,19 +191,19 @@ public class BlockMixingVat extends BlockTEBase<TileMixingVat> implements TOPInf
                         String id = held.getTagCompound().getString("Potion");
                         PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                         if (held.getItem().equals(Items.POTIONITEM)) {
-                            FluidStack fluid = TFPHelper.getPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                            FluidStack fluid = PotionHelper.getPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                             fillTanksWithFluid(vat, fluid);
                             vat.markDirty();
                             worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                             return true;
                         } else if (held.getItem().equals(Items.SPLASH_POTION)) {
-                            FluidStack fluid = TFPHelper.getSplashPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                            FluidStack fluid = PotionHelper.getSplashPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                             fillTanksWithFluid(vat, fluid);
                             vat.markDirty();
                             worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                             return true;
                         } else if (held.getItem().equals(Items.LINGERING_POTION)) {
-                            FluidStack fluid = TFPHelper.getLingeringPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                            FluidStack fluid = PotionHelper.getLingeringPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                             fillTanksWithFluid(vat, fluid);
                             vat.markDirty();
                             worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);

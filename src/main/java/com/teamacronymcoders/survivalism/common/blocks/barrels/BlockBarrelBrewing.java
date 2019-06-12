@@ -6,7 +6,7 @@ import com.teamacronymcoders.survivalism.client.render.BarrelTESR;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBase;
 import com.teamacronymcoders.survivalism.common.tiles.barrels.TileBarrelBrewing;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
-import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.PotionHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.helpers.StringHelper;
@@ -166,7 +166,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                     if (held.getItem() instanceof ItemGlassBottle) {
                         if (brewing.getOutput().getFluid() != null) {
                             if (FluidRegistry.isFluidRegistered("potion")) {
-                                if (TFPHelper.isPotion(brewing.getOutput().getFluid())) {
+                                if (PotionHelper.isPotion(brewing.getOutput().getFluid())) {
                                     String id = brewing.getOutput().getFluid().tag.getString("Potion");
                                     PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                                     if (type != null) {
@@ -182,7 +182,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 }
                             }
                             if (FluidRegistry.isFluidRegistered("potion_splash")) {
-                                if (TFPHelper.isSplashPotion(brewing.getOutput().getFluid())) {
+                                if (PotionHelper.isSplashPotion(brewing.getOutput().getFluid())) {
                                     String id = brewing.getOutput().getFluid().tag.getString("Potion");
                                     PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                                     if (type != null) {
@@ -198,7 +198,7 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 }
                             }
                             if (FluidRegistry.isFluidRegistered("potion_lingering")) {
-                                if (TFPHelper.isLingeringPotion(brewing.getOutput().getFluid())) {
+                                if (PotionHelper.isLingeringPotion(brewing.getOutput().getFluid())) {
                                     String id = brewing.getOutput().getFluid().tag.getString("Potion");
                                     PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                                     if (type != null) {
@@ -223,19 +223,19 @@ public class BlockBarrelBrewing extends BlockBarrelBase implements TOPInfoProvid
                                 String id = held.getTagCompound().getString("Potion");
                                 PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                                 if (held.getItem().equals(Items.POTIONITEM)) {
-                                    FluidStack fluid = TFPHelper.getPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    FluidStack fluid = PotionHelper.getPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                                     brewing.getInput().fillInternal(fluid, true);
                                     brewing.markDirty();
                                     worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                                     return true;
                                 } else if (held.getItem().equals(Items.SPLASH_POTION)) {
-                                    FluidStack fluid = TFPHelper.getSplashPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    FluidStack fluid = PotionHelper.getSplashPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                                     brewing.getInput().fillInternal(fluid, true);
                                     brewing.markDirty();
                                     worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);
                                     return true;
                                 } else if (held.getItem().equals(Items.LINGERING_POTION)) {
-                                    FluidStack fluid = TFPHelper.getLingeringPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
+                                    FluidStack fluid = PotionHelper.getLingeringPotion(SurvivalismConfigs.potionToBottleDrainAmount, type);
                                     brewing.getInput().fillInternal(fluid, true);
                                     brewing.markDirty();
                                     worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 8);

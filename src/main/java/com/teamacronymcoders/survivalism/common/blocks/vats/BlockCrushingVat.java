@@ -5,7 +5,7 @@ import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.client.render.CrushingTESR;
 import com.teamacronymcoders.survivalism.common.tiles.vats.TileCrushingVat;
 import com.teamacronymcoders.survivalism.compat.theoneprobe.TOPInfoProvider;
-import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.TFPHelper;
+import com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation.PotionHelper;
 import com.teamacronymcoders.survivalism.utils.SurvivalismReferenceObjects;
 import com.teamacronymcoders.survivalism.utils.configs.SurvivalismConfigs;
 import com.teamacronymcoders.survivalism.utils.event.crushing.CrushingEvent;
@@ -155,7 +155,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> implements TO
             if (held.getItem() instanceof ItemGlassBottle) {
                 if (vat.getTank().getFluid() != null) {
                     if (FluidRegistry.isFluidRegistered("potion")) {
-                        if (TFPHelper.isPotion(vat.getTank().getFluid())) {
+                        if (PotionHelper.isPotion(vat.getTank().getFluid())) {
                             String id = vat.getTank().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
@@ -171,7 +171,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> implements TO
                         }
                     }
                     if (FluidRegistry.isFluidRegistered("potion_splash")) {
-                        if (TFPHelper.isSplashPotion(vat.getTank().getFluid())) {
+                        if (PotionHelper.isSplashPotion(vat.getTank().getFluid())) {
                             String id = vat.getTank().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
@@ -187,7 +187,7 @@ public class BlockCrushingVat extends BlockTEBase<TileCrushingVat> implements TO
                         }
                     }
                     if (FluidRegistry.isFluidRegistered("potion_lingering")) {
-                        if (TFPHelper.isLingeringPotion(vat.getTank().getFluid())) {
+                        if (PotionHelper.isLingeringPotion(vat.getTank().getFluid())) {
                             String id = vat.getTank().getFluid().tag.getString("Potion");
                             PotionType type = ForgeRegistries.POTION_TYPES.getValue(new ResourceLocation(id));
                             if (type != null) {
