@@ -1,6 +1,5 @@
 package com.teamacronymcoders.survivalism.modules.recipes.thermalfoundation;
 
-import cofh.thermalfoundation.init.TFFluids;
 import com.teamacronymcoders.survivalism.Survivalism;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BarrelRecipeManager;
 import com.teamacronymcoders.survivalism.common.recipe.barrel.BrewingRecipe;
@@ -13,6 +12,7 @@ import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class PotionBrewing {
     private static final FluidStack awkward_fluidstack = new FluidStack(FluidRegistry.getFluid("potion"), 1000);
     private static final List<PFHolder> brewingComponents = new ArrayList<>();
 
-    public static void registerTFSupport() {
+    public static void registerPotionSupport() {
         // Register Potion PFHolders
         registerAwkwardType();
         registerBaseTypes();
@@ -33,13 +33,15 @@ public class PotionBrewing {
 
         // Generates Brewing Recipes for the PFHolders
         registerPotionRecipes();
-        registerSplashAndLingeringRecipes();
+        if (Loader.isModLoaded("thermalfoundation")) {
+            registerSplashAndLingeringRecipes();
+        }
     }
 
     private static void registerAwkwardType() {
         List<Ingredient> ingredientList = new ArrayList<>();
         ingredientList.add(Ingredient.fromItem(Items.NETHER_WART));
-        TFFluids.addPotionToFluidStack(awkward_fluidstack, PotionTypes.AWKWARD);
+        PotionHelper.addPotionToFluidStack(awkward_fluidstack, PotionTypes.AWKWARD);
         BarrelRecipeManager.register(new BrewingRecipe(awkward, FluidRegistry.getFluidStack("water", 1000), ingredientList, awkward_fluidstack, 1800));
     }
 

@@ -25,6 +25,6 @@ public class PotionModule extends ModuleBase {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        PotionBrewing.registerTFSupport();
+        PotionBrewing.registerPotionSupport();
     }
 }

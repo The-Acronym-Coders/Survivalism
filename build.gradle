@@ -34,11 +34,6 @@ minecraft {
 }
 
 repositories{
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
-
     maven{
         name 'JEI'
         url 'http://dvs1.progwml6.com/files/maven'
@@ -96,6 +91,10 @@ dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
     deobfCompile "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
     deobfCompile "CraftTweaker2:ZenScript:${crafttweaker_version}"
+
+    deobfCompile("blusunrize:ImmersiveEngineering:${ieVersion}") {
+        exclude module: "crafttweaker"
+    }
 
     // CoFH Mods
     deobfCompile("cofh:ThermalFoundation:${thermal_foundation_version}:universal") {

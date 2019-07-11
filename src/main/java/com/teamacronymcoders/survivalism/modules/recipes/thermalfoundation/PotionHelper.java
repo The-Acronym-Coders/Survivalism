@@ -53,7 +53,7 @@ public class PotionHelper {
         return addPotionToFluidStack(FluidRegistry.getFluidStack("potion_lingering", amount), type);
     }
 
-    private static FluidStack addPotionToFluidStack(FluidStack stack, PotionType type) {
+    static FluidStack addPotionToFluidStack(FluidStack stack, PotionType type) {
         ResourceLocation resourcelocation = ForgeRegistries.POTION_TYPES.getKey(type);
         if (resourcelocation == null) {
             return null;
